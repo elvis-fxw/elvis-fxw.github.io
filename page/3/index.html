@@ -50,70 +50,6 @@
     <ul class="post-list">
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            TCP连接的建立与终止引言TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。
-UDP是无连接协议。
-
-连接的建立与终止建立过程（三次握手）：1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
-2. 服务器发回包含服务器初始序...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item animated fadeInDown">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -179,13 +115,13 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/">《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</a>
     </span>
   
 
@@ -195,14 +131,12 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            动态选路协议引言第9章学了静态选路。在配置接口时，通过route命令增加表项（通常从系统自引导程序文件），或是通过ICMP重定向生成表项（出错时）。
-但是静态选路受制于三种情况：
-1. 网络很小
-2. 与其他网络只有单个连接点
-3. 没有多余路由
-如果上述三种情况不能全部满足，通常使用动态选路。
+                            TCP的超时与重传引言TCP提供可靠的运输层，方法之一就是确认从另一端收到的数据。但是数据和确认都有可能会丢失。如果当定时器溢出时还没有收到确认，它就重传该数据。
+对每个连接，TCP管理4个不同的定时器：
 
-动态选路当相邻路由器之间进行通信，以告知对方每个路由器当前所连接的网络，这时就出现了动态选路。...
+重传定时器适用于当希望收到另一端的确认。
+坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。
+保活（keepalive）定时器可检测到一个空闲连接的另一...
                                 
         </div>
 </article>
@@ -220,8 +154,8 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -230,10 +164,77 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动态选路/">动态选路</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/">《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            IP选路引言选路是IP最重要的功能之一。主要目的：了解单个IP层如何作出路由决策。
+
+选路的原理IP搜索路由表的几个步骤：
+1. 搜索匹配的主机地址
+2. 搜索匹配的网络地址
+3. 搜索默认表项
+IP层进行的选路实际上是一种选路机制，它搜索路由表并决定向哪个网络接口发送分组。这区别于选路策略，它只是一组决定把哪些路由放入路由表的规则。
+简单路由表netstat -r列出路由表，-n以数字格式...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP选路/">IP选路</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/选路/">选路</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -309,13 +310,13 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/">《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</a>
     </span>
   
 
@@ -325,7 +326,13 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            TCP的坚持定时器引言ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window prob...
+                            一、引言当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。
+
+ARP为IP地址到对应的硬件地址之间提供动态映射。
+RARP是被那些没有磁盘驱动器的系统使用的。
+
+
+二、ARP运行过程...
                                 
         </div>
 </article>
@@ -343,8 +350,8 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -353,10 +360,10 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议" title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>

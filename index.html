@@ -256,13 +256,13 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/">《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器</a>
     </span>
   
 
@@ -272,17 +272,7 @@ a和b都是 32位 整数么？
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
-
-不可靠：它不能保证IP数据报能成功地到达目的地。
-无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
-
-
-二、IP首部IP数据报的格式如下图所示：
-                
-                IP数据报格式
-            
-普通IP的部首长为20个字节。分析IP首部，最高...
+                            TCP的坚持定时器引言ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window prob...
                                 
         </div>
 </article>
@@ -300,8 +290,8 @@ a和b都是 32位 整数么？
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -310,10 +300,10 @@ a和b都是 32位 整数么？
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -326,13 +316,13 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/">《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统</a>
     </span>
   
 
@@ -342,15 +332,8 @@ a和b都是 32位 整数么？
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            UDP：用户数据报协议引言UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。
-UDP首部为8字节，IP首部为20字节。
-UDP是不可靠的。
-
-UDP首部
-                
-                UDP首部
-            
-在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪...
+                            DNS：域名系统引言域名系统是一种用于TCP/IP应用程序的分布式数据库，它提供主机名字和IP地址之间的转换及有关电子邮件的选路信息。这里提到的分布式是指在Internet上的单个站点不能拥有所有的信息。​    只要是一堆机器，就可以叫集群，他们是不是一起协作着干活，这个谁也不知道；一个程序或系统，只要运行在不同的机器上，就可以叫分布式。
+对DNS的访问时通过一个地址解析器来完成的（一般在...
                                 
         </div>
 </article>
@@ -368,8 +351,8 @@ UDP首部
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -378,10 +361,10 @@ UDP首部
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/域名系统/">域名系统</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
