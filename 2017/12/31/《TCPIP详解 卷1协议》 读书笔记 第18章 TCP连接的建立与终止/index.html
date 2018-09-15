@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,TCP连接的建立与终止">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="TCP连接的建立与终止"><a href="#TCP连接的建立与终止" class="headerlink" title="TCP连接的建立与终止"></a>TCP连接的建立与终止</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。</p>
+<p>UDP是无连接协议。</p>
+<hr>
+<h2 id="连接的建立与终止"><a href="#连接的建立与终止" class="headerlink" title="连接的建立与终止"></a>连接的建立与终止</h2><h3 id="建立过程（三次握手）："><a href="#建立过程（三次握手）：" class="headerlink" title="建立过程（三次握手）："></a>建立过程（三次握手）：</h3><pre><code>1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
+2. 服务器发回包含服务器初始序号的SYN报文段，同时将确认序号（ACK）设置为客户的ISN+1，表示期望得到ISN+1的报文段。
+3. 将确认序号置为ISN+1，发送给服务器。
+</code></pre><p>发送第一个SYN的一端成为<strong>主动打开</strong>，接受这个SYN并发回下一个SYN的一端执行<strong>被动打开</strong>。<br>当一端为建立连接而发送它的SYN时，它为连接选择一个初始序号ISN。ISN随着时间变化而变化，所以每个连接的ISN都是不同的。</p>
+<h3 id="终止过程（四次握手）："><a href="#终止过程（四次握手）：" class="headerlink" title="终止过程（四次握手）："></a>终止过程（四次握手）：</h3><p>建立连接的时候发送SYN，终止连接的时候发送FIN。发送FIN通常是应用层进行关闭的结果。<br>发送FIN的一端没有数据流动，但是一个TCP连接在收到一个FIN后仍能发送数据。（半关闭 half close）</p>
+<pre><code>1. 首先主动关闭的一方发送一个FIN。
+2. 另一方收到这个FIN，执行被动关闭。发回一个ACK，确认序号+1.
+3. 服务器向应用程序传送一个文件结束符，接着这个服务器程序就关闭连接，导致服务器发送一个FIN。
+4. 客户收到FIN，返回一个ACK给服务器。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，我Client端也可以关闭连接了。
+</code></pre><p>一般而言，一方完成<strong>主动关闭</strong>，另一方完成<strong>被动关闭</strong>。<br><strong>也有情况为双方主动打开，或双方主动关闭的。</strong></p>
+<hr>
+<h2 id="最大报文段长度MSS"><a href="#最大报文段长度MSS" class="headerlink" title="最大报文段长度MSS"></a>最大报文段长度MSS</h2><p>MSS表示TCP传往另一端的最大数据块的长度。</p>
+<ul>
+<li>当一个连接建立时，连接的双方都要通告各自的MSS。如果一方不接受</li>
+<li>另一方的MSS值，则MSS就定为默认的536字节（因为主机要求IP数据报不能超过576字节，576-40首部长度=536）</li>
+<li>对于一个以太网来说，MSS值可以达到1460字节。（因为以太网MTU为1500，除去40首部剩下1460）</li>
+<li>如果目的IP地址是“非本地的”，那么MSS通常为536.（在传输过程中避免分片）</li>
+</ul>
+<hr>
+<h2 id="TCP的半关闭"><a href="#TCP的半关闭" class="headerlink" title="TCP的半关闭"></a>TCP的半关闭</h2><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。（少用）<br>发送了FIN的一方停止发送数据，但是还没收到另一个FIN之前，还是能接收数据。</p>
+<hr>
+<h2 id="TCP的状态变迁图"><a href="#TCP的状态变迁图" class="headerlink" title="TCP的状态变迁图"></a>TCP的状态变迁图</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905111514841" alt="TCP的状态变迁" title="" class="">
+                <p>TCP的状态变迁</p>
+            </figure>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905114915973" alt="TCP正常连接建立和终止所对应的状态" title="" class="">
+                <p>TCP正常连接建立和终止所对应的状态</p>
+            </figure>
+<p>###2MSL等待状态<br>TIME_WAIT状态也成为2MSL等待状态。每个具体TCP实现必须选择一个报文段最大生存时间MSL（Maximum Segment Lifetime）。它是任何报文段被丢弃前在网络内的最长时间。</p>
+<p>当TCP执行一个主动关闭，并发回最后一个ACK，该连接必须在TIME_WAIT状态停留的时间为2倍的MSL。这样可让TCP再次发送最后的ACK以防这个ACK丢失。</p>
+<p>而且在2MSL期间，这个TCP连接的插口不能再被使用。只能在2MSL过去之后才能再被使用。此时任何迟到的报文段将被丢弃。（如果我们关闭一个客户程序，并马上重启，那么这个程序将不能重用相同的本地端口，但是客户程序一般不关心本地端口；但是服务器就不一样了，服务器一般都是用固定端口对应固定的服务，立即重启服务器的话就不能用这个熟知端口了，所以重启服务器程序之前，一般需要1~4分钟）。</p>
+<p>于是给出了一个“<strong>平静时间</strong>”的概念，在重启动后的MSL秒内不能建立任何连接，这就成为<strong>平静时间</strong>。</p>
+<h3 id="FIN-WAIT-2状态"><a href="#FIN-WAIT-2状态" class="headerlink" title="FIN_WAIT_2状态"></a>FIN_WAIT_2状态</h3><p>客户端发送一个FIN，并且收到ACK之后的状态。它将在接收到服务器端发送的FIN后进入TIME_WAIT状态。<br>如果另一端一直处于CLOSE_WAIT状态，不发送FIN，这意味着我们这端可能永远保持这个状态（半关闭）。</p>
+<hr>
+<h2 id="复位报文段"><a href="#复位报文段" class="headerlink" title="复位报文段"></a>复位报文段</h2><p>RST比特是用于“复位”的。<br>无论何时一个发往目的地的报文段出错，TCP都会发出一个复位报文段。</p>
+<h3 id="到不存在的端口的连接请求"><a href="#到不存在的端口的连接请求" class="headerlink" title="到不存在的端口的连接请求"></a>到不存在的端口的连接请求</h3><p>在UDP中，一个数据报达到目的端口时，该端口没在使用，它将产生一个ICMP端口不可达的信息。而<strong>TCP则使用复位</strong>。</p>
+<h3 id="异常终止一个连接"><a href="#异常终止一个连接" class="headerlink" title="异常终止一个连接"></a>异常终止一个连接</h3><p>发送FIN终止连接的方式叫做<strong>有序释放</strong>。<br>中途发送一个复位报文段来释放一个连接，叫做<strong>“异常”释放</strong>。</p>
+<p>异常终止一个连接对应用程序来说有两个优点： </p>
+<ol>
+<li>丢弃任何待发数据并立即发送复位报文段； </li>
+<li>RST的接收方会区分另一端执行的是异常关闭还是正常关闭。应用程序使用的API必须提供产生异常关闭而不是正常关闭的手段。</li>
+</ol>
+<p><strong>需要注意的是RST报文段不会导致另一端产生任何响应，另一端根本不进行确认。收到RST的一方将终止该连接，并通知应用层连接复位。</strong></p>
+<h3 id="检测半打开连接"><a href="#检测半打开连接" class="headerlink" title="检测半打开连接"></a>检测半打开连接</h3><p>如果一方已经关闭或异常终止连接而另一方却还不知道，我们将这样的TCP连接成为<strong>半打开</strong>的。只要不打算在半打开的连接上传输数据，仍除去连接状态的一方就不会检测另一方已经出现异常。</p>
+<p>半打开连接的另一个常见原因是当服务器主机突然掉电而不是正常的结束服务应用程序后再关机，服务器主机重启后，从客户向服务器发送另一行字符。由于服务器的TCP已经重新启动，它将丢失复位前连接的所有信息，因此它不知道数据报文段中提到的连接。TCP的处理原则是接收方以复位作为应答。</p>
+<hr>
+<h2 id="同时打开与同时关闭"><a href="#同时打开与同时关闭" class="headerlink" title="同时打开与同时关闭"></a>同时打开与同时关闭</h2><p>很少用到，发生的概率很小。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:59.726Z" itemprop="dateUpdated">2018-09-09 12:40:59</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/&title=《《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/&title=《《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP连接的建立与终止"><span class="post-toc-number">1.</span> <span class="post-toc-text">TCP连接的建立与终止</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连接的建立与终止"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">连接的建立与终止</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#建立过程（三次握手）："><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">建立过程（三次握手）：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#终止过程（四次握手）："><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">终止过程（四次握手）：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大报文段长度MSS"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">最大报文段长度MSS</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP的半关闭"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">TCP的半关闭</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP的状态变迁图"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">TCP的状态变迁图</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#FIN-WAIT-2状态"><span class="post-toc-number">1.5.1.</span> <span class="post-toc-text">FIN_WAIT_2状态</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#复位报文段"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">复位报文段</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#到不存在的端口的连接请求"><span class="post-toc-number">1.6.1.</span> <span class="post-toc-text">到不存在的端口的连接请求</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#异常终止一个连接"><span class="post-toc-number">1.6.2.</span> <span class="post-toc-text">异常终止一个连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#检测半打开连接"><span class="post-toc-number">1.6.3.</span> <span class="post-toc-text">检测半打开连接</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#同时打开与同时关闭"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">同时打开与同时关闭</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/&title=《《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/&title=《《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD9ElEQVR42u3dy27bQAwF0Pz/T7tAN22R2LiXpNMsjlZBJY+kMwuKD6AfH/Hx+H3k1zz+Op5d+fns49Pxev3Xv0qeeXjgwIEDB47gNZ4dr5dOXun1OjlNcjxbM/kVDhw4cOC45UgC5wxx/6Bt2N5sJw4cOHDg+E6OJHHKV064W8R8O3HgwIEDx0/gyIt07WPlSV1essSBAwcOHP+XY5aMtWfbUL3pEL29VooDBw4cOOb3HQbdn/P3G+c7cODAgQPH6dDAfrghGWiYDczV74UDBw4cONYcybjALCrlJb9k5dm4XjvcgAMHDhw49hztWMC+/bOnTIJ9/i7//DsOHDhw4FhzzKLM1eDCLCVrhyGGjS4cOHDgwHHEsQ9aSSr1jlGJvKQYJZY4cODAgWPB0RYHN+W/GXrevspTvqefBThw4MCBY8ExbPmPUqNkZKF9yauCJg4cOHDguOJoi4N5Me4gp1y3kVYlQhw4cODAMeLIU538bD46MONONq89iwMHDhw4bjna8NmG4X0JMt+eHB0HDhw4cLybI8/58ttfFQSTwFwEVBw4cODA8WaOtlG0GSNoR+j2ZcTigwAHDhw4cJxyzNK5WUEwX20WhvPiYNHjwoEDBw4ccV2uLfnNinR12Fuv094FBw4cOHBccSQpU3u2LQXOGkuzlDKiwYEDBw4ca47bBtKmQdUmae1IxDDc4sCBAweOgCMvorVLz0p4rwP5JvRG24YDBw4cOG4mCt7ynwrsi3cJ/ab4GNVKceDAgQPHgiNPuvZFvdnft+H86V1w4MCBA8eCIy+37VO4NknLw/msvfTFr3DgwIEDx5qjnRBr061h76t8gSTNG7avcODAgQPHiCMPV7OmUUKQD0O0Y3lJqhlVPXHgwIEDRzdXFr3GvlDYwiV3bFtQxVbhwIEDB44FRz6adnXjTUvpKjkcfn3gwIEDB46gDlbXEYPr26C4uWZWIvyiC4cDBw4cONYcV+2lWYFv1hzaJIRPr8GBAwcOHKcc+YBanR2OEJP75g2wiAYHDhw4cBxx5ElREvza9CnfgNkmFSVLHDhw4MBxxNH2qWbDB8kKswJl3naKhhhw4MCBA8eCY/bas1SqHTiYhcx2tWisAQcOHDhwxByP8tjT5E2g2dnZ9uDAgQMHjiuOTXBKCnY5676xNEs1h+EfBw4cOHC85JgF1/yxkvRpQ3ycUuLAgQMHjiOONri2raY2/ZvRHxQxceDAgQPHt3O0YwezR283I/l0OOhx4cCBAweOU47Zo7RkszG7WZNpFWhx4MCBA8e6ONgW8l4/RI7VfgSs0jwcOHDgwHFTMVvlNe1IXDvckIO2b3QwKocDBw4cOP4cvwCcYNi75AGSqgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

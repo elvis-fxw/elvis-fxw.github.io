@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,传输控制协议">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/传输控制协议/">传输控制协议</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="TCP：传输控制协议"><a href="#TCP：传输控制协议" class="headerlink" title="TCP：传输控制协议"></a>TCP：传输控制协议</h1><p>这一章可以看成是TCP的概述</p>
+<h2 id="TCP的服务"><a href="#TCP的服务" class="headerlink" title="TCP的服务"></a>TCP的服务</h2><ul>
+<li>TCP提供一种面向连接的、可靠的字节流服务。（面向连接：在彼此交互数据前要先建立TCP连接，仅有两方进行通信）</li>
+<li>广播和多播不能用于TCP</li>
+</ul>
+<p>提供可靠性：</p>
+<ul>
+<li>应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据报长度将保持不变。</li>
+<li>TCP数据成为报文段或段（segment）</li>
+<li><strong>超时与重传</strong>：当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认，将重发这个报文段。</li>
+<li>当TCP收到发自另一端的数据，会发送一个确认ACK。</li>
+<li>TCP将保持它首部和数据的检验和，如果有错将丢弃这个报文段，不返回确认，则会超时并重发。</li>
+<li>封装在IP数据报中，IP到达另一端的时候可能会失序，TCP可以重新排序。</li>
+<li>IP数据报会发生重复，TCP接收端必须丢弃重复的数据。</li>
+<li><strong>拥塞控制</strong>：TCP还能提供流量控制（窗口win）</li>
+<li>字节流服务，TCP对字节流不作任何解释。</li>
+</ul>
+<hr>
+<h2 id="TCP的首部"><a href="#TCP的首部" class="headerlink" title="TCP的首部"></a>TCP的首部</h2><p>TCP的封装：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823171658535" alt="TCP封装" title="" class="">
+                <p>TCP封装</p>
+            </figure></p>
+<p>TCP首部格式如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823171714004" alt="TCP首部格式" title="" class="">
+                <p>TCP首部格式</p>
+            </figure></p>
+<ul>
+<li>每个TCP段都包含源端口和目的端端口号，用于寻找发端和收端应用程序。两个IP地址+两个端口号确定一个唯一的TCP连接。</li>
+<li>一个IP地址和一个端口号也被称为一个插口（socket）。</li>
+<li>序号用来标识从TCP发端向TCP收端发送的数据字节流，它标识在这个报文段中的第一个数据字节（18章中都是用偏移量来表示了）。</li>
+<li>当建立新的TCP连接时，SYN标志变成1，序号字段包含这个主机选择的初始序号ISN。（三次握手的时候，先发送SYN和ISN过去，还有mss（最大报文段长度）和win大小）。<strong>该主机要发送数据的第一个字节序号为这个ISN加1，因为SYN标志消耗了一个序号。</strong></li>
+<li>确认序号包含发送确认的一端所期望收到的下一个序号。因此，确认序号应当是上次已成功收到数据字节序号加1.</li>
+<li>当连接建立起来后，ACK标志总是置为1.</li>
+<li>TCP位应用层提供双全工服务，这意味着数据能在两个方向上独立地进行传输。</li>
+<li>TCP可以表述为一个没有选择确认或否认的滑动窗口协议。</li>
+<li>首部长度给出首部中32bit字的数目，因为任选字段的长度是可变的，这个字节占4bit，（1111最多为15），因此TCP最多有60字节的首部。正常的长度是20字节（IP和UDP首部都是固定的20和8）。</li>
+<li>TCP的流量控制由连接的每一端通过生命的窗口大小来提供。</li>
+<li>检验和覆盖了整个的TCP报文段：TCP首部和数据。</li>
+<li>只有当URG标志置为1时紧急指针才有效。</li>
+<li>最常见的可选字段是最长报文大小MSS，每个连接方通常在通信的第一个报文段中指明这个选项，它指明本段所能接收的最大长度的报文段。</li>
+<li>一个连接建立和终止时，双方交换的报文段仅有TCP首部。</li>
+</ul>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:01.543Z" itemprop="dateUpdated">2018-09-09 12:41:01</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/传输控制协议/">传输控制协议</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP：传输控制协议"><span class="post-toc-number">1.</span> <span class="post-toc-text">TCP：传输控制协议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP的服务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">TCP的服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP的首部"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">TCP的首部</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD60lEQVR42u3awU4jMRAE0Pz/T+9ekSCmussDHF5OKJDx+A1Spdv9esWvfx9e53c+/zb/m4+//bz6+a7Oa11+4cCBAweOeKvnSycbOJPttjEla+4fBw4cOHDc4kgWmC583t6tDe/u4e37OHDgwIHjxzmmxVVTHCaPJHkHBw4cOHD8ZY6mB5kD9VfDgQMHDhy/y7Fr2OWF2a2jqfzOH++V4sCBAweOtKp67UL3L//8yHwHDhw4cOA4NuamoZU3+/LVd9efxurb3eHAgQMHjppj2rCbYjVlUrNKc+iFAwcOHDgajnPTbRpjSTsvCdrpJsdROv2OgAMHDhw4Lp2n7G4uadglj2G6yiMjGjhw4MCBY8XRBFW+cB7n00eSPO1BkYkDBw4cOGqOfLG8kEuu2TQEm7ZgVNrhwIEDB46CI/lwHo3TqjFBf2JUAgcOHDhwPMcxPYiaRmYe1Xkx1n/q2rkcDhw4cOAIGny3WnVNUZfH//ShfkODAwcOHDgKjmnbbofVj7Lln22uhgMHDhw4eo68NNqVUtOWYl5A5kMVy+YgDhw4cOBYcSS3PpiJuLSxHWhzHRw4cODAcYsjj6vkEn2ZtxtTyIcnxiUcDhw4cOAomoPJhZriLX9NP9WsMvjegQMHDhw4Yo5pEO4ibdoonD6ePshx4MCBA0fPkZRhSSF3a7Rux727/3GLEAcOHDhwBHvpg7A5sro1xNAHLQ4cOHDguMWxe00H6aKED46FdsMQu0MsHDhw4MDRc0zHznKOJETzoM0D+8JMOg4cOHDgGHJMC6ppi7Af8s5XnBZmX6yCAwcOHDgucezyeff+NMLzz/Yr4sCBAweOnmPaMmtae6/6NR2qy0HH/y84cODAgePNTpvxhd3RVD5UN20F5iViVdHiwIEDB440laqiLufbNQSboK0eOQ4cOHDgKDjy6NqNL5yDdhe6u3Zk9AUCBw4cOHCsOPJbvBu0yRjcbnv5UMXb5iAOHDhw4Cg4+kJoGtJJrObtyPxgbDDcgAMHDhw4Co6mrNrF3vQWp38zfUjLEg4HDhw4cBw5du3CvEWYb3I6JNHE8zffOHDgwIEDx4pjd2yT3FYzcpcfQU2z8tVo4cCBAweOIUTymrYUnwjmPFbP948DBw4cOJ7g6MN4d3D1xKHU7vpLLBw4cODAceRIwvXW+MK55Ms5miBfjjXgwIEDB44hx/SYJ9/StJTaHVz1nUAcOHDgwPFbHNPwa9qLCUre1oweCQ4cOHDg+HGO3VanBV5eXvYHThe+d+DAgQMHjlVzsBkRyJt003bhrZTEgQMHDhy3OPLNTMutPAh3zb5+gG/ZasSBAwcOHF///B9UyT4Q1ehlaQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

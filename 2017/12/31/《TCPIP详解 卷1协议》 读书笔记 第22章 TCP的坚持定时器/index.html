@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,TCP的坚持定时器">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="TCP的坚持定时器"><a href="#TCP的坚持定时器" class="headerlink" title="TCP的坚持定时器"></a>TCP的坚持定时器</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。<br>有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。<br>为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window probe）</p>
+<hr>
+<h2 id="坚持定时器"><a href="#坚持定时器" class="headerlink" title="坚持定时器"></a><strong>坚持定时器</strong></h2><p>当通告窗口为0之后，引起客户设置其坚持定时器，当定时器溢出时还没有接收到窗口更新的话，它就探查这个空的窗口来判断窗口更新的报文是否丢失了。</p>
+<ul>
+<li>如果得知窗口非0了，就可以开始发送数据了</li>
+<li>如果窗口还是0，就重新计时，这个过程将会持续到窗口被打开，或者连接被终止（所以叫做“坚持”定时器）</li>
+<li>坚持定时器使用了TCP指数退避，但是坚持定时器总是在5~60秒之间。</li>
+</ul>
+<hr>
+<h2 id="糊涂窗口综合征症SWS（Silly-Window-Syndrome）"><a href="#糊涂窗口综合征症SWS（Silly-Window-Syndrome）" class="headerlink" title="糊涂窗口综合征症SWS（Silly Window Syndrome）"></a><strong>糊涂窗口综合征症SWS（Silly Window Syndrome）</strong></h2><p>基于窗口的流量控制，会导致SWS——少量的数据将通过连接进行交换，而不是满长度的报文段。</p>
+<ul>
+<li>接收方可以通告一个<strong>小窗口</strong>，发送方也可以发送少量的数据（不用等到其他数据一起发送一个大的报文段）。</li>
+<li>这样会导致在通道中有很多小数据，可能导致拥塞，影响网络利用率。</li>
+</ul>
+<p>避免的方法：</p>
+<pre><code>1. **接收方**不通告小窗口，除非窗口有了一个满长度的报文段大小，或者有了一半缓存空间。
+2. **发送方**有3个条件，必须满足任一条件才发送数据：
+</code></pre><ul>
+<li>可以发送一个满长度的报文段</li>
+<li>可以发送至少是接收方通告窗口大小一半的报文段</li>
+<li>可以发送任何数据并且不希望接收ACK（就是说没有未被确认的数据）或者该连接上不能使用Nagle算法（连接上只能有一个未被确认的分组，确认后才能发送新的）。（<strong>一半会用Nagle来防止这种SWS的情况</strong>）</li>
+</ul>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:52.234Z" itemprop="dateUpdated">2018-09-09 12:40:52</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP的坚持定时器"><span class="post-toc-number">1.</span> <span class="post-toc-text">TCP的坚持定时器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#坚持定时器"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">坚持定时器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#糊涂窗口综合征症SWS（Silly-Window-Syndrome）"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">糊涂窗口综合征症SWS（Silly Window Syndrome）</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD90lEQVR42u3awY7bSAwE0Pn/n04uOewisFxF0pks9uk0MDxS99OhTDa/vuLrxz+uV5+8+v7v//XqO893e/78+VnHFw4cOHDgiLf6vI12e6+WlTwrwW1poheAAwcOHDiOOJIH5FH6/Mjnuz0nYLuGfI84cODAgeO7OGZ8eXE4W8PzJzhw4MCB42/myAunvM23D939+nHgwIEDxy3HrGGXl0xtw7EtBdvm5kGvFAcOHDhwvM+vOrT+K39/ZL4DBw4cOHA8FkvJlZRbSZS2AxB5YM/29et/ceDAgQPHmuOqYfeJ2MtLygSo2BcOHDhw4Fhw5CHacuQNuDbCk8AeNgFx4MCBA8cRR15WzQbX2rG2WcBvRjT+FbQ4cODAgWPBkTy4bcbl0dtuZrO9/DXjwIEDB44NRx6f+dHOPmivVpW3Hb9uH4wDBw4c/2OOfIBgc/iUNw3b0YfZzFv0iwMHDhw4cCw42qhrN7+nzIuxzcvAgQMHDhx7jjz29hveHGu1DcTZ6AMOHDhw4LjlaA94knZh3kZsET9xNxw4cODAsedIjoLyMYXZYVUe6m3otoUoDhw4cODYc8zKtnyIbbaxfNwhh4iO0HDgwIEDx5qjjatZ8669c9tY3B9cFVMeOHDgwIEj4Mjjs43n9s6b9eSsb56FAwcOHDiOONpGXvL3rL2Yx/9sDUNdHDhw4MBRZlxbFCXjBe3S/yTTmxYhDhw4cOAYcSTbyEffkkOmTwwx7JuPOHDgwIHjimNz5SMFbbsw587Xc9tSxIEDBw4cCUdbFD0voi3A8qB9Dv6DWhYHDhw4cCw49sVYW9pdHVO1ENFrxoEDBw4ca47NiEDS8rsN4+RlJNuuT+Fw4MCBA0e5tvbWSbjOlt62I5PyMh/IwIEDBw4ce47ZcU57pDT7fvv09ifCm4oWBw4cOHCMONpj/raZmANtYn7TvsSBAwcOHLccbZHTlnCzo6w8dPOW5eqoCQcOHDhwjDhuD2/yYYK2yZisavZzAQcOHDhwXHHk5dasYZc345Jm5W0yvjx/w4EDBw4cRxz7sYO89GoPh9oWYf3acODAgQPHEUc+ynAbe0lLsS38kr3gwIEDB47PceyPbXKCTVTngZo8/c13cODAgQPHguNHec3Ktjxu8yItX0/xcwEHDhw4cKw52tibteTa4Mzbgu3r2eDiwIEDB458tUm47gfXZt+ZBfMs7HHgwIEDxy3HLKjaoqstvfJBh00VhgMHDhw4vpdjFrRF1JUoeVszeiU4cODAgeMv5si3kUT4ZjCuGHHAgQMHDhxHHG1EzQ6B8sZfHtJ5bB8fO+HAgQMHjvVAQx5sbbtw1uxrj5rydicOHDhw4Bhx/AQU7lz/sHk1XQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>多态和虚函数 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="C++,继承,多态,虚函数">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-多态和虚函数" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                多态和虚函数
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:46:21" datetime="2017-12-31T04:46:21.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/">C++</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/继承/">继承</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/继承/多态/">多态</a></li></ul></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多态/">多态</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/继承/">继承</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚函数/">虚函数</a></li></ul>
+
+                
+	<span id="/2017/12/31/多态和虚函数/" class="leancloud_visitors" data-flag-title="多态和虚函数" title="多态和虚函数"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/多态和虚函数/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/多态和虚函数/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <ol>
+<li>在子类转化成父类之后，只有<strong>虚函数</strong>会调用<strong>子类的</strong>重载函数。如果<strong>不是虚函数</strong>，那么调用的还是<strong>父类的</strong>函数。这叫做<strong>动态绑定</strong>。<br><strong>多态：</strong>指父类的对象可以指向一个子类的对象。指允许不同类的对象对同一消息做出响应。即同一消息可以根据发送对象的不同而采用多种不同的行为方式。（发送消息就是函数调用）<br>把不同的子类对象都当作父类来看，可以屏蔽不同子类对象之间的差异，写出通用的代码，做出通用的编程，以适应需求的不断变化。赋值之后，<strong>父对象就可以根据当前赋值给它的子对象的特性以不同的方式运作</strong>。也就是说，<strong>父亲的行为像儿子</strong>，而不是儿子的行为像父亲。</li>
+<li>如果需要<strong>动态绑定</strong>，那么在用这些对象作为参数的时候，必须使用<strong>引用传参</strong>，或者<strong>指针</strong>。如果使用<strong>形参</strong>的话，调用的会是<strong>父类的函数</strong>。</li>
+<li>如果父类中一个函数是virtual的，那么子类全都是virtual的，不需要额外标明。</li>
+<li>虚函数的作用：使得系统在运行时可以根据实际指向的对象来调用相应的函数。</li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:42.010Z" itemprop="dateUpdated">2018-09-09 12:40:42</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/多态和虚函数/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/多态和虚函数/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多态/">多态</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/继承/">继承</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚函数/">虚函数</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/多态和虚函数/&title=《多态和虚函数》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/多态和虚函数/&title=《多态和虚函数》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/17/指针/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">指针</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/多态和虚函数/&title=《多态和虚函数》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/多态和虚函数/&title=《多态和虚函数》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3aS27DMAwFwN7/0u62QBPnkVQLWBqtAje1NVnQ4ufrK17Xr/Xzev79d9+8v7JsYWBgPJZx3a7qtt5tKL9z8tcXe8DAwDiAkWziPsrl2131XAwMDIx3tyvcunXExMDAwFjFqIbUK1gYGBgY94zqrfP0slo++/NcHAMD44GM3q3/5/Of9DcwMDAexbiKa9JOqB5DC7vCwMDYmjEpk03GL/LEONkPBgbGCYzqw6rb6oXa0aAYBgbGRozqqER+jEvalkkAjX4mDAyMAxh57JoMZEwOlIVaIAYGxgGM3phXdaOTNkBhWgQDA2MjRpJ8TrLk3s+xoLiGgYGxEWM+1VD95qoGwNskFgMDYzvGvHw2aRJM2p8YGBjnMO4PZL1S3bzBWWghYGBgHMBYe7zLj4+9RuaLKxgYGIcx8oblJK3tFfKaJ1wMDIyNGHlqmm+6Gl6brU0MDIytGVE4G6ep1fZkntx+mB/BwMDYmpEfB3sHx0li/CEcY2BgbMqYF8V6xbVR27JaO8TAwNiOkQfE6nEwfwOU/wsDA+MARvK5mmoWBiZaxUEMDIwTGFdx5UlsNaQm2/2Qf2NgYGzKWBWz7x9QHRTrvQAwMDD2ZuRBtjdO0WswVMEYGBgnMKqBbzI0lh8fy6ksBgYGRlw4mzQbqiMdGBgYGPPgmGfSeSFv2XsDAwPjUYy8GZCnu3l4TUL5snIbBgbGAxnV0Fkt3ydBs/rTNJuaGBgYz2N8A/AYapjqpGC1AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

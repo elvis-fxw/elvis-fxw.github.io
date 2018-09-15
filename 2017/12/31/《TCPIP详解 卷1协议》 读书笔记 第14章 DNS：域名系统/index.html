@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,DNS,域名系统">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/域名系统/">域名系统</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="DNS：域名系统"><a href="#DNS：域名系统" class="headerlink" title="DNS：域名系统"></a>DNS：域名系统</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>域名系统是一种用于TCP/IP应用程序的分布式数据库，它提供主机名字和IP地址之间的转换及有关电子邮件的选路信息。这里提到的分布式是指在Internet上的单个站点不能拥有所有的信息。<br>​<br>    只要是一堆机器，就可以叫集群，他们是不是一起协作着干活，这个谁也不知道；一个程序或系统，只要运行在不同的机器上，就可以叫分布式。</p>
+<p>对DNS的访问时通过一个地址解析器来完成的（一般在应用程序上，不像TCP/IP协议那样是操作系统的内核）。</p>
+<hr>
+<h2 id="DNS基础"><a href="#DNS基础" class="headerlink" title="DNS基础"></a>DNS基础</h2><p>DNS的名字空间具有层次结构：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823163854912" alt="DNS层次结构" title="" class="">
+                <p>DNS层次结构</p>
+            </figure></p>
+<ul>
+<li>每个结点有一个至多63字符长的标识。</li>
+<li>这棵树的树根是没有任何标识的特殊节点。</li>
+<li>命名标识中一律不区分大小写。</li>
+<li>命名树上任何一个结点的域名就是将<strong>从该结点到最高层的域名</strong>串连起来，中间用“.”隔开。</li>
+<li>域名树种的每个结点必须有一个唯一的域名，但是不同结点可以用相同的标识。</li>
+</ul>
+<p>FQDN（Full Qualified Domain Name）：完全域名、绝对域名。如：sun.tuc.noao.edu.</p>
+<ul>
+<li>如果一个域名不以点结尾，则认为该域名是不完全的。</li>
+<li>如果不完整的域名由两个或以上的标号组成，则认为它是完整的，或者在该域名的右边加一个局部后缀。</li>
+</ul>
+<p>顶级域名分为三个部分：</p>
+<pre><code>1. arpa是一个用作地址到名字转换的特殊域
+2. 7个3字符长的普通域
+3. 2字符长的都是国家域/地理域
+</code></pre><p>网络信息中心NIC负责分配顶级域和委派其他指定地区域的授权机构。</p>
+<p>一个独立管理的DNS子树称为一个区域，常见的区域是一个二级域，如noao.edu。</p>
+<p>当一个新系统加入到一个区域中时，DNS管理者为该新系统申请一个域名和一个IP地址，并加到名字服务器的数据库中。</p>
+<p>一个名字服务器负责一个或多个区域。<br>一个区域的管理者必须为该区域提供一个主名字服务器和至少一个辅助名字服务器（独立和冗余的，以免某个服务器故障时影响名字服务）。</p>
+<p>主、辅助名字服务器的区别：主名字服务器从磁盘文件中调入该区域的所有信息，辅助名字服务器从主服务器中调入所有信息。</p>
+<p>当一个名字服务器没有请求的信息时，它将于其他的名字服务器联系（DNS的分布特性），然而不是每个名字服务器都知道如何和其他的名字服务器联系，这时它会与根服务器联系，根服务器告诉它与另一个名字服务器联系。</p>
+<hr>
+<h2 id="NDS的报文格式"><a href="#NDS的报文格式" class="headerlink" title="NDS的报文格式"></a>NDS的报文格式</h2><p>DNS定义了一个用于查询和响应的报文格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164725935" alt="NDS的报文格式" title="" class="">
+                <p>NDS的报文格式</p>
+            </figure></p>
+<p>16bit的标志字段如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164801260" alt="这里写图片描述" title="" class="">
+                <p>这里写图片描述</p>
+            </figure></p>
+<h3 id="查询问题部分"><a href="#查询问题部分" class="headerlink" title="查询问题部分"></a>查询问题部分</h3><p>查询名是要查找的名字，它是一个或多个标识符的序列（长度+名字+0结尾，如下），该字段无需以整32bit边界结束，无需填充字节。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164852172" alt="域名的标识" title="" class="">
+                <p>域名的标识</p>
+            </figure></p>
+<p>每个问题有一个查询类型，每个响应也有一个类型。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164943673" alt="类型" title="" class="">
+                <p>类型</p>
+            </figure></p>
+<p>最常用的查询类型是A，表示获得查询名的IP地址。PTR表示获得IP地址对应的域名。</p>
+<p>查询类通常是1，指互联网地址。</p>
+<h3 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h3><p>DNS报文中的最后三个字段：回答、授权、附加信息，均采用一种称为<strong>资源记录RR（Resource Record）</strong>的相同格式。</p>
+<p>域名、类型、类和查询问题部分一样。<br>生存时间值位2天。</p>
+<hr>
+<h2 id="指针查询"><a href="#指针查询" class="headerlink" title="指针查询"></a>指针查询</h2><p>指针查询即给定一个IP地址，返回与该地址对应的域名。</p>
+<p>当一个组织加入Internet并获得DNS域名空间的授权，如noao.edu，则它们同事也获得了对应IP地址的in-addr.arpa域名空间的授权（2个域名空间的授权）。<br>在DNS树种结点in-addr.arpa的下一级必须是IP地址的第一节（140），再下一级是IP地址的再下一节，以此类推。<br>DNS名字是由DNS树的底部逐步往上书写的，这意味着140.252.13.33的sun主机，它的DNS名字是33.13.252.140.in-addr.arpa。</p>
+<p>从名字解析器传入IP时，先将IP转换成34.13.252.140.in-addr.arpa，再传送给名字服务器查询。</p>
+<hr>
+<h2 id="资源记录-1"><a href="#资源记录-1" class="headerlink" title="资源记录"></a>资源记录</h2><p>A – 知道名字查询IP<br>PTR – 知道IP查询域名</p>
+<hr>
+<p>##高速缓存<br>所有的名字服务器均使用高速缓存，高速缓存是名字服务器维护而不是名字解析器维护的（名字解析器在应用程序上，不能一直处于工作状态）。</p>
+<p>名字解析器将在本地主机上（UDP和TCP端口号53）寻找名字服务器。</p>
+<hr>
+<h2 id="用UDP还是TCP"><a href="#用UDP还是TCP" class="headerlink" title="用UDP还是TCP"></a>用UDP还是TCP</h2><ul>
+<li>DNS主要使用UDP。 </li>
+<li>如果发送的数据超过512字节，则用TCP重传。 </li>
+<li>因为UDP一般要求不能超过512字节。</li>
+</ul>
+<hr>
+<h2 id="查询过程"><a href="#查询过程" class="headerlink" title="查询过程"></a>查询过程</h2><pre><code>1. 客户程序启动后，调用它的名字解析器函数，将我们键入的主机名转换成一个IP地址，一个A类型的查询请求被送往一个根服务器。
+2. 由根服务器返回的相应中包含为该服务器所在域服务的名字服务器名。
+3. 客户端的名字解析器将向该服务器的名字服务器重发上述A类查询，这个查询通常将期望递归标志设置为1.
+4. 返回IP地址。
+</code></pre>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:02.850Z" itemprop="dateUpdated">2018-09-09 12:41:02</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/域名系统/">域名系统</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/&title=《《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/&title=《《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#DNS：域名系统"><span class="post-toc-number">1.</span> <span class="post-toc-text">DNS：域名系统</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DNS基础"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">DNS基础</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#NDS的报文格式"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">NDS的报文格式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#查询问题部分"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">查询问题部分</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#资源记录"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">资源记录</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#指针查询"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">指针查询</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#资源记录-1"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">资源记录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用UDP还是TCP"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">用UDP还是TCP</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#查询过程"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">查询过程</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/&title=《《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/&title=《《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD4UlEQVR42u3aS27cQAwFQN//0gmQlRfRzHskbSdAaTWIFXV3aUHx8/ERX7/+XJ9/f77y/5s87elq95PsbXjhwIEDB45gu683kfxLTvm0er6rzW7fvE4cOHDgwHHEkQfX/GDt7yvQPOjiwIEDB46f5cg3t0n2ZgE+2QkOHDhw4PhfOF4/oS3SJYj5PThw4MCB46c4knJbknS16VNCluwnLxee1Upx4MCBA8ck6g3TuX/t95fPd+DAgQMHjtHQQJICbUYW9g2t1TAEDhw4cOBYc7TbyhtL7TM3oJshiSijxYEDBw4cMUc+KLA5xmxkIc+wZsMTf1kdBw4cOHCsOWZDAMny7XbboN6OVrSvDQcOHDhwzDiSxdri3WZMYfZKWtbH0+HAgQMHjjXHZg5if+CrlK99MW9eMA4cOHDgOOKYDTTMWkdJCH8d8q8SQhw4cODA8RUcs+PlqdRsxK1tO7Up3OrCgQMHDhxxijVr5FyFxjbQ5k8YZqU4cODAgWMUXNtWTVv4y8PnjHJfHMSBAwcOHFccs8CWF/jygDcbrWs/At4kkzhw4MCBY82RH2Cz3avUKx/smzWfcODAgQPHnqNNn9oCYhuAZ8G7TfAeXwYOHDhw4FhzzBr/+7Datq/alGzWJMOBAwcOHHuOdjRttt3NPXmxbxaA33x34MCBAweOEcdVwGsLdkmStgnh7fNx4MCBA8eeI9nirF3Uto7akJk8Z/aScODAgQPHFcfV8FkLtF9rkwR+XGWWOHDgwIFjneq043R5CteOMuQpX7QKDhw4cOBYcLRb34wXJFibdfMnP66IAwcOHDjWHPkAXD4w1wJd3d+O0L25BwcOHDhwrDmiwtm3j9DNipLJWYrCIg4cOHDgWHDkAwc53G2radYnapNDHDhw4MCx50i08uLarPGzD6KzQYfHjBYHDhw4cJQcs4GAZMk8cWqbVbcfB28mO3DgwIEDx4IjP0z+u472ixXz1/N4Pw4cOHDgWHO06dOGoG1TzYLlLP3DgQMHDhxXHG1C1Zb/kpLipmiYjDgUrxAHDhw4cBxxbJpMV+HwdmRhNn6BAwcOHDj2HJtjt6FxVjrMIdrnP54dBw4cOHAsOPYjC5sQmBQl278mKSIOHDhw4Pg6jjYgtelZG8hb6Ly4mZcmceDAgQPHniN/9Kx1tGkObV7GMFTjwIEDB44jjk2z57Zgl38dDL8aXu8KBw4cOHB8I0cSgG/TuRnN7K84cODAgeOnOJIg1441tMNtbYpYJI04cODAgeOIox0jmIXPnGZWIswHF85qpThw4MCB42igYX+AfKOzcYc2+cSBAwcOHGuO34Zme+7S/cfTAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

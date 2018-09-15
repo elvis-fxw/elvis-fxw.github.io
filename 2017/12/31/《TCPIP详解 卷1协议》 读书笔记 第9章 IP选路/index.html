@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,IP选路,选路">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP选路/">IP选路</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/选路/">选路</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="IP选路"><a href="#IP选路" class="headerlink" title="IP选路"></a><strong>IP选路</strong></h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>选路是IP最重要的功能之一。<br><strong>主要目的：了解单个IP层如何作出路由决策。</strong></p>
+<hr>
+<h2 id="选路的原理"><a href="#选路的原理" class="headerlink" title="选路的原理"></a><strong>选路的原理</strong></h2><p>IP搜索路由表的几个步骤：</p>
+<pre><code>1. 搜索匹配的主机地址
+2. 搜索匹配的网络地址
+3. 搜索默认表项
+</code></pre><p>IP层进行的选路实际上是一种<strong>选路机制</strong>，它搜索路由表并决定向哪个网络接口发送分组。<br>这区别于<strong>选路策略</strong>，它只是一组决定把哪些路由放入路由表的规则。</p>
+<h3 id="简单路由表"><a href="#简单路由表" class="headerlink" title="简单路由表"></a><strong>简单路由表</strong></h3><p>netstat -r列出路由表，-n以数字格式打印出IP地址。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160811152711748" alt="简单路由表" title="" class="">
+                <p>简单路由表</p>
+            </figure>
+<p>从左到右分别是目的IP地址、网关（下一站路由器的IP地址，<strong>如果是本地计算机直接连接到的网络，网关通常是本地计算机对应的网络接口</strong>）、标志、参考记数Refcnt、发送的分组数use、本地接口名字</p>
+<p>五种标志：<br>以下的<strong>“该路由”</strong>指的是目的地址所代表的主机。</p>
+<ul>
+<li>U 该路由可以使用</li>
+<li>G 该路由是到一个网关（路由器）。如果没有该标志，说明目的地是直接相连的。（意思是说没有G标志的话，就直接发到目的地，有的话就是发到中间路由）</li>
+<li>H 该路由是到一个主机，目的地址是一个完整的主机地址。没有H标志的话，目的地址是一个网络号或者网络号+子网号。</li>
+<li>D 该路由是由重定向报文创建的。</li>
+<li>M 该路由已被重定向报文修改。</li>
+</ul>
+<p>标志G很重要，区分了“间接路由”和“直接路由”。发往直接路由的分组包含目的地址的IP和链路层地址。发往间接路由的分组包含目的地址的IP，但链路层地址为间接路由的地址。</p>
+<ul>
+<li>参考记数Refcnt：正在使用路由的活动进程个数。</li>
+<li>use：通过该路由发送的分组数。</li>
+<li>Interface：本地接口的名字。环回接口的名字为lo0。默认路由为emd0。</li>
+</ul>
+<h3 id="初始化路由表"><a href="#初始化路由表" class="headerlink" title="初始化路由表"></a><strong>初始化路由表</strong></h3><p>一个常用的方法是在系统引导时显式地在初始化文件中运行route命令：<br>route add default sun 1<br>route add slip bsdi 1<br>第3个参数代表目的端，第4个参数代表网关（路由器），最后一个参数代表路由的度量。当度量值&gt;0时要为该路由设置G标志，否则不设置。</p>
+<h3 id="没有到达目的地的路由"><a href="#没有到达目的地的路由" class="headerlink" title="没有到达目的地的路由"></a><strong>没有到达目的地的路由</strong></h3><p>如果路由表中没有默认项，而又没有找到匹配项。这时会发生什么情况呢？<br>如果数据报是<strong>本地主机产生</strong>的，那么就发送该数据报的应用程序返回一个差错，或是“主机不可达差错”或是“网络不可达差错”。如果是<strong>被转发的</strong>数据报，那么就给原始发送端发送一份ICMP主机不可达的差错报文。</p>
+<hr>
+<h2 id="ICMP主机与网络不可达差错"><a href="#ICMP主机与网络不可达差错" class="headerlink" title="ICMP主机与网络不可达差错"></a><strong>ICMP主机与网络不可达差错</strong></h2><p>当路由器收到一份IP数据报但又不能转发时，就要发送一份ICMP“主机不可达”差错报文。<br>当接通SLIP链路启动时，就要在路由表中增加一项实用SLIP链路的表项，而当断开时则删除该表项。</p>
+<hr>
+<h2 id="ICMP重定向差错"><a href="#ICMP重定向差错" class="headerlink" title="ICMP重定向差错"></a><strong>ICMP重定向差错</strong></h2><p>当IP数据报应该被发送到另一个路由器时，收到数据报的路由器就要发送ICMP重定向差错报文给IP数据报的发送端。<br>只有当主机可以选择路由器发送分组的情况下，我们才可能看到ICMP重定向报文。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160811161319940" alt="ICMP重定向" title="" class="">
+                <p>ICMP重定向</p>
+            </figure>
+<pre><code>1. 主机发送一份IP数据报给默认路由R1。
+2. R1检查路由表，发现R2是发送该数据报的下一站。当它把数据报发给R2时，R1检测到它正在发送数据报的接口与数据报到达R1的接口是相同的（即主机和两个路由器所在的局域网LAN）。
+3. R1发送一份ICMP重定向报文告诉主机，您以后直接发给R2就好了，别再发给我了。
+</code></pre><p><strong>重定向一般用来让具有很少选路信息的主机逐渐建立更完善的路由表。</strong></p>
+<p>重定向报文创建的路由，标志带有D。</p>
+<h3 id="更多的细节"><a href="#更多的细节" class="headerlink" title="更多的细节"></a><strong>更多的细节</strong></h3><p>ICMP重定向报文的接受者必须查看三个IP地址：</p>
+<pre><code>1. 导致重定向的IP地址（目的IP？）
+2. 发送重定向报文的路由器的IP地址
+3. 应该采用的路由器IP地址
+</code></pre><hr>
+<h2 id="ICMP路由器发现报文"><a href="#ICMP路由器发现报文" class="headerlink" title="ICMP路由器发现报文"></a><strong>ICMP路由器发现报文</strong></h2><p>初始化路由表的方法：</p>
+<ol>
+<li>通过在配置文件中指定静态路由，这种方法常用来设置默认路由。</li>
+<li>利用ICMP路由器通告和请求报文。</li>
+</ol>
+<p>主机在引导以后要广播或多播传送一份路由器请求报文。一台或更多台路由器响应一份路由器通告报文。另外，路由器定期地广播或多播传送它们的路由器通告报文，允许每个正在监听的主机相应地更新它们的路由表。</p>
+<ul>
+<li>主机在引导期间一般发送三份路由器请求报文，每3秒钟发一次。一旦接收到一个有效的通告报文就停止发送请求报文。</li>
+<li>只要有一般的默认路由器，该路由器就会每隔10分钟发送通告报文，报文的生命周期是30分钟。</li>
+<li>路由器发现报文一般由用户进程（守护进程）创建和处理。</li>
+</ul>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:45.498Z" itemprop="dateUpdated">2018-09-09 12:40:45</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP选路/">IP选路</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/选路/">选路</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/&title=《《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/&title=《《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第7章 Ping程序/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCP/IP详解 卷1:协议》 读书笔记 第7章 Ping程序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCP/IP详解卷1：协议》读书笔记-第1章-概述</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#IP选路"><span class="post-toc-number">1.</span> <span class="post-toc-text">IP选路</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#选路的原理"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">选路的原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#简单路由表"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">简单路由表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#初始化路由表"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">初始化路由表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#没有到达目的地的路由"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">没有到达目的地的路由</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP主机与网络不可达差错"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">ICMP主机与网络不可达差错</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP重定向差错"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">ICMP重定向差错</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#更多的细节"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">更多的细节</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP路由器发现报文"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">ICMP路由器发现报文</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/&title=《《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/&title=《《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADJUlEQVR42u3aQXIiQQwEQP//0+wDsKFKgg2myTkRNgyd44Oskn5+4utWXvefur/b/evkDPnPX3BhY2NjX4SdA/56nX8qf0CPkcl9/noPNjY29qnsx4UhOdbsoLP7J6+fnA0bGxv769l5i9Iebva92NjY2NgJexYJ5Y3HLH7CxsbGxp4F/ZsgKUEmj/U/ZWnY2NjYH89uh6yf/Pot821sbGzsD2bf1tfjRuJxsUkahk2Y9eeZsbGxsQ9it0Vis2qzgbXtR3Q2bGxs7CPY7Yfzr3zfZx8XwqgtwcbGxj6I3a6/tLH+ZqiwHwA8+Qk2Njb2QezZ0HdWqGal9DFg9nCxsbGxT2InR5w1DDmvXaZsR9G/3AcbGxv7CPasOLVRzqxVyEtUPVTGxsbGPog9i9dfFeXko4L2T1WXQ2xsbOzLspMCsImZ3jcSmDUz2NjY2Oex23/0Z4fbl8m2GhdZGjY2NvYR7BmsPcQmMMrLZz6owMbGxj6DPRvK5gdtw6Z2CDELsLCxsbFPYreHyIP72fLlJrSaPQ5sbGzsM9htDJT8u5+/p13i2a+KYmNjY5/Eni3ozNZrZilXHkXlS0XY2NjY57GjuUHQrsxKYDtC2BdFbGxs7PPYeSQ0K3htyZmtDb1gmo2NjY19WfYe2Ra/zRrQfsUHGxsb+1R2G7XnJXATA7UFrw6VsLGxsS/O3qy8zAKpWRnbPMQoWsLGxsY+gj0rLXtM24rkjcoTPDY2NvZx7NmINx/lboa+7yiN2NjY2Gewk/CljeP3AVDSeLSPNarJ2NjY2Bdkz5qK6KaLlua1jUcxG8HGxsa+IDsPktrh62alJn//rNXBxsbGPom9aUiSAfAsimrjrTZywsbGxj6JfSuvttTl708aofZBF3ESNjY29mXZ++qXI/OQKB8Gz0ogNjY29nnsvJzsB7HtyKEdAxetFDY2NvZx7Nniy+xxJGs3SQi1GTBjY2Njfye7LS1tU7FZxKlDJWxsbOyvZLe/bUcLszhpFnhhY2Njn8fOy8ZspaYN9GcPIr8nNjY29knsPJpp1242oU8eVCVFdDXfxsbGxv5c9j/NcEUozAA77gAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

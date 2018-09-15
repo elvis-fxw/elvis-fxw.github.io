@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCP/IP详解卷1：协议》读书笔记-第1章-概述 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》读书笔记 第1章 概述" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCP/IP详解卷1：协议》读书笔记-第1章-概述
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/" class="leancloud_visitors" data-flag-title="《TCP/IP详解卷1：协议》读书笔记-第1章-概述" title="《TCP/IP详解卷1：协议》读书笔记-第1章-概述"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="一、分层"><a href="#一、分层" class="headerlink" title="一、分层"></a>一、分层</h2><p>网络协议通常分不同层次进行开发，每一层分别负责不同的通信功能。<br>TCP/IP通常被认为是一个四层协议系统：</p>
+<ol>
+<li>应用层<br>负责处理特定的应用程序细节。</li>
+<li>运输层<br>主要为两台主机上的应用程序提供端到端的通信。</li>
+<li>网络层(互联网层)<br>处理分组在网络中的活动。</li>
+<li>链路层(数据链路层、网络接口层)<br>通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡。一起处理与电缆(或其他任何传输媒介的物理接口细节)</li>
+</ol>
+<p>下图为TCP/IP协议族的四个层次以及常见的协议：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805150308363" alt="TCP/IP协议族的四个层次" title="" class="">
+                <p>TCP/IP协议族的四个层次</p>
+            </figure></p>
+<hr>
+<h3 id="局域网上运行FTP的两台主机"><a href="#局域网上运行FTP的两台主机" class="headerlink" title="局域网上运行FTP的两台主机"></a><strong>局域网上运行FTP的两台主机</strong></h3><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805151223499" alt="局域网上运行FTP的两台主机" title="" class="">
+                <p>局域网上运行FTP的两台主机</p>
+            </figure>
+<ul>
+<li>大多数的网络应用程序都被设计成客户-服务器模式。</li>
+<li>在同一层上，双方都可以有一个或多个协议进行通信。</li>
+<li>应用层通常是一个用户进程，而下三层一般在操作系统内核中执行。</li>
+<li>应用层关心的是应用程序的细节；下三层对应用层一无所知，它们负责处理所有的通信细节。</li>
+<li>TCP/IP协议族是一组不同的协议组合在一起构成的协议族，TCP/IP只是其中的两种协议而已。</li>
+</ul>
+<hr>
+<h3 id="通过路由器连接的两个网络"><a href="#通过路由器连接的两个网络" class="headerlink" title="通过路由器连接的两个网络"></a><strong>通过路由器连接的两个网络</strong></h3><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805152656678" alt="通过路由器连接的两个网络" title="" class="">
+                <p>通过路由器连接的两个网络</p>
+            </figure>
+<p> 网络通过路由器进行连接，形成互联网。路由器是网关，但是网关不一定是路由器。<br> 应用层和运输层使用<strong>端到端</strong>（End-to-End）协议，网络层使用<strong>逐跳</strong>（Hop-by-hop）协议，两个端系统和每个中建系统都要使用它。（从第3章IP协议可以更好理解，在IP选路的过程中，选路表中只有下一跳的IP地址，只能一个一个地往目的地跳，所以称为逐跳）</p>
+<ul>
+<li>网络层IP提供的是一种<strong>不可靠</strong>的服务。它<strong>尽可能快</strong>地把数据发送到目的地，但是不提供任何可靠性保证。</li>
+<li>TCP提供的是<strong>可靠的</strong>服务，采用了超时重传、发送和接收端到端的确认分组等机制。</li>
+<li>所以让网络层尽快传送数据，然后到了传输层再来检测对错咯。</li>
+<li>路由器具有多个网络接口层（链路层），任何具有多个接口的系统，称为<strong>多接口的</strong>。一个主机也可以有多个接口。大多数的TCP/IP实现也允许一个多接口主机来但当路由器的功能（需要进行特殊配置）。</li>
+</ul>
+<p>连接网络的另一个途径是使用网桥，与路由器的区别：<br>链路层——网桥<br>网络层——路由器<br>TCP/IP更倾向于使用路由器来连接网络。</p>
+<hr>
+<h2 id="二、TCP-IP的分层"><a href="#二、TCP-IP的分层" class="headerlink" title="二、TCP/IP的分层"></a>二、TCP/IP的分层</h2><p>TCP/IP协议中不同层次的协议：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805154019320" alt="TCP、IP协议族中不同层次的协议" title="" class="">
+                <p>TCP、IP协议族中不同层次的协议</p>
+            </figure></p>
+<ul>
+<li>TCP和UDP是两种最为著名的运输层协议，都是用IP作为网络层协议。</li>
+<li>UDP是不可靠的，它不能保证数据包安全无误地到达最终目的。</li>
+<li>TCP和UDP的每组数据都通过端系统和每个中间路由器中的IP层在互联网中进行传输。</li>
+<li>ICMP是IP协议的负数协议。IP层用它来与其它主机或路由器交换错误报文和其他重要信息。</li>
+<li>IGMP是Internet组管理协议。它用来把一个UDP数据报多播到多个主机。</li>
+</ul>
+<hr>
+<h2 id="三、互联网的地址"><a href="#三、互联网的地址" class="headerlink" title="三、互联网的地址"></a>三、互联网的地址</h2><p>互联网上的<strong>每个接口</strong>都必须有一个<strong>唯一的IP地址</strong>。IP地址长32bit。<br>有五类不同的互联网地址格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805154819765" alt="五类不同的互联网地址格式" title="" class="">
+                <p>五类不同的互联网地址格式</p>
+            </figure><br>32位的IP地址通常写成4个十进制数的形式，每个整数对应一个字节——点分十进制表示法。<br>多接口主机具有多个IP地址，其中每个接口都对应一个IP地址。<br>互联网络信息中心（InterNIC）负责分配IP地址，但是它只分配<strong>网络号</strong>。（跟子网有关，别人只知道你的网络号，你的<strong>主机号</strong>由内网的管理员来分配。）</p>
+<p>各类IP地址有一个范围：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805155614843" alt="IP地址范围" title="" class="">
+                <p>IP地址范围</p>
+            </figure></p>
+<hr>
+<h2 id="四、域名系统"><a href="#四、域名系统" class="headerlink" title="四、域名系统"></a>四、域名系统</h2><p>人们可以通过IP地址或主机名来访问一台主机，不过人们更喜欢主机名。<br>DNS是一个分布的数据库，由它来提供IP地址和主机名之间的映射信息。</p>
+<hr>
+<h2 id="五、封装"><a href="#五、封装" class="headerlink" title="五、封装"></a>五、封装</h2><p>实际上数据是通过链路层传到其他网络的，那么数据从应用程序一直往下，通过4个层，每一层都给数据添加一些首部（尾部）信息。这就叫封装。下图为封装的过程：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805160059177" alt="封装过程" title="" class="">
+                <p>封装过程</p>
+            </figure></p>
+<p>TCP传给IP的数据单元：TCP报文段（TCP segment）<br>UDP传给IP的数据单元：UDP数据报（UDP datagram）<br>IP传给网络接口层的数据单元：IP数据报（IP datagram）<br>以太网传输的比特流：帧（Frame），长度必须在46~1500字节之间。（涉及到MTU最大传输单位）</p>
+<p>每一层的首部信息中，都会包含上一层的标识，以标识上一层的协议。</p>
+<hr>
+<h2 id="六、分用"><a href="#六、分用" class="headerlink" title="六、分用"></a>六、分用</h2><p><strong>分用与封装对应</strong>：当主机收到一个以太网数据帧的时候，数据就开始从协议栈中由底向上升，同时去掉各层协议加上的报文首部。每层协议盒都要去检查报文首部中的协议标识，以确定接收数据的上层协议。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805161302772" alt="分用过程" title="" class="">
+                <p>分用过程</p>
+            </figure>
+<hr>
+<h2 id="七、客户-服务器模型（Client-Server）"><a href="#七、客户-服务器模型（Client-Server）" class="headerlink" title="七、客户-服务器模型（Client-Server）"></a>七、客户-服务器模型（Client-Server）</h2><ul>
+<li>重复型：服务器处理一个客户请求的时候，不能为其他客户机提供服务。</li>
+<li>并发型：利用生成其他服务器的方法来处理客户的请求。</li>
+<li>TCP服务器是并发的，UDP服务器是重复的。</li>
+</ul>
+<hr>
+<h2 id="八、端口号"><a href="#八、端口号" class="headerlink" title="八、端口号"></a>八、端口号</h2><ul>
+<li>服务器一般都是通过知名端口号来识别的，知名端口号介于1~255之间，256~1023之间的端口号通常由Unix系统占用。</li>
+<li>而客户端通常对它所使用的端口号并不关心，只需保证该端口号在本机上市唯一的就可以了。客户端口号又称临时端口号。</li>
+<li>大多数TCP/IP实现给临时端口分配1024~5000.</li>
+</ul>
+<p><strong>保留端口号</strong><br>Unix系统有保留端口号，具有超级用户特权的进程才能够分配。介于1~1023之间。</p>
+<hr>
+<h2 id="九、标准的简单服务"><a href="#九、标准的简单服务" class="headerlink" title="九、标准的简单服务"></a>九、标准的简单服务</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805162634219" alt="标准的简单服务" title="" class="">
+                <p>标准的简单服务</p>
+            </figure>
+<ul>
+<li>当使用TCP和UDP提供相同的服务时，一般选择相同的端口号。</li>
+<li>这些端口都是奇数的。<br>因为这些端口号都是从NCP（TCP前身）端口号派生出来的，NCP是单工的，不是双全工的，因此每个应用程序需要两个连接，需预留一对奇数和偶数端口号。而现在TCP和UDP只需要一个端口号，因此用了奇数。</li>
+</ul>
+<hr>
+<h2 id="十、应用编程接口"><a href="#十、应用编程接口" class="headerlink" title="十、应用编程接口"></a>十、应用编程接口</h2><p>常用：socker和TLI（运输层接口：Transport Layer Interface）</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:44.740Z" itemprop="dateUpdated">2018-09-09 12:40:44</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/&title=《《TCP/IP详解卷1：协议》读书笔记-第1章-概述》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/&title=《《TCP/IP详解卷1：协议》读书笔记-第1章-概述》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、分层"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、分层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#局域网上运行FTP的两台主机"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">局域网上运行FTP的两台主机</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#通过路由器连接的两个网络"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">通过路由器连接的两个网络</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、TCP-IP的分层"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、TCP/IP的分层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、互联网的地址"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、互联网的地址</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、域名系统"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、域名系统</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、封装"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、封装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、分用"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、分用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#七、客户-服务器模型（Client-Server）"><span class="post-toc-number">7.</span> <span class="post-toc-text">七、客户-服务器模型（Client-Server）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#八、端口号"><span class="post-toc-number">8.</span> <span class="post-toc-text">八、端口号</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#九、标准的简单服务"><span class="post-toc-number">9.</span> <span class="post-toc-text">九、标准的简单服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#十、应用编程接口"><span class="post-toc-number">10.</span> <span class="post-toc-text">十、应用编程接口</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/&title=《《TCP/IP详解卷1：协议》读书笔记-第1章-概述》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第1章 概述/&title=《《TCP/IP详解卷1：协议》读书笔记-第1章-概述》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADM0lEQVR42u3a227CMBAFQP7/p9PXShXhnHWoiBk/IRoSj5HY7uXxiNfxa/1+5/z65K9/rzz+rOTKxzsWNjY29k3Yx+lKtvLswc82ff762bPOr88t2NjY2Luy200nKwmEK/g8rGJjY2Njn280DyfJnc8/O0uQsLGxsbETTB5+WkDyLGxsbGzspKjUFuVngWeWAr2xloaNjY398ey8K/r5r9/S38bGxsb+YPZRrjwVycd3Vlq/x2hhY2Nj78Rut9U2dPOi//ke2jZw1GDGxsbG3oLdFtyTx7SYd5SEXnwKGxsbeyN2nkIkB5QnDzm+Pawaj42Njb0FO9nW+nFclXJcth9sbGzsLdh5kMhDV37NeiKRH+6LohI2Njb2bdkrjdWk6dseWXLnPAQW5SRsbGzs27LbW6+U8tuntIlHcRzY2NjYG7HbYHPt6MxKU3l2hzq8YWNjY388e/aPfhK6rgpObeoSBWBsbGzs7dj5KMzK8M1KS/iq5vEjj3LY2NjYt2KvhIdZO3alnZCMe74oQmFjY2N/AXulHD9rG+dbn+3waVcEGxsb++bs9p/+/Pq26N+OCq0UvLCxsbH3Zuc3yqs07bhP3jyelZmwsbGxd2K3aUM+rPOfrd86KGJjY2Nvx86LPrOtRFE0OIi2IBXV0rCxsbG3YLdhaQbOE5W8SZwERWxsbOy92Re0SxeGJvNglg8StU1ibGxs7J3YM1ibSKwEvJU9FN85NjY29q3YK4MybYM2LwO1Jap2wAgbGxv7G9iz9u2sufuOMPbifWxsbOyN2O0mZk3cpEkwK/TnDYzHytljY2Nj34Q9a5TmiUp+0OtfSXIo2NjY2Huzk9/5WfhpR3basJcfEDY2Nvau7LxVMAshsyB31RjQ0wCGjY2NfVv2Ua584iWh5seUtyWi48DGxsbeiN3+9K8UcdrXeTErbz/Uh4KNjY19E3YetPJ0om0nzBKVfA/Y2NjY38C+KkhcO3bTFqqmhTVsbGzsb2TnISp/Jy9dXfDFYGNjY2OXBfq2/PSOZAYbGxt7b3bb3E3SjDwtyZ++/vVgY2Nj78duKzB5OT4PUS2s7Vov9bexsbGxP5f9A2AKfLjkvUQ4AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>el-form源码解析 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="vue,element,form,表单">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-el-form源码解析" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                el-form源码解析
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-13 19:06:58" datetime="2018-01-13T11:06:58.000Z" itemprop="datePublished">
+    2018-01-13</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/">vue</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/element/">element</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/element/">element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/form/">form</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/表单/">表单</a></li></ul>
+
+                
+	<span id="/2018/01/13/el-form源码解析/" class="leancloud_visitors" data-flag-title="el-form源码解析" title="el-form源码解析"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/13/el-form源码解析/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/13/el-form源码解析/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近一直在用vue来开发页面，使用的ui框架是饿了么的前端框架Element-ui，个人还在一直学习的阶段。用了那么久的Element，但是它的内部到底是怎么实现的？I know nothing…Jhon S…咳咳，我也不知道它是怎么实现的。</p>
+<p>现如今心血来潮，想分析一下Element的源码，也能进一步了解vue的使用。于是挑选了比较常用的表单插件 <em>el-form</em> 来进行分析。</p>
+<h1 id="组件的使用"><a href="#组件的使用" class="headerlink" title="组件的使用"></a>组件的使用</h1><p>先来看一段Element官网的demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;el-form :model=&quot;numberValidateForm&quot; ref=&quot;numberValidateForm&quot; label-width=&quot;100px&quot; class=&quot;demo-ruleForm&quot;&gt;</span><br><span class="line">  &lt;el-form-item label=&quot;年龄&quot; prop=&quot;age&quot;&gt;</span><br><span class="line">    &lt;el-input type=&quot;age&quot; v-model.number=&quot;numberValidateForm.age&quot; auto-complete=&quot;off&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">  &lt;/el-form-item&gt;</span><br><span class="line">  &lt;el-form-item&gt;</span><br><span class="line">    &lt;el-button type=&quot;primary&quot; @click=&quot;submitForm(&apos;numberValidateForm&apos;)&quot;&gt;提交&lt;/el-button&gt;</span><br><span class="line">    &lt;el-button @click=&quot;resetForm(&apos;numberValidateForm&apos;)&quot;&gt;重置&lt;/el-button&gt;</span><br><span class="line">  &lt;/el-form-item&gt;</span><br><span class="line">&lt;/el-form&gt;</span><br></pre></td></tr></table></figure>
+<p>我们使用el-form的时候，表单的每一项我们都要使用到el-form-item，然后el-form-item里面再用到各个类型的输入框。</p>
+<p>如果我们是第一次使用vue，以前用的都是传统的html、jsp的页面，看到这里可能有点疑惑：el-form?el-form-item?这些是什么标签？并不是我们常见的html标签啊……</p>
+<p>其实这都是Element的组件，Element已经把这些组件声明为<a href="https://cn.vuejs.org/v2/guide/components.html#%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C" target="_blank" rel="noopener"><strong>全局组件</strong></a>，vue使用组件的时候可以直接使用。</p>
+<p>我们可以根据组件的name属性，来使用同名的标签，表明我们使用的是这个特定的组件。使用组件的时候有一个有趣的地方，组件的name属性我们一般用驼峰命名，但是我们使用标签的时候，要用<strong>连接线</strong>的方式才行。比如el-form标签，其name属性为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name: <span class="string">'ElForm'</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用slot来嵌套组件"><a href="#使用slot来嵌套组件" class="headerlink" title="使用slot来嵌套组件"></a>使用slot来嵌套组件</h1><blockquote>
+<p>为了让组件可以组合，我们需要一种方式来混合父组件的内容与子组件自己的模板。这个过程被称为<strong>内容分发</strong> (即 Angular 用户熟知的“transclusion”)。Vue.js 实现了一个内容分发 API，参照了当前 <a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md" target="_blank" rel="noopener">Web Components 规范草案</a>，使用特殊的 <code>&lt;slot&gt;</code> 元素作为原始内容的插槽。</p>
+</blockquote>
+<p>实际上，el-form里面会嵌套着el-form-item，用到的正是vue的<a href="https://cn.vuejs.org/v2/guide/components.html#%E4%BD%BF%E7%94%A8%E6%8F%92%E6%A7%BD%E5%88%86%E5%8F%91%E5%86%85%E5%AE%B9" target="_blank" rel="noopener"><strong>slot</strong></a>功能。slot是用来分发内容的，就是可以把东西放入到el-form组件里面。</p>
+<h2 id="单个插槽"><a href="#单个插槽" class="headerlink" title="单个插槽"></a>单个插槽</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"el-form"</span> <span class="attr">:class</span>=<span class="string">"[</span></span></span><br><span class="line"><span class="tag"><span class="string">	labelPosition ? 'el-form--label-' + labelPosition : '',</span></span></span><br><span class="line"><span class="tag"><span class="string">	  &#123; 'el-form--inline': inline &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">	]"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们来看看el-form的源码中的html代码部分，比较简单，form标签里面只有一个slot插槽。我们把<em>el-form-item</em>放在<em>el-form</em>标签里面的时候，<em>el-form-item</em>就会被插入到slot的位置。</p>
+<p><strong>这就是使用slot的方法：你把其他的html元素放入到该组件的标签里面，这些html元素就会被插入到组件的slot标签的位置。</strong></p>
+<p>所以我们平时能像html一样使用这些组件的标签，就是使用了slot。</p>
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>除了单个插槽，还有具名插槽。顾名思义，就是有名字的插槽，插槽有一个name属性。比如<em>el-form-item</em>里面用的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item"</span> <span class="attr">:class</span>=<span class="string">"&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-error': validateState === 'error',</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-validating': validateState === 'validating',</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-required': isRequired || required</span></span></span><br><span class="line"><span class="tag"><span class="string">	  &#125;"</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">label</span> <span class="attr">:for</span>=<span class="string">"prop"</span> <span class="attr">class</span>=<span class="string">"el-form-item__label"</span> <span class="attr">v-bind:style</span>=<span class="string">"labelStyle"</span> <span class="attr">v-if</span>=<span class="string">"label || $slots.label"</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"label"</span>&gt;</span>&#123;&#123;label + form.labelSuffix&#125;&#125;             <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item__content"</span> <span class="attr">v-bind:style</span>=<span class="string">"contentStyle"</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">transition</span> <span class="attr">name</span>=<span class="string">"el-zoom-in-top"</span>&gt;</span></span><br><span class="line">	        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item__error"</span> <span class="attr">v-if</span>=<span class="string">"validateState === 'error' &amp;&amp; showMessage &amp;&amp; form.showMessage"</span>&gt;</span>&#123;&#123;validateMessage&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<em>label</em>标签下使用了具名slot.在父组件调用的时候，可以在label下的某个标签附上属性slot=”label”，则会被插入到这个具名slot的位置。一般我们不需要自定义标签，所以不会用到这个具名slot.这时会使用这个slot的默认内容NaN。(slot里面的内容就是备用内容，如果用户没有放别的东西进来，就默认显示备用内容)</p>
+<p>例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">slot</span>=<span class="string">"label"</span>&gt;</span>这里可能是一个页面标题<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="transition过渡"><a href="#transition过渡" class="headerlink" title="transition过渡"></a>transition过渡</h3><p>顺带一提，这里还用到了<strong>transition</strong>标签，<em>transition</em>标签是VUE提供的过渡效果的标签。VUE会根据name属性去查找CSS。当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：</p>
+<blockquote>
+<p>自动嗅探目标元素是否使用了 CSS 过渡或动画，如果使用，会在合适的时机添加/移除CSS 过渡 class。</p>
+<p>如果过渡组件设置了 JavaScript 钩子函数，这些钩子函数将在合适的时机调用。</p>
+<p>如果没有检测到 CSS 过渡/动画，并且也没有设置 JavaScript钩子函数，插入和/或删除 DOM 的操作会在下一帧中立即执行。（注意：这里的帧是指浏览器逐帧动画机制，和 Vue 的 nextTick 概念不同）</p>
+</blockquote>
+<h1 id="el-form-item获取el-form里的表单对象"><a href="#el-form-item获取el-form里的表单对象" class="headerlink" title="el-form-item获取el-form里的表单对象"></a>el-form-item获取el-form里的表单对象</h1><p>el-form-item和el-form既然是2个不同的插件，我们把表单对象绑定到el-form的model属性的时候，el-form-item是怎么获取到的呢？</p>
+<p>我在el-form-item源码里发现了计算属性form:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">form() &#123;</span><br><span class="line">	<span class="keyword">let</span> parent = <span class="keyword">this</span>.$parent;</span><br><span class="line">	<span class="keyword">let</span> parentName = parent.$options.componentName;</span><br><span class="line">		<span class="keyword">while</span> (parentName !== <span class="string">'ElForm'</span>) &#123;</span><br><span class="line">		   <span class="keyword">if</span> (parentName === <span class="string">'ElFormItem'</span>) &#123;</span><br><span class="line">		     <span class="keyword">this</span>.isNested = <span class="literal">true</span>;</span><br><span class="line">		   &#125;</span><br><span class="line">		   parent = parent.$parent;</span><br><span class="line">		   parentName = parent.$options.componentName;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> parent;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>el-form-item通过<strong>$parent</strong>获取el-form实例，这里并不只是获取el-form那么简单，如果item是嵌套在另一个item里面的，还要继续往上获取form,直到获取到form。</p>
+<p>接下来，根据el-form-item的prop属性(开发者用于绑定表单对象中的字段的属性)来获取model中的值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">fieldValue: &#123;</span><br><span class="line">        cache: <span class="literal">false</span>,</span><br><span class="line">        get() &#123;</span><br><span class="line">          <span class="keyword">var</span> model = <span class="keyword">this</span>.form.model;</span><br><span class="line">          <span class="keyword">if</span> (!model || !<span class="keyword">this</span>.prop) &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">var</span> path = <span class="keyword">this</span>.prop;</span><br><span class="line">          <span class="keyword">if</span> (path.indexOf(<span class="string">':'</span>) !== <span class="number">-1</span>) &#123;</span><br><span class="line">            path = path.replace(<span class="regexp">/:/</span>, <span class="string">'.'</span>);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> getPropByPath(model, path).v;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPropByPath</span>(<span class="params">obj, path</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> tempObj = obj;</span><br><span class="line">    path = path.replace(<span class="regexp">/\[(\w+)\]/g</span>, <span class="string">'.$1'</span>);</span><br><span class="line">    path = path.replace(<span class="regexp">/^\./</span>, <span class="string">''</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> keyArr = path.split(<span class="string">'.'</span>);</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> len = keyArr.length; i &lt; len - <span class="number">1</span>; ++i) &#123;</span><br><span class="line">      <span class="keyword">let</span> key = keyArr[i];</span><br><span class="line">      <span class="keyword">if</span> (key <span class="keyword">in</span> tempObj) &#123;</span><br><span class="line">        tempObj = tempObj[key];</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'please transfer a valid prop path to form item!'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      o: tempObj,</span><br><span class="line">      k: keyArr[i],</span><br><span class="line">      v: tempObj[keyArr[i]]</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>小伙伴们看一下代码就明白了，根据prop的key，获取到model中对应的值。</p>
+<h1 id="属性的默认值"><a href="#属性的默认值" class="headerlink" title="属性的默认值"></a>属性的默认值</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">showMessage: &#123;</span><br><span class="line">	type: <span class="built_in">Boolean</span>,</span><br><span class="line">	<span class="keyword">default</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用default来赋予默认值，type指定属性的种类，可以有多个种类，用[Boolean,String]的格式。</p>
+<h1 id="图标的设置"><a href="#图标的设置" class="headerlink" title="图标的设置"></a>图标的设置</h1><p>平时我们可以看到一些按钮上可能有一些图标，比如这篇文章的标题下面，时间、分类的前面都有个小图标，这可不是插入了一张小图片，而是用了矢量图标，这实际上是通过设置class属性来实现的。</p>
+<p>我们来看看常用的el-input，也就是我们的输入框组件，它有一个icon属性，我们可以根据 <a href="http://element-cn.eleme.io/1.2/#/zh-CN/component/icon" target="_blank" rel="noopener">Element图标</a> 来设置icon属性。官网的原文是这么说的：</p>
+<blockquote>
+<p>直接通过设置类名为 <code>el-icon-iconName</code> 来使用即可。</p>
+</blockquote>
+<p>它都这么说了，我就乖乖地把icon=”el-icon-el-icon-search”，想设置一个搜索图标。惊喜地发现了&amp;￥#@&amp;……￥￥&amp;#根本不管用啊！！</p>
+<p>下面我们看看它的代码实现：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"icon"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"el-input__icon"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:class</span>=<span class="string">"[</span></span></span><br><span class="line"><span class="tag"><span class="string">        'el-icon-' + icon,</span></span></span><br><span class="line"><span class="tag"><span class="string">        onIconClick ? 'is-clickable' : ''</span></span></span><br><span class="line"><span class="tag"><span class="string">      ]"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-if</span>=<span class="string">"icon"</span></span></span><br><span class="line"><span class="tag">      @<span class="attr">click</span>=<span class="string">"handleIconClick"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以发现，只要根据官网的图标的名字，把 el-icon- 后面的名字作为icon属性就行了，根本不是官网说的那样。你自己做了处理还不说清楚……</p>
+<h1 id="slots获取slot内容"><a href="#slots获取slot内容" class="headerlink" title="$slots获取slot内容"></a>$slots获取slot内容</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 前置元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-input-group__prepend"</span> <span class="attr">v-if</span>=<span class="string">"$slots.prepend"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"prepend"</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里用到了<a href="https://vuefe.cn/v2/api/#vm-slots" target="_blank" rel="noopener">$slots</a>,可以通过$slots.具名slot的name来获取这个slot的内容，来判断是否有前置元素的存在。</p>
+<h1 id="el-input里面的input标签"><a href="#el-input里面的input标签" class="headerlink" title="el-input里面的input标签"></a>el-input里面的input标签</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-if</span>=<span class="string">"type !== 'textarea'"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">class</span>=<span class="string">"el-input__inner"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind</span>=<span class="string">"$props"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">:autocomplete</span>=<span class="string">"autoComplete"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">:value</span>=<span class="string">"currentValue"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">ref</span>=<span class="string">"input"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">input</span>=<span class="string">"handleInput"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">focus</span>=<span class="string">"handleFocus"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">blur</span>=<span class="string">"handleBlur"</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面这段代码是el-input里面的input标签，想想也是，el-input只是在原生的input标签上封装了一层而已。</p>
+<p>这里有3个事件input,focus,blur,这里Element没有做过多的处理，都是用<strong><a href="https://cn.vuejs.org/v2/api/#vm-emit" target="_blank" rel="noopener">$emit</a></strong>来触发当前实例的事件（我理解为el-input组件的上层所定义的事件,@click之类的，交给用户自己来决定怎么处理），比如$emit(‘input’, value)可以把el-input组件的值传回我们的实例v-model绑定的值，来实现组件之间的值传递。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">handleFocus(event) &#123;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'focus'</span>, event);</span><br><span class="line">&#125;,</span><br><span class="line">handleInput(event) &#123;</span><br><span class="line">	<span class="keyword">const</span> value = event.target.value;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'input'</span>, value);</span><br><span class="line">	<span class="keyword">this</span>.setCurrentValue(value);</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'change'</span>, value);</span><br><span class="line">&#125;,</span><br><span class="line">handleIconClick(event) &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.onIconClick) &#123;</span><br><span class="line">	    <span class="keyword">this</span>.onIconClick(event);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'click'</span>, event);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h1 id="表单验证"><a href="#表单验证" class="headerlink" title="表单验证"></a>表单验证</h1><p>我们可以看官网的例子：<a href="http://element-cn.eleme.io/1.2/#/zh-CN/component/form" target="_blank" rel="noopener">点我点我点我看例子</a></p>
+<p>Form 组件提供了表单验证的功能，只需要通过 rule 属性传入约定的验证规则，并 Form-Item 的 prop属性设置为需校验的字段名即可。</p>
+<p>但是本质上他们是怎么实现表单验证的呢？</p>
+<p>在el-form里的mounted钩子，获取rules.可以看出同时获取了form的rules和form-item里面的rules。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rules = <span class="keyword">this</span>.getRules();</span><br><span class="line"><span class="keyword">if</span> (rules.length) &#123;</span><br><span class="line">          <span class="keyword">this</span>.$on(<span class="string">'el.form.blur'</span>, <span class="keyword">this</span>.onFieldBlur);</span><br><span class="line">          <span class="keyword">this</span>.$on(<span class="string">'el.form.change'</span>, <span class="keyword">this</span>.onFieldChange);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getRules() &#123;</span><br><span class="line">        <span class="keyword">var</span> formRules = <span class="keyword">this</span>.form.rules;</span><br><span class="line">        <span class="keyword">var</span> selfRules = <span class="keyword">this</span>.rules;</span><br><span class="line"></span><br><span class="line">        formRules = formRules ? formRules[<span class="keyword">this</span>.prop] : [];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [].concat(selfRules || formRules || []);</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<p>然后开始监听blur和change事件。这2个事件在el-input里我们也看到了，在发生input的时候，el-input就会触发这2个事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">onFieldBlur() &#123;</span><br><span class="line">	<span class="keyword">this</span>.validate(<span class="string">'blur'</span>);</span><br><span class="line">&#125;,</span><br><span class="line">onFieldChange() &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.validateDisabled) &#123;</span><br><span class="line">	    <span class="keyword">this</span>.validateDisabled = <span class="literal">false</span>;</span><br><span class="line">	    <span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.validate(<span class="string">'change'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，实际上进行校验的实际上是validate这个函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> AsyncValidator <span class="keyword">from</span> <span class="string">'async-validator'</span>;</span><br><span class="line"></span><br><span class="line">validate(trigger, callback = noop) &#123;</span><br><span class="line">	        <span class="keyword">var</span> rules = <span class="keyword">this</span>.getFilteredRule(trigger);</span><br><span class="line">	        <span class="keyword">if</span> (!rules || rules.length === <span class="number">0</span>) &#123;</span><br><span class="line">	          callback();</span><br><span class="line">	          <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">this</span>.validateState = <span class="string">'validating'</span>;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">var</span> descriptor = &#123;&#125;;</span><br><span class="line">	        descriptor[<span class="keyword">this</span>.prop] = rules;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">var</span> validator = <span class="keyword">new</span> AsyncValidator(descriptor);</span><br><span class="line">	        <span class="keyword">var</span> model = &#123;&#125;;</span><br><span class="line">	</span><br><span class="line">	        model[<span class="keyword">this</span>.prop] = <span class="keyword">this</span>.fieldValue;</span><br><span class="line">	</span><br><span class="line">	        validator.validate(model, &#123; <span class="attr">firstFields</span>: <span class="literal">true</span> &#125;, (errors, fields) =&gt; &#123;</span><br><span class="line">	          <span class="keyword">this</span>.validateState = !errors ? <span class="string">'success'</span> : <span class="string">'error'</span>;</span><br><span class="line">	          <span class="keyword">this</span>.validateMessage = errors ? errors[<span class="number">0</span>].message : <span class="string">''</span>;</span><br><span class="line">	</span><br><span class="line">	          callback(<span class="keyword">this</span>.validateMessage);</span><br><span class="line">	        &#125;);</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<p>可以看出Element也是用了async-validator库来做的验证，所以配置的rules的时候根据async-validator的规则来配置即可。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:17.675Z" itemprop="dateUpdated">2018-09-09 12:41:17</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/01/13/el-form源码解析/" target="_blank" rel="external">https://elvis-fxw.github.io/2018/01/13/el-form源码解析/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/element/">element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/form/">form</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/表单/">表单</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/13/el-form源码解析/&title=《el-form源码解析》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/13/el-form源码解析/&title=《el-form源码解析》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/01/16/A+B问题/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">A+B问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#组件的使用"><span class="post-toc-number">1.</span> <span class="post-toc-text">组件的使用</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用slot来嵌套组件"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用slot来嵌套组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#单个插槽"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">单个插槽</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#具名插槽"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">具名插槽</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#transition过渡"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">transition过渡</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#el-form-item获取el-form里的表单对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">el-form-item获取el-form里的表单对象</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#属性的默认值"><span class="post-toc-number">4.</span> <span class="post-toc-text">属性的默认值</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#图标的设置"><span class="post-toc-number">5.</span> <span class="post-toc-text">图标的设置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#slots获取slot内容"><span class="post-toc-number">6.</span> <span class="post-toc-text">$slots获取slot内容</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#el-input里面的input标签"><span class="post-toc-number">7.</span> <span class="post-toc-text">el-input里面的input标签</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#表单验证"><span class="post-toc-number">8.</span> <span class="post-toc-text">表单验证</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/13/el-form源码解析/&title=《el-form源码解析》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/13/el-form源码解析/&title=《el-form源码解析》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3aXW6EMAxGUfa/abqAlnA/GyrFXJ5GM1MmJ5WMf3Ic+Dp/Xevv8LtdfXq8ccmQIWNbxrm81rdef3P9+gqz/ublFsiQIeMDjHXgu1ou+oFS4OZrkyFDhgzO4IFVhgwZMt5jPBV8a4mmDBkyZJAiNm2lde7wYi0uQ4aMDRm86/7/r1+Zb8iQIWMrxlm60sSRLJQH2T/WI0OGjNGMztCx1uJP23OkeJYhQ8Z3GOtAmRaWtYMUae4XTEdlyJCxLYP8ca3ETfE8EN88MWTIkDGOkWLSsLguWXlwRwFahgwZQxlpOfrUmDPdxJsyW4YMGaMZ/aNafACQDhJI6hnsigwZMkYz0qZbJ1srLl2GDBmjGXwkwJdVK4xbQVyGDBmjGZ0BAA+daYstDfQyZMiYzUgPQ6QDSJ7e1UYOB4/QMmTI2JbBy0VeDXcOmXXGojJkyPgOg7f+yXL5SKC2lTcZrgwZMgYxeCnbOVrRTw2L2a4MGTI2Z5ztK03mglQPPwBkyJAxm5FG5WeX1QnfMmTI+A6D/DBv968xZGtIsXozg5UhQ8Y4Bm+Npe/wYrVWBgf/ExkyZGzOeKpkJQwSRmtDUBkyZMxmpHViJxFMj2ukDwMZMmTMZvAl8vd5idt5P3h6yJAhYwSjFvh4klccTPJDGzJkyJABClqeINb6gig1lCFDxucZnTq4tllBu02GDBkfYPCCM22TpRtRvI8MGTJGM9JwSdpqQfHZPvAhQ4aM0Ywfi4Md842XzUwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

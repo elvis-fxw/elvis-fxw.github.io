@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>指针 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pointer">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-指针" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                指针
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-17 23:46:56" datetime="2017-12-17T15:46:56.000Z" itemprop="datePublished">
+    2017-12-17</time>
+
+                
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pointer/">pointer</a></li></ul>
+
+                
+	<span id="/2017/12/17/指针/" class="leancloud_visitors" data-flag-title="指针" title="指针"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/17/指针/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/17/指针/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="什么是指针"><a href="#什么是指针" class="headerlink" title="什么是指针"></a>什么是指针</h1><p>指针用于<strong>指向对象</strong>。与迭代器一样，指针提供对其所指对象的<strong>间接访问</strong>，只是指针结构更加通用一点。<br>与迭代器不同的是，指针用于指向单个对象，而迭代器只能用于访问容器内的对象。</p>
+<p>指针保存的是另一个对象的地址。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string *sp=&amp;s;//*表明sp是一个指针变量，&amp;是取地址操作符（只能作用于左值）。</span><br></pre></td></tr></table></figure></p>
+<p><strong>尽量避免使用指针和数组！</strong>多用vector和string。</p>
+<hr>
+<h1 id="指针的定义和初始化"><a href="#指针的定义和初始化" class="headerlink" title="指针的定义和初始化"></a>指针的定义和初始化</h1><p>指针需要有一个关联的数据类型，决定了指针所指向的对象的类型。（应该是因为不同类型所占的字节数不同）</p>
+<p><strong>注意：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int dp,*dp2;//只有dp2才是指针，也就是说连续声明的时候，每一个指针前面都要用*</span><br></pre></td></tr></table></figure></p>
+<p>最好是贴着变量名声明 int *dp2；</p>
+<hr>
+<h1 id="避免使用未初始化的指针"><a href="#避免使用未初始化的指针" class="headerlink" title="避免使用未初始化的指针"></a>避免使用未初始化的指针</h1><p>使用未初始化的指针，很容易导致程序崩溃。未初始化的指针，会将指针中存放的不确定值视为地址。<br>​    </p>
+<ul>
+<li>不要提前定义指针</li>
+<li>如果一定要分开定义，那么要初始化为0值。</li>
+</ul>
+<hr>
+<h1 id="初始化和赋值的约束"><a href="#初始化和赋值的约束" class="headerlink" title="初始化和赋值的约束"></a>初始化和赋值的约束</h1><ul>
+<li>0值或NULL</li>
+<li>同类型的变量地址或另一指针</li>
+</ul>
+<hr>
+<h1 id="void-指针"><a href="#void-指针" class="headerlink" title="void*指针"></a>void*指针</h1><p>它可以保存任何类型对象的地址。但是不允许使用void*指针操纵所指向的对象。<br>​    </p>
+<hr>
+<h1 id="指针操作"><a href="#指针操作" class="headerlink" title="指针操作"></a>指针操作</h1><ol>
+<li>*解引用操作符，可以返回对象的值。</li>
+<li>指针和引用的比较（两个重要区别）</li>
+</ol>
+<ul>
+<li>引用<strong>总是指向某个对象</strong>，一经初始化之后就始终指向同一个对象（所以引用必须在定义时初始化）。</li>
+<li><strong>赋值</strong>的差异：引用赋值，修改的是对象的值。</li>
+</ul>
+<ol>
+<li>指向指针的指针（多维）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int **ppi=new int*[10];</span><br><span class="line">for(int i=0;i&lt;10;i++)</span><br><span class="line">ppi[i] = new int[10];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>表明ppi是二维指针，那么<em>ppi指向的是一个指针，可以把</em>ppi看成一个大小为10的int<em>数组，里面存储的都是int</em>指针。<br>        如上便相当于声明了一个</strong>二维数组**。</p>
+<hr>
+<h1 id="使用指针访问数组元素"><a href="#使用指针访问数组元素" class="headerlink" title="使用指针访问数组元素"></a>使用指针访问数组元素</h1><p>在表达式中使用数组名，名字会自动转换为指向数组第一个元素的指针（也就是代表那个元素的地址）。<br>当使用下表访问指针的时候，下标是可以为<strong>负的</strong>。<br>​    </p>
+<hr>
+<h1 id="指针是数组的迭代器"><a href="#指针是数组的迭代器" class="headerlink" title="指针是数组的迭代器"></a>指针是数组的迭代器</h1><hr>
+<h1 id="指针和const限定符"><a href="#指针和const限定符" class="headerlink" title="指针和const限定符"></a>指针和const限定符</h1><ol>
+<li><p>指向const对象的指针<br>const double <em>cptr;<br>这里的cptr是一个指向double类型const对象的指针，const限定了cptr指针所指向的对象类型，而非cptr本身。cptr并不是const。<strong>不能通过cptr修改对象的值。</strong><br>把一个<strong>const对象</strong>的地址给一个<strong>非指向const对象的指针</strong>也会<strong>编译错误</strong>。但是允许把<strong>非const对象</strong>的地址赋给<strong>指向const对象的指针</strong>（但是不能通过cptr修改这个对象的值）。<br>指向const的指针常用作函数的<em>*形参</em></em>。</p>
+</li>
+<li><p>const指针<br>const指针本身的值不能被修改，即不能指向其它对象了。但是其对象的值还是可以修改的。<br>与任何const量一样，const指针也必须在定义时就初始化。</p>
+</li>
+<li>指向const对象的const指针<br>const double *const pi_ptr=&amp; pi;</li>
+<li>指针和typedef<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef string *pstring;</span><br><span class="line">const pstring cstr;</span><br><span class="line">这里const修饰的是pstring的类型，即修饰的是指针，等价于</span><br><span class="line">string *const cstr;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:40.393Z" itemprop="dateUpdated">2018-09-09 12:40:40</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/17/指针/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/17/指针/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pointer/">pointer</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/多态和虚函数/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">多态和虚函数</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/09/hello-mellow/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Hello Mellow</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#什么是指针"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是指针</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针的定义和初始化"><span class="post-toc-number">2.</span> <span class="post-toc-text">指针的定义和初始化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#避免使用未初始化的指针"><span class="post-toc-number">3.</span> <span class="post-toc-text">避免使用未初始化的指针</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#初始化和赋值的约束"><span class="post-toc-number">4.</span> <span class="post-toc-text">初始化和赋值的约束</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#void-指针"><span class="post-toc-number">5.</span> <span class="post-toc-text">void*指针</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针操作"><span class="post-toc-number">6.</span> <span class="post-toc-text">指针操作</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用指针访问数组元素"><span class="post-toc-number">7.</span> <span class="post-toc-text">使用指针访问数组元素</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针是数组的迭代器"><span class="post-toc-number">8.</span> <span class="post-toc-text">指针是数组的迭代器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针和const限定符"><span class="post-toc-number">9.</span> <span class="post-toc-text">指针和const限定符</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3awXKDMAxFUf7/p+m2nTTmPilkBvmy6pDG+LBQJEvHga/z5fp9f/3/ZM3X+8cdlwwZMh7LOJcX2Ra5T1bmn/7zRBkyZGzAIJvgJB5M13eCFydDhgwZbx6Wpok8BMuQIUNGn0EC8RovQ4YMGSmDL905PuPr3FiLy5Ah44EMfur+/b9v6W/IkCHjUYwzvDqH/rXWJtqVDBkyRjM6aV+t7CTNhmIaKkOGjKEMXi6mBSr/LgnHFzAZMmSMZvABCPLgGrV2VId+N2TIkDGCkQbBzsBEOi72gVArQ4aMDRh86c8mlOmeZciQsRsjrQ05Oy1lyRiHDBky9mGQwJomhTyhrJ2Y/flUhgwZoxmdAzWeVvJwzIN1HIJlyJDxWEa/vOyPVqTBNO5syJAhYxyjdojGg3LalkApowwZMkYzeBuy0zbgIbh2zCdDhox9GDxB7CR2vGA+0kuGDBmjGZ1xCrJCGqZ5IL4Ay5AhYxAjHTblPF7upq2Fi+EwGTJkDGX0Rx/uTkMvMDJkyNiGwYcqaq1KfujWCrgyZMgYyugUnGnIRtsiYxYyZMjYgHGGVzqQUUso43VkyJAxmtFZmj8mTfJqyaIMGTJmM2pb5N9K31xxpEOGDBkbMGoDEDVA5xfg7coyZMiQsQy4pMjkR3iksXrRGJAhQ4aMdombbhGFchkyZGzA4OUoKSlr7cl0TRkyZOzD4KUjCbIkcUybpp0XJEOGjIczfgAUPLJQcmGjNwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

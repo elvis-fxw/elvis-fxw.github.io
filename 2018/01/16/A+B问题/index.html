@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>A+B问题 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="算法,lintCode,位运算">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-A+B问题" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                A+B问题
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-16 21:19:32" datetime="2018-01-16T13:19:32.000Z" itemprop="datePublished">
+    2018-01-16</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lintCode/">lintCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/位运算/">位运算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+                
+	<span id="/2018/01/16/A+B问题/" class="leancloud_visitors" data-flag-title="A+B问题" title="A+B问题"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/16/A+B问题/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/16/A+B问题/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>给出两个整数a和b, 求他们的和, 但不能使用 + 等数学运算符。</p>
+<p>说明</p>
+<p>a和b都是 32位 整数么？</p>
+<ul>
+<li>是的</li>
+</ul>
+<p>我可以使用位运算符么？</p>
+<ul>
+<li>当然可以</li>
+</ul>
+</blockquote>
+<p>异或相当于的加法，实现加法器的时候就是用很多个异或。</p>
+<ol>
+<li><p>当前位相加，当前位的结果：</p>
+<p>0 + 0 = 0 </p>
+<p>0 + 1 = 1 </p>
+<p>1 + 0 = 1 </p>
+<p>1 + 1 = 0</p>
+<p>很明显这和我们异或的结果的一样的。</p>
+</li>
+<li><p>两数相加，有可能进位。我们知道，二进制的加法，同位数相加的时候，要进位，就得两个数都是1。这其实和并(&amp;)的计算是一样的。</p>
+<p>a&amp;b的结果：</p>
+<p>0 &amp; 0 = 0 </p>
+<p>0 &amp; 1 = 0 </p>
+<p>1 &amp; 0 = 0 </p>
+<p>1 &amp; 1 = 1 </p>
+<p> a&amp;b的结果中，第n位数为1，表示的是2个数的第n位相加，需要进位。相当于在第n+1位上面+1.相当于需要把a&amp;b的结果往左移动1个二进制位。也就是a&amp;b&lt;&lt;1；</p>
+</li>
+</ol>
+<p>所以 a+b 应该等于 a^b + (a&amp;b)&lt;&lt;1 的结果。</p>
+<p>但是 a^b +(a&amp;b)&lt;&lt;1之后有可能还会进位，所以我们还需要用递归的方法来继续计算，直到没有进位为止。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:19.292Z" itemprop="dateUpdated">2018-09-09 12:41:19</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/01/16/A+B问题/" target="_blank" rel="external">https://elvis-fxw.github.io/2018/01/16/A+B问题/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lintCode/">lintCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/位运算/">位运算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/16/A+B问题/&title=《A+B问题》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/16/A+B问题/&title=《A+B问题》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/01/20/Element可编辑表格的实现/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Element可编辑表格的实现</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/01/13/el-form源码解析/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">el-form源码解析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/16/A+B问题/&title=《A+B问题》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/16/A+B问题/&title=《A+B问题》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3aQY7DIBBE0dz/0o40q0gR9q+GjETzWUVxbPOyKNE0rxce19/4/uZzfP9ydHX0+9E3y4YMGTK2ZVy3g0yII/kc+NxkyJBxDuM+ZNOg5M/k8f0wZxkyZMjAIXj/tFqsy5AhQ0bK4MUt/1Pm3ytDhowTGCQK72OUXCWAn9fiMmTI2JCRNgb+8/MP+xsyZMjYhHGFoxaOaWTHs5IhQ0ZrRm1TPl0gpi3P4rtkyJDRlJFu1qchmDYpa4c5ZMiQcQ5j7eZ+2pLk8fqwwpUhQ0Y7Bl8gznxfC2hSGAcrUBkyZGzLSFuMadsg3YarwWTIkNGbQUrHVU2CdAOOx7oMGTJ6M2pRSwKRX+VNheFnGTJkHMCYWa7Nb5+Npltc4cqQIaMd4/4GHn98sbiqJB4+U4YMGe0YvEAlYFIx83fxEleGDBm9GemxCbK843fxZR/iyZAhoyljJvJ4O2HVEnD4fBkyZBzDIK/kcck313h8x/0NGTJktGCkW/A8RtNFIQ/Zh3JahgwZ7Ri1iEw7D6vCevgcGTJkHMPgpPkjGrWlZ7GFKUOGjM0ZaZimhyrS9ufMkTIZMmR0ZVzhqB2JSP/RONBlyJDRmsEHj9RaqyCNbBkyZJzG4CHLo7AWsiRwh++SIUPGAYxayJIylbQha4ct0AUZMmQcxkhfNl+s8rtkyJAhg2/GpW2D+UNjMmTIOIdRO3jB25C1yZFyWoYMGScwZhoDMxPiRe+C5qUMGTJ2ZbwBHuYUGYAEFFUAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,网际协议">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>IP是TCP/IP协议族中最为核心的协议。<br>特点：</p>
+<ul>
+<li>不可靠：它不能保证IP数据报能成功地到达目的地。</li>
+<li>无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。</li>
+</ul>
+<hr>
+<h1 id="二、IP首部"><a href="#二、IP首部" class="headerlink" title="二、IP首部"></a>二、IP首部</h1><p>IP数据报的格式如下图所示：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808150524200" alt="IP数据报格式" title="" class="">
+                <p>IP数据报格式</p>
+            </figure></p>
+<p>普通IP的部首长为20个字节。<br>分析IP首部，最高位在左边，0bit；最低位在右边，31bit。<br><strong>大尾字节序</strong>：4个字节的32bit值以大尾字节序（网络字节序，先传0位bit，最后传31bit，每次传1byte）的次序传输，如果是以小尾字节序格式存储的，在传输数据之前要把收吧转换成网络字节序。</p>
+<h2 id="格式说明："><a href="#格式说明：" class="headerlink" title="格式说明："></a>格式说明：</h2><ul>
+<li>版本号：目前的协议版本号是4，所以IP有时也称作IPv4。</li>
+<li>首部长度：首部长度是指首部占32bit字的数目，因为首部长度是4位bit数，所以首部最长为60个字节。</li>
+<li><p>TOS服务类型：包括一个3bit的优先权子字段（现已被忽略），4bit的TOS子字段和1bit未用位但必须置0。4bit的TOS分别代表：最小时延、最大吞吐量、最高可靠性和最小费用。4个服务类型只能选1个置为1.如果4bit均为0，则说明是一般服务。<br>  如FTP文件传输要求有最大吞吐量，所以最大吞吐量的位置为1.<br>  <img src="http://img.blog.csdn.net/20160808151651795" alt="服务类型字段推荐值"></p>
+</li>
+<li><p><em>现在大多数的TCP/IP实现都不知道TOS特性（= = 都不支持还说</em>&amp;……%￥）*</p>
+</li>
+<li>总长度字段：整个IP数据报的长度，以字节byte为单位。（注意：首部长度是4byte为单位）利用首部长度和总长度字段就可以知道IP数据报中数据内容的起始位置和长度。<br>  该字段长16bit，所以数据报最长为65535字节。（超级通道的MTU位65535，它使用的就是最长的数据报长度）<ul>
+<li>尽管可以传送一个长达65535字节的IP数据报，但是大多数的链路层都会对它进行分片。而且主机也不能接收超过576字节的数据报。由于TCP把用户数据分成若干片，因此一般来说这个限制不会影响TCP。</li>
+<li>UDP都限制用户数据报长度为512字节，小于576字节。、</li>
+<li>但是现在大多数的实现（特别是安歇支持网络文件系统NFS的实现）允许超过8192字节的IP数据报。</li>
+<li>总长度字段是IP首部中必要的内容，因为一些数据链路（如以太网）需要填充一些数据以达到最小长度。</li>
+</ul>
+</li>
+<li>标识字段：唯一地标识主机发送的每一份数据报。通常每发送一份报文它的值就会加1.</li>
+<li>TTL生存时间字段：设置了数据报可以经过的最多路由器数。一旦经过一个处理它的路由器，它的值就减去1.</li>
+<li>协议字段：根据它可以识别是哪个协议向IP传送数据。</li>
+<li>首部检验和字段：是根据IP首部计算的检验和码。先把检验和字段置为0，对首部中每个16bit进行二进制反码求和，结果存在检验和字段中。在接收到一份IP数据报后，同样反码求和，如果正确，应该为全1.</li>
+<li>源地址和目的地址就不说了。。</li>
+<li>任选项字段：可变长的可选信息。（很少使用）</li>
+<li>IP首部始终是32bit的整数倍。</li>
+</ul>
+<hr>
+<h1 id="三、IP路由选择（选路）"><a href="#三、IP路由选择（选路）" class="headerlink" title="三、IP路由选择（选路）"></a>三、IP路由选择（选路）</h1><p>如果目的主机与源主机直接相连（如点对点链路）或者都在一个共享网络上（以太网或令牌环网），那么IP数据报就直接送到目的主机上。否则，主机把数据报发往一默认的路由器上，由路由器来转发该数据报。</p>
+<p>IP层在内存中有一个路由表，每转发一次数据，都要搜索一次该表。当数据报来自某个网络接口时，IP首先检查目的IP地址是否为本机的IP地址之一或者IP广播地址，如果不是，那么（1）如果IP层被设置为路由器的功能，那么对数据报进行转发；否则（2）数据报被丢弃。</p>
+<p>路由表每一项包括了一下信息：</p>
+<ol>
+<li>目的IP地址。它可以是一个完整的主机地址，也可以是一个网络地址（不含主机号）。</li>
+<li>下一站（下一跳）路由器的IP地址，或者直接连接的网络IP地址。</li>
+<li>标志。其中一个标志知名目的IP地址是网络地址还是主机地址，另一个标志指明下一站路由器是否为真正的下一站路由器，还是一个直接相连的接口。</li>
+<li>为数据报的传输指定一个网络接口。</li>
+</ol>
+<p>IP路由选择是逐跳地进行的，IP并不知道到达任何目的的完整路径。<br>IP路由选择主要完成以下这些功能：</p>
+<pre><code>1. 搜索路由表，寻找能与目的IP地址完全匹配的表目（网络号和主机号都要匹配）。
+2. 搜索路由表，寻找能与目的网络号相匹配的表目。
+3. 搜索路由表，寻找标为“默认”的表目。
+</code></pre><p>如果以上3步都不成功，那么该数据报不能被传送。</p>
+<p>为一个网络指定一个路由器，而不必为每个主机指定一个路由器，这个IP路由选择机制的另一个基本特性。</p>
+<ul>
+<li>数据报中的目的IP地址始终不发生任何变化。</li>
+<li>每个链路层可能具有不同的数据帧首部，而且链路层的目的地址（如果有的话）始终指的是下一站的链路层地址。</li>
+</ul>
+<hr>
+<h1 id="四、子网寻址"><a href="#四、子网寻址" class="headerlink" title="四、子网寻址"></a>四、子网寻址</h1><p>子网编码：网络号+子网号+主机号</p>
+<ul>
+<li>全0或全1的主机号都是无效的。</li>
+</ul>
+<p>自然划分方法：把B类的前16bit作为网络号，接下来的8bit作为子网地址，后8bit作为主机号。<br>大多数的子网例子都是B类地址，其实子网还可以用于C类地址，只是它可用的bit数较少而已。很少A类例子，因为A类地址本来就少，但是大多数A类地址都是子网划分的。</p>
+<ul>
+<li>子网对外部路由器来说隐藏了内部网络组织的细节。</li>
+<li>使用子网划分的好处是缩小了路由表的规模，子网内所有的主机都只需要1个路由表目。</li>
+<li>子网对于外部的路由器是透明的，子网对于内部的路由器是不透明的（外部知道这有一个子网，只需要知道网络号就行了；内部不管什么子网，它要找到完整的IP地址）。</li>
+</ul>
+<hr>
+<h1 id="五、子网掩码"><a href="#五、子网掩码" class="headerlink" title="五、子网掩码"></a>五、子网掩码</h1><p>子网掩码：确定IP地址中有多少bit用于子网号，多少bit用于主机号。1代表网络号，0代表主机号。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808162553155" alt="子网掩码" title="" class="">
+                <p>子网掩码</p>
+            </figure></p>
+<p>子网掩码经常用十六进制来表示，特别当界限不是一个字节时（比如网络号有20位，不是8的倍数）。<br>根据子网掩码，就可以确定一个IP是否为（1）本子网的 （2）本网络中其他子网的 （3）其他网络上的主机。</p>
+<hr>
+<h1 id="六、特殊情况的IP地址"><a href="#六、特殊情况的IP地址" class="headerlink" title="六、特殊情况的IP地址"></a>六、特殊情况的IP地址</h1><p>有7个特殊的IP地址：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808163046694" alt="特殊的IP地址" title="" class="">
+                <p>特殊的IP地址</p>
+            </figure></p>
+<p>0表示所有bit全为0；-1表示所有bit全为1.netid、subnetid、hostid分别表示部位全0或全1的对应字段。子网号为空表示没有进行子网划分。<br>全为1的时候为广播地址。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:51.034Z" itemprop="dateUpdated">2018-09-09 12:40:51</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/01/13/el-form源码解析/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">el-form源码解析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、引言"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、引言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、IP首部"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、IP首部</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#格式说明："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">格式说明：</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、IP路由选择（选路）"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、IP路由选择（选路）</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、子网寻址"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、子网寻址</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、子网掩码"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、子网掩码</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、特殊情况的IP地址"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、特殊情况的IP地址</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD+UlEQVR42u3ay04jQQwFUP7/pxlpNAtGSsK9toNYnKxQ6K6uOo1k/Pj4iD+ffz/5lV8/r6/J7/36zet72z3XHxw4cODAUR4gXzrZdHLIhCbf4bPfJvvBgQMHDhxXHK+Pmh/ydXjLN5qQJWu2rxMHDhw4cPwkRx7eZiiz481SPhw4cODA8Rs48kpau84mOUxWwIEDBw4cP8+RJGb54/Mtzp612f9ZrRQHDhw4cHRPKQqFv//nN8534MCBAweO0dDArGA3C7Szkt9mJOLfvThw4MCBY80xS5napKgNfu8b14v2gAMHDhw4Fhx5QG1bTZuW0gYofzEPvseBAwcOHEcc7SGTdKsdksgbRXmQbpNGHDhw4MCx58gPOSvS5UExSSbzAmVbavzmLwUHDhw4cMTfr8bFytGHWfMpT+TawbgHP+PAgQMHjlOOouW/CMztwER+4KII+Cz04sCBAweOU4584GAWMvNEa9+salNBHDhw4MBxy3G16TYhbIN3PlTR/hYHDhw4cLyDY5aAzVK4PBzm6dy+QIkDBw4cOPYcmyGAdrghOUzUHAqaUrPXgwMHDhw49hybobQ85ZuVFIv3Wa4T/d+BAwcOHDhOOa4aS+1oQjuCMBxceHYvDhw4cOA4mhZoBxo2KO367aDDbH0cOHDgwHHFkZfq8iZTe2XbRrpqgz1YHwcOHDhwrDnaMYJNGjZrKbWDC5v1ceDAgQPHnmMTaK+2OxvOa0fxon3iwIEDB46jnCgv2yXbbcNw3vRKCnxntVIcOHDgwPG2tlM7NjdLq/LUK/+3YJjg4cCBAweOBcdVga9N3jatozzAJzH0v7tw4MCBA8eaI0mZZmRt+MxTuKTYtyli4sCBAweOK452QC25Ji/hJc9qy4X5iB4OHDhw4HgfR9vIaQ8/K9vNkre2ZYUDBw4cOK448nSoTeE2aeHmqG1yWHThcODAgQPHS45NQ+ggTTptU+13iAMHDhw4rjjy8JYXBDdNoFni16aID1bAgQMHDhxrjmTTm3A7Q5wF6U0qGKHgwIEDB46Ao02KZqEuCbFJMylvOOXrPy0O4sCBAweOBcdsxKENq/sgOhutK1JHHDhw4MCx5sgfmQS/2WDBvoDYlvm+eSU4cODAgWPB8Vl+ZkW9PG3bDC5sSpY4cODAgeOK431hL28vtYXItq3VPgsHDhw4cOw5ZgFyP9YwC9hXgw7fVExx4MCBA8eaow2uedLVRvhNkylf/+k+ceDAgQPHj3Pkzad8bKJ9ejuQ8cZAiwMHDhw4FhxJ4W+WdOXXb5iiJhYOHDhw4DjiyIcY9qnULFTvDx+leThw4MCB46ZithpoSBK8zXBDC3pQIsSBAwcOHBOOP/nbKlzES5EXAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

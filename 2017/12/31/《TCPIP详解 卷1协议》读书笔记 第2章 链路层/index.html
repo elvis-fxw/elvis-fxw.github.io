@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,链路层">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》读书笔记 第2章 链路层" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链路层/">链路层</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层" title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>链路层主要有三个目的：</p>
+<pre><code>1. 为IP模块发送和接收IP数据包
+2. 为ARP模块发送ARP请求和接收ARP应答
+3. 为RARP发送RARP请求和接收RARP应答
+</code></pre><hr>
+<h2 id="二、以太网和IEEE802封装"><a href="#二、以太网和IEEE802封装" class="headerlink" title="二、以太网和IEEE802封装"></a>二、以太网和IEEE802封装</h2><p>以太网是一个标准，是当今TCP/IP采用的主要的<strong>局域网技术</strong>。它的速率为10Mb/s，地址为48bit。<br>而IEEE是一个与以太网稍有不同的标准集。<br>以太网IP数据报的封装实在RFC894（最常用的）中定义的，IEEE802则是RFC1042。<br>两种帧格式都采用48bit的目的地址和源地址（硬件地址）。其封装格式如下：</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805165734816" alt="链路层封装格式" title="" class="">
+                <p>链路层封装格式</p>
+            </figure>
+<ul>
+<li>在802标准定义的帧格式中，<strong>长度</strong>指的是后续数据的字节长度，不包括CRC检验码。而以太网的<strong>类型</strong>字段定义了后续数据的类型。802中的类型字段则由后续的子网接入协议（SNAP）给出。</li>
+<li><strong>幸运的是，802定义的有效长度值和以太网的有效类型值无一相同，这样，就可以对两种帧格式进行区分。</strong></li>
+<li>CRC字段用于帧内后续字节差错的循环冗余码检验（检验和）。</li>
+<li>两种帧都有最小长度要求，802至少要38字节，以太网最小要46字节。</li>
+<li>以太网是最为常见的封装格式。</li>
+</ul>
+<hr>
+<h2 id="三、尾部封装"><a href="#三、尾部封装" class="headerlink" title="三、尾部封装"></a>三、尾部封装</h2><p>RFC893定义的一种以太网的封装格式，它通过调整IP数据报中字段的次序来提高性能。<br>不过现在尾部封装已遭到反对！= =</p>
+<hr>
+<h2 id="四、SLIP：串行线路IP（Serial-Line-IP）"><a href="#四、SLIP：串行线路IP（Serial-Line-IP）" class="headerlink" title="四、SLIP：串行线路IP（Serial Line IP）"></a>四、SLIP：串行线路IP（Serial Line IP）</h2><p>它是一种在串行线路上对IP数据报进行封装的简单形式。<br>下面描述SLIP的帧格式：</p>
+<pre><code>1. IP数据报以一个称作END（0xc0）的特殊字符结束。大多数实现在数据报的开始出也传一个END字符，防止噪声影响。
+2. 如果IP报文中某个字符为END，那么用0xdb0xdc来取代它。0xdb被称作SLIP的ESC字符，但是它与ASCII码的ESC字符（0x1b）不同。
+3. 如果IP报文中某个字符为SLIP的ESC字符，就要连续传输两个字节0xdb和0xdd来取代它。
+  ![这里写图片描述](http://img.blog.csdn.net/20160805171209806)
+</code></pre><p>SLIP是一种简单的帧封装方法，有一些缺陷：</p>
+<pre><code>1. 必须知道对方的IP，没办法把本端的IP地址通知给另一端。
+2. 数据帧中没有类型字段，如果一条串行线路用于SLIP，那么它不能同时使用其它协议。（无法判断是什么协议，所以只能用一种）
+3. 没有检验和，只能通过上层协议来发现错误。（其实新型的调制解调器可以检测并纠正错误报文）
+</code></pre><p>尽管如此，SLIP仍然被广泛使用。</p>
+<hr>
+<h2 id="五、压缩的SLIP（CSLIP）"><a href="#五、压缩的SLIP（CSLIP）" class="headerlink" title="五、压缩的SLIP（CSLIP）"></a>五、压缩的SLIP（CSLIP）</h2><p><strong>可以压缩TCP、IP首部。</strong><br>为了传送1个字节，需要40个字节的TCP+IP部首。<br>CSLIP一般能把上面的40个字节压缩到3或5个字节，能在CSLIP的每一端维持多达16个TCP连接。</p>
+<hr>
+<h2 id="六、PPP：点对点协议"><a href="#六、PPP：点对点协议" class="headerlink" title="六、PPP：点对点协议"></a>六、PPP：点对点协议</h2><p>PPP修改了SLIP中所有的缺陷，它包括三个部分：</p>
+<ol>
+<li>在串行链路上封装IP数据报的方法。既支持数据为8位和无奇偶检验的异步模式，还支持面向比特的同步链接。</li>
+<li>建立、配置及测试数据链路的链路控制协议（LCP）。它允许通信双方进行协商，以确定不同的选项。</li>
+<li>针对不同网络层协议的网络控制协议（NCP）。例如允许双方商定是否对报文首部进行压缩，类似于CSLIP。</li>
+</ol>
+<p>PPP数据帧的格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805172211617" alt="PPP数据帧的格式" title="" class="">
+                <p>PPP数据帧的格式</p>
+            </figure></p>
+<ul>
+<li>由于标志字符为0x7e，如果在信息字段中出现该字符，需要对其进行转义。</li>
+<li>利用链路控制协议，大多数的产品通过协商可以省略标识符和地址字段，并把协议字段由2个字节减少到1个字节。PPP与SLIP相比，只增加了3个额外的字节：1个协议字段，2个CRC字段。</li>
+<li>使用网络控制协议，可以减小IP和TCP首部长度。</li>
+</ul>
+<p>总的来说，PPP比SLIP具有以下优点：</p>
+<pre><code>1. PPP支持在单根串行线路上运行多种协议（因为有协议字段了）。
+2. 每一帧都有循环冗余检验。（有了CRC字段）
+3. 通信双方可以进行IP地址的动态协商（使用IP网络控制协议）。
+4. 与CSLIP类似，对TCP和IP报文首保进行压缩。
+5. 链路控制协议可以对多个数据链路选项进行设置。
+</code></pre><hr>
+<h2 id="七、环回接口"><a href="#七、环回接口" class="headerlink" title="七、环回接口"></a>七、环回接口</h2><p>环回接口允许运行在同一主机上的客户程序和服务器程序通过TCP/IP进行通信。A类网络号127就是为环回接口预留的。127.0.0.1就是localhost，大多数系统把127.0.0.1分配给环回接口。<br>一个传给环回接口的数据报不能在任何网络上出现，但是它还是会通过协议栈进行封装，封装完再返回给自己。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805173301499" alt="环回接口" title="" class="">
+                <p>环回接口</p>
+            </figure></p>
+<hr>
+<h2 id="八、最大传输单元MTU"><a href="#八、最大传输单元MTU" class="headerlink" title="八、最大传输单元MTU"></a>八、最大传输单元MTU</h2><p>如果数据的长度比链路层的MTU要大，那么IP层就需要进行分片，分成每一片都小于MTU。<br>以太网的MTU为1500字节，802.3的MTU为1492字节。</p>
+<hr>
+<h2 id="九、路径MTU"><a href="#九、路径MTU" class="headerlink" title="九、路径MTU"></a>九、路径MTU</h2><p>如果两台主机之间的通信要通过多个网络，那么每个网络的链路层就可能有不同的MTU。两台通信主机路径的最小MTU被称作路径MTU。<br>因为两台主机之间的来回选路不一定是对称的，往返可能是两条不同的路。</p>
+<hr>
+<h2 id="十、串行线路吞吐量计算"><a href="#十、串行线路吞吐量计算" class="headerlink" title="十、串行线路吞吐量计算"></a>十、串行线路吞吐量计算</h2><p>如果用SLIP同时运行一个交互式应用程序和一个FTP之类的传输程序。一般要等FTP传输了一半（533ms），才能把交互式应用程序的分组数据发送出去。<br>等待533ms太久了，于是要缩减MTU，这样一次要传递的数据量小了，传输一个数据的时间就短了。<br>一般SLIP把MTU缩减到256.</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:43.415Z" itemprop="dateUpdated">2018-09-09 12:40:43</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链路层/">链路层</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/&title=《《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/&title=《《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、引言"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、以太网和IEEE802封装"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、以太网和IEEE802封装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、尾部封装"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、尾部封装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、SLIP：串行线路IP（Serial-Line-IP）"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、SLIP：串行线路IP（Serial Line IP）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、压缩的SLIP（CSLIP）"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、压缩的SLIP（CSLIP）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、PPP：点对点协议"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、PPP：点对点协议</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#七、环回接口"><span class="post-toc-number">7.</span> <span class="post-toc-text">七、环回接口</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#八、最大传输单元MTU"><span class="post-toc-number">8.</span> <span class="post-toc-text">八、最大传输单元MTU</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#九、路径MTU"><span class="post-toc-number">9.</span> <span class="post-toc-text">九、路径MTU</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#十、串行线路吞吐量计算"><span class="post-toc-number">10.</span> <span class="post-toc-text">十、串行线路吞吐量计算</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/&title=《《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/&title=《《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADJ0lEQVR42u3aQW7jMBAEwPz/095rgIXk7hkHiJjSyZBlk0UDmXCaX1/x9frv+n7/6pnv7149n7xOxv36iQsbGxv7IezX7XX/1a/4usIn96/evZpnMgdsbGzs89j3w9wPeTXwZmnab6sXFBsbGxs7LjY5KSlXm7GwsbGxse/vJFuUT7Wr7meFjY2N/TfZyb/4Sasop24KXjtPbGxs7LPZeSr6+1//SL6NjY2N/YvZr/KatYTaZ2ZRRKHAxsbGPoi9ObIzW5Q2oM0bTHXkgI2NjX0Qu26sL+Lb/Wf3hQ0bGxv7JPYmQG03EkkhbCPkvFjWq4WNjY39EHYbDLSRbdtsao/s7OeDjY2N/XT2p1pI+4VIfpN2hkUwgI2Njf1YdtvimbWKPruB2RzcxMbGxj6VPftwslVInm9zjNkRTGxsbOyz2fkwM8ynwuPkTrEo2NjY2Mex2zI2AyfR7CYeLpYPGxsb+wh23u5vi1MbOeSN/llQfZmKYGNjYx/BbkPZNgBIpj4rUe13YmNjY5/KTppKmydnDal92IyNjY39F9j75nse8d4/OWsS5T9PdFIJGxsb++Hs/JoVwtl0PxUVvOmoYWNjYz+WnUe5+7/8bZyQ/271fLCxsbGPY+83Cck35O37dgnqQzzY2NjYf4bdxr3t0swCibYQFu0kbGxs7MeyZ+Uqj1fbApYfo2wXERsbG/tUdr55aJv1s5bQ/hjom+XAxsbGPpqdINutSDtWXj6Hy4SNjY19ELttMOVtnXxrkb+etbfe3MfGxsY+gp0fmsmP2mzaQLPgIW+TYWNjY5/Hzpv1m0Mz7UJ/9gBQnVpjY2NjP4o9m/os+p1tV9qlicbCxsbGPpS9uZOHBD9XxvICjI2NjX0G+1Ve+aZicxAnH3e4fNjY2NgHsds//bOmUh4Yz8Lm2WFQbGxs7JPYSdGaHeLZBMn5RigvltjY2NhnszexbltO2oWbVeA3C4GNjY39h9mfin6TkrmPey+N2NjY2NijcLfdWiTbkmHYgI2NjX0cO28qzZ6/X6D9xqb9LDY2NvZJ7LwYzI7szGLjdhvTNpiwsbGxj2D/A+pjDDf0hBqvAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

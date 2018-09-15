@@ -1,0 +1,1788 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[Element可编辑表格的实现]]></title>
+      <url>/2018/01/20/Element%E5%8F%AF%E7%BC%96%E8%BE%91%E8%A1%A8%E6%A0%BC%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+      <content type="html"><![CDATA[<p>最近在重构一个页面，需要把表格做成可编辑的。但是不巧的是Element框架里是没有可编辑表格的，所以只好自己来实现一个了。</p>
+<p>实现起来不难，下面我给大家分享一下我是怎么做的。</p>
+<h1 id="表格怎么实现可编辑"><a href="#表格怎么实现可编辑" class="headerlink" title="表格怎么实现可编辑"></a>表格怎么实现可编辑</h1><p>其实思路很简单，主要利用普通显示和输入框之间的切换，来实现表格的编辑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比如像上面的代码这样，我们使用v-if(或v-show)指令来实现普通的显示和输入之间的切换。</p>
+<p>这里使用到了<a href="https://cn.vuejs.org/v2/guide/components.html#%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD" target="_blank" rel="noopener">slot-scope</a>，这主要是用于把el-table-column的值传递到input里。</p>
+<h1 id="监听表格的点击"><a href="#监听表格的点击" class="headerlink" title="监听表格的点击"></a>监听表格的点击</h1><p>首先第一步肯定是去监听点击事件，看看点击了表格的哪里，我好切换输入框。</p>
+<p>我本来是想在span上面绑定click的处理的，但是我发现el-table有一个cell-click的事件更加好用！</p>
+<table>
+<thead>
+<tr>
+<th>cell-click</th>
+<th>当某个单元格被点击时会触发该事</th>
+<th>row, column, cell, event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>cell-click事件有row,column,cell这三个参数，我们可以凭这3个参数来判断现在被点击的是哪一行哪一列的表格。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;el-table :data=<span class="string">"list"</span> @cell-click=<span class="string">"edit"</span>&gt;</span><br><span class="line">       ……</span><br><span class="line">&lt;<span class="regexp">/el-table&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比如这样，当表格某个格子被点击的时候，我们就调用edit函数，可以在edit函数中进行处理，来切换输入框等。</p>
+<h1 id="怎么实现表格的文本与输入框的切换"><a href="#怎么实现表格的文本与输入框的切换" class="headerlink" title="怎么实现表格的文本与输入框的切换"></a>怎么实现表格的文本与输入框的切换</h1><p>现在我们知道，使用cell-click时间来监听表格的点击，在edit函数中实现文本与输入框的切换。</p>
+<p>一开始的时候，我是想给表格的每一列都加一个对应的状态，比如isEditing1，isEditing2…用第一列v-if可以绑定row.isEditing1，我只要改变这个isEditing1的值为true或false，就可以控制切换了。像下面这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing1"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing1"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但是这样的话还要加上那么多个状态，多少列数据就加多少个状态，太麻烦了，这个方案想了一下就被我放弃了。</p>
+<p>后来我发现column里面有一个property属性，这个属性其实是数据的变量名。比如上面代码中，column.property = “name”。我只要加一个变量，存储被编辑的数据的变量名即可。当然column还有其他属性可以选择~</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"scope.row.editingColumn != 'name'"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.editingColumn == 'name'"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我给每一行数据加了一个属性editingColumn，顾名思义，是用来指明现在被编辑的是哪一列的数据。我只要在cell-click绑定的edit函数里，修改这个row.editingColumn即可：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edit: <span class="function"><span class="keyword">function</span>(<span class="params">row, column, cell, event</span>)</span>&#123;</span><br><span class="line">	row[<span class="string">'editingColumn'</span>] = column.property;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而且不用担心这一整列数据都会变成输入框，因为我们是根据row参数来修改的，只是改了被点击的这一行的数据。所以只有这一行这一列的格子会变成输入框~</p>
+<h1 id="修改之后提交到后台保存"><a href="#修改之后提交到后台保存" class="headerlink" title="修改之后提交到后台保存"></a>修改之后提交到后台保存</h1><p>这是需求方提的需求，每修改一个数据就要刷新一次整个表格的数据。</p>
+<p>我采用了2种方法：</p>
+<ol>
+<li>@blur失去焦点事件。当输入完成后，用户点击一下其他地方，输入框失去焦点后，就把输入框切换成文本，然后把数据提交到后台。</li>
+<li>监听回车键<a href="https://cn.vuejs.org/v2/guide/events.html#%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6" target="_blank" rel="noopener">@keyup.enter</a>，如果输入完后用户点击了回车键，就把输入框切换成文本，然后把数据提交到后台。</li>
+</ol>
+<p>输入框切换成文本跟文本切换成输入框一样，修改editingColumn的值即可。</p>
+<p>后来我优化了一下，当数据被修改后再提交到后台，免得没修改也提交，浪费资源，影响体验。</p>
+<h1 id="获取焦点的问题"><a href="#获取焦点的问题" class="headerlink" title="获取焦点的问题"></a>获取焦点的问题</h1><p>其实还有一个挺影响用户体验的问题，就是你把文本切换成输入框之后，这时候的输入框还是blur的，你还需要再点击一下，才能开始输入。</p>
+<p>所以我们的目标也很明确了，就是要切换到输入框之后，马上给输入框获得焦点。</p>
+<p>我们可以用vue的自定义指令来实现，大家可以看一下自定义指令的demo——<br><a href="https://cn.vuejs.org/v2/guide/custom-directive.html#%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">v-focus</a>，刚好自定义指令的demo就是做了聚焦的例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">directives: &#123;</span><br><span class="line">  focus: &#123;</span><br><span class="line">    <span class="comment">// 指令的定义</span></span><br><span class="line">    inserted: <span class="function"><span class="keyword">function</span> (<span class="params">el</span>) </span>&#123;</span><br><span class="line">      el.focus()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你在input标签加上v-focus属性，即可在被插入到DOM的时候获取到聚焦了。</p>
+<p>研究了一个下午的，做出来我感觉体验还挺好的哈哈哈~</p>
+]]></content>
+      
+        <categories>
+            
+            <category> vue </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> vue </tag>
+            
+            <tag> Element </tag>
+            
+            <tag> 可编辑表格 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[A+B问题]]></title>
+      <url>/2018/01/16/A+B%E9%97%AE%E9%A2%98/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>给出两个整数a和b, 求他们的和, 但不能使用 + 等数学运算符。</p>
+<p>说明</p>
+<p>a和b都是 32位 整数么？</p>
+<ul>
+<li>是的</li>
+</ul>
+<p>我可以使用位运算符么？</p>
+<ul>
+<li>当然可以</li>
+</ul>
+</blockquote>
+<p>异或相当于的加法，实现加法器的时候就是用很多个异或。</p>
+<ol>
+<li><p>当前位相加，当前位的结果：</p>
+<p>0 + 0 = 0 </p>
+<p>0 + 1 = 1 </p>
+<p>1 + 0 = 1 </p>
+<p>1 + 1 = 0</p>
+<p>很明显这和我们异或的结果的一样的。</p>
+</li>
+<li><p>两数相加，有可能进位。我们知道，二进制的加法，同位数相加的时候，要进位，就得两个数都是1。这其实和并(&amp;)的计算是一样的。</p>
+<p>a&amp;b的结果：</p>
+<p>0 &amp; 0 = 0 </p>
+<p>0 &amp; 1 = 0 </p>
+<p>1 &amp; 0 = 0 </p>
+<p>1 &amp; 1 = 1 </p>
+<p> a&amp;b的结果中，第n位数为1，表示的是2个数的第n位相加，需要进位。相当于在第n+1位上面+1.相当于需要把a&amp;b的结果往左移动1个二进制位。也就是a&amp;b&lt;&lt;1；</p>
+</li>
+</ol>
+<p>所以 a+b 应该等于 a^b + (a&amp;b)&lt;&lt;1 的结果。</p>
+<p>但是 a^b +(a&amp;b)&lt;&lt;1之后有可能还会进位，所以我们还需要用递归的方法来继续计算，直到没有进位为止。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 算法 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> lintCode </tag>
+            
+            <tag> 位运算 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[el-form源码解析]]></title>
+      <url>/2018/01/13/el-form%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</url>
+      <content type="html"><![CDATA[<p>最近一直在用vue来开发页面，使用的ui框架是饿了么的前端框架Element-ui，个人还在一直学习的阶段。用了那么久的Element，但是它的内部到底是怎么实现的？I know nothing…Jhon S…咳咳，我也不知道它是怎么实现的。</p>
+<p>现如今心血来潮，想分析一下Element的源码，也能进一步了解vue的使用。于是挑选了比较常用的表单插件 <em>el-form</em> 来进行分析。</p>
+<h1 id="组件的使用"><a href="#组件的使用" class="headerlink" title="组件的使用"></a>组件的使用</h1><p>先来看一段Element官网的demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;el-form :model=&quot;numberValidateForm&quot; ref=&quot;numberValidateForm&quot; label-width=&quot;100px&quot; class=&quot;demo-ruleForm&quot;&gt;</span><br><span class="line">  &lt;el-form-item label=&quot;年龄&quot; prop=&quot;age&quot;&gt;</span><br><span class="line">    &lt;el-input type=&quot;age&quot; v-model.number=&quot;numberValidateForm.age&quot; auto-complete=&quot;off&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">  &lt;/el-form-item&gt;</span><br><span class="line">  &lt;el-form-item&gt;</span><br><span class="line">    &lt;el-button type=&quot;primary&quot; @click=&quot;submitForm(&apos;numberValidateForm&apos;)&quot;&gt;提交&lt;/el-button&gt;</span><br><span class="line">    &lt;el-button @click=&quot;resetForm(&apos;numberValidateForm&apos;)&quot;&gt;重置&lt;/el-button&gt;</span><br><span class="line">  &lt;/el-form-item&gt;</span><br><span class="line">&lt;/el-form&gt;</span><br></pre></td></tr></table></figure>
+<p>我们使用el-form的时候，表单的每一项我们都要使用到el-form-item，然后el-form-item里面再用到各个类型的输入框。</p>
+<p>如果我们是第一次使用vue，以前用的都是传统的html、jsp的页面，看到这里可能有点疑惑：el-form?el-form-item?这些是什么标签？并不是我们常见的html标签啊……</p>
+<p>其实这都是Element的组件，Element已经把这些组件声明为<a href="https://cn.vuejs.org/v2/guide/components.html#%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C" target="_blank" rel="noopener"><strong>全局组件</strong></a>，vue使用组件的时候可以直接使用。</p>
+<p>我们可以根据组件的name属性，来使用同名的标签，表明我们使用的是这个特定的组件。使用组件的时候有一个有趣的地方，组件的name属性我们一般用驼峰命名，但是我们使用标签的时候，要用<strong>连接线</strong>的方式才行。比如el-form标签，其name属性为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name: <span class="string">'ElForm'</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用slot来嵌套组件"><a href="#使用slot来嵌套组件" class="headerlink" title="使用slot来嵌套组件"></a>使用slot来嵌套组件</h1><blockquote>
+<p>为了让组件可以组合，我们需要一种方式来混合父组件的内容与子组件自己的模板。这个过程被称为<strong>内容分发</strong> (即 Angular 用户熟知的“transclusion”)。Vue.js 实现了一个内容分发 API，参照了当前 <a href="https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md" target="_blank" rel="noopener">Web Components 规范草案</a>，使用特殊的 <code>&lt;slot&gt;</code> 元素作为原始内容的插槽。</p>
+</blockquote>
+<p>实际上，el-form里面会嵌套着el-form-item，用到的正是vue的<a href="https://cn.vuejs.org/v2/guide/components.html#%E4%BD%BF%E7%94%A8%E6%8F%92%E6%A7%BD%E5%88%86%E5%8F%91%E5%86%85%E5%AE%B9" target="_blank" rel="noopener"><strong>slot</strong></a>功能。slot是用来分发内容的，就是可以把东西放入到el-form组件里面。</p>
+<h2 id="单个插槽"><a href="#单个插槽" class="headerlink" title="单个插槽"></a>单个插槽</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"el-form"</span> <span class="attr">:class</span>=<span class="string">"[</span></span></span><br><span class="line"><span class="tag"><span class="string">	labelPosition ? 'el-form--label-' + labelPosition : '',</span></span></span><br><span class="line"><span class="tag"><span class="string">	  &#123; 'el-form--inline': inline &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">	]"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们来看看el-form的源码中的html代码部分，比较简单，form标签里面只有一个slot插槽。我们把<em>el-form-item</em>放在<em>el-form</em>标签里面的时候，<em>el-form-item</em>就会被插入到slot的位置。</p>
+<p><strong>这就是使用slot的方法：你把其他的html元素放入到该组件的标签里面，这些html元素就会被插入到组件的slot标签的位置。</strong></p>
+<p>所以我们平时能像html一样使用这些组件的标签，就是使用了slot。</p>
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>除了单个插槽，还有具名插槽。顾名思义，就是有名字的插槽，插槽有一个name属性。比如<em>el-form-item</em>里面用的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item"</span> <span class="attr">:class</span>=<span class="string">"&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-error': validateState === 'error',</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-validating': validateState === 'validating',</span></span></span><br><span class="line"><span class="tag"><span class="string">	    'is-required': isRequired || required</span></span></span><br><span class="line"><span class="tag"><span class="string">	  &#125;"</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">label</span> <span class="attr">:for</span>=<span class="string">"prop"</span> <span class="attr">class</span>=<span class="string">"el-form-item__label"</span> <span class="attr">v-bind:style</span>=<span class="string">"labelStyle"</span> <span class="attr">v-if</span>=<span class="string">"label || $slots.label"</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"label"</span>&gt;</span>&#123;&#123;label + form.labelSuffix&#125;&#125;             <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item__content"</span> <span class="attr">v-bind:style</span>=<span class="string">"contentStyle"</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">transition</span> <span class="attr">name</span>=<span class="string">"el-zoom-in-top"</span>&gt;</span></span><br><span class="line">	        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-form-item__error"</span> <span class="attr">v-if</span>=<span class="string">"validateState === 'error' &amp;&amp; showMessage &amp;&amp; form.showMessage"</span>&gt;</span>&#123;&#123;validateMessage&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<em>label</em>标签下使用了具名slot.在父组件调用的时候，可以在label下的某个标签附上属性slot=”label”，则会被插入到这个具名slot的位置。一般我们不需要自定义标签，所以不会用到这个具名slot.这时会使用这个slot的默认内容NaN。(slot里面的内容就是备用内容，如果用户没有放别的东西进来，就默认显示备用内容)</p>
+<p>例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">slot</span>=<span class="string">"label"</span>&gt;</span>这里可能是一个页面标题<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="transition过渡"><a href="#transition过渡" class="headerlink" title="transition过渡"></a>transition过渡</h3><p>顺带一提，这里还用到了<strong>transition</strong>标签，<em>transition</em>标签是VUE提供的过渡效果的标签。VUE会根据name属性去查找CSS。当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：</p>
+<blockquote>
+<p>自动嗅探目标元素是否使用了 CSS 过渡或动画，如果使用，会在合适的时机添加/移除CSS 过渡 class。</p>
+<p>如果过渡组件设置了 JavaScript 钩子函数，这些钩子函数将在合适的时机调用。</p>
+<p>如果没有检测到 CSS 过渡/动画，并且也没有设置 JavaScript钩子函数，插入和/或删除 DOM 的操作会在下一帧中立即执行。（注意：这里的帧是指浏览器逐帧动画机制，和 Vue 的 nextTick 概念不同）</p>
+</blockquote>
+<h1 id="el-form-item获取el-form里的表单对象"><a href="#el-form-item获取el-form里的表单对象" class="headerlink" title="el-form-item获取el-form里的表单对象"></a>el-form-item获取el-form里的表单对象</h1><p>el-form-item和el-form既然是2个不同的插件，我们把表单对象绑定到el-form的model属性的时候，el-form-item是怎么获取到的呢？</p>
+<p>我在el-form-item源码里发现了计算属性form:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">form() &#123;</span><br><span class="line">	<span class="keyword">let</span> parent = <span class="keyword">this</span>.$parent;</span><br><span class="line">	<span class="keyword">let</span> parentName = parent.$options.componentName;</span><br><span class="line">		<span class="keyword">while</span> (parentName !== <span class="string">'ElForm'</span>) &#123;</span><br><span class="line">		   <span class="keyword">if</span> (parentName === <span class="string">'ElFormItem'</span>) &#123;</span><br><span class="line">		     <span class="keyword">this</span>.isNested = <span class="literal">true</span>;</span><br><span class="line">		   &#125;</span><br><span class="line">		   parent = parent.$parent;</span><br><span class="line">		   parentName = parent.$options.componentName;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> parent;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>el-form-item通过<strong>$parent</strong>获取el-form实例，这里并不只是获取el-form那么简单，如果item是嵌套在另一个item里面的，还要继续往上获取form,直到获取到form。</p>
+<p>接下来，根据el-form-item的prop属性(开发者用于绑定表单对象中的字段的属性)来获取model中的值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">fieldValue: &#123;</span><br><span class="line">        cache: <span class="literal">false</span>,</span><br><span class="line">        get() &#123;</span><br><span class="line">          <span class="keyword">var</span> model = <span class="keyword">this</span>.form.model;</span><br><span class="line">          <span class="keyword">if</span> (!model || !<span class="keyword">this</span>.prop) &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">var</span> path = <span class="keyword">this</span>.prop;</span><br><span class="line">          <span class="keyword">if</span> (path.indexOf(<span class="string">':'</span>) !== <span class="number">-1</span>) &#123;</span><br><span class="line">            path = path.replace(<span class="regexp">/:/</span>, <span class="string">'.'</span>);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> getPropByPath(model, path).v;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPropByPath</span>(<span class="params">obj, path</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> tempObj = obj;</span><br><span class="line">    path = path.replace(<span class="regexp">/\[(\w+)\]/g</span>, <span class="string">'.$1'</span>);</span><br><span class="line">    path = path.replace(<span class="regexp">/^\./</span>, <span class="string">''</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> keyArr = path.split(<span class="string">'.'</span>);</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> len = keyArr.length; i &lt; len - <span class="number">1</span>; ++i) &#123;</span><br><span class="line">      <span class="keyword">let</span> key = keyArr[i];</span><br><span class="line">      <span class="keyword">if</span> (key <span class="keyword">in</span> tempObj) &#123;</span><br><span class="line">        tempObj = tempObj[key];</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'please transfer a valid prop path to form item!'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      o: tempObj,</span><br><span class="line">      k: keyArr[i],</span><br><span class="line">      v: tempObj[keyArr[i]]</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>小伙伴们看一下代码就明白了，根据prop的key，获取到model中对应的值。</p>
+<h1 id="属性的默认值"><a href="#属性的默认值" class="headerlink" title="属性的默认值"></a>属性的默认值</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">showMessage: &#123;</span><br><span class="line">	type: <span class="built_in">Boolean</span>,</span><br><span class="line">	<span class="keyword">default</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用default来赋予默认值，type指定属性的种类，可以有多个种类，用[Boolean,String]的格式。</p>
+<h1 id="图标的设置"><a href="#图标的设置" class="headerlink" title="图标的设置"></a>图标的设置</h1><p>平时我们可以看到一些按钮上可能有一些图标，比如这篇文章的标题下面，时间、分类的前面都有个小图标，这可不是插入了一张小图片，而是用了矢量图标，这实际上是通过设置class属性来实现的。</p>
+<p>我们来看看常用的el-input，也就是我们的输入框组件，它有一个icon属性，我们可以根据 <a href="http://element-cn.eleme.io/1.2/#/zh-CN/component/icon" target="_blank" rel="noopener">Element图标</a> 来设置icon属性。官网的原文是这么说的：</p>
+<blockquote>
+<p>直接通过设置类名为 <code>el-icon-iconName</code> 来使用即可。</p>
+</blockquote>
+<p>它都这么说了，我就乖乖地把icon=”el-icon-el-icon-search”，想设置一个搜索图标。惊喜地发现了&amp;￥#@&amp;……￥￥&amp;#根本不管用啊！！</p>
+<p>下面我们看看它的代码实现：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"icon"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"el-input__icon"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:class</span>=<span class="string">"[</span></span></span><br><span class="line"><span class="tag"><span class="string">        'el-icon-' + icon,</span></span></span><br><span class="line"><span class="tag"><span class="string">        onIconClick ? 'is-clickable' : ''</span></span></span><br><span class="line"><span class="tag"><span class="string">      ]"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-if</span>=<span class="string">"icon"</span></span></span><br><span class="line"><span class="tag">      @<span class="attr">click</span>=<span class="string">"handleIconClick"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以发现，只要根据官网的图标的名字，把 el-icon- 后面的名字作为icon属性就行了，根本不是官网说的那样。你自己做了处理还不说清楚……</p>
+<h1 id="slots获取slot内容"><a href="#slots获取slot内容" class="headerlink" title="$slots获取slot内容"></a>$slots获取slot内容</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 前置元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"el-input-group__prepend"</span> <span class="attr">v-if</span>=<span class="string">"$slots.prepend"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"prepend"</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里用到了<a href="https://vuefe.cn/v2/api/#vm-slots" target="_blank" rel="noopener">$slots</a>,可以通过$slots.具名slot的name来获取这个slot的内容，来判断是否有前置元素的存在。</p>
+<h1 id="el-input里面的input标签"><a href="#el-input里面的input标签" class="headerlink" title="el-input里面的input标签"></a>el-input里面的input标签</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-if</span>=<span class="string">"type !== 'textarea'"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">class</span>=<span class="string">"el-input__inner"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind</span>=<span class="string">"$props"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">:autocomplete</span>=<span class="string">"autoComplete"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">:value</span>=<span class="string">"currentValue"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">ref</span>=<span class="string">"input"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">input</span>=<span class="string">"handleInput"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">focus</span>=<span class="string">"handleFocus"</span></span></span><br><span class="line"><span class="tag">  @<span class="attr">blur</span>=<span class="string">"handleBlur"</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面这段代码是el-input里面的input标签，想想也是，el-input只是在原生的input标签上封装了一层而已。</p>
+<p>这里有3个事件input,focus,blur,这里Element没有做过多的处理，都是用<strong><a href="https://cn.vuejs.org/v2/api/#vm-emit" target="_blank" rel="noopener">$emit</a></strong>来触发当前实例的事件（我理解为el-input组件的上层所定义的事件,@click之类的，交给用户自己来决定怎么处理），比如$emit(‘input’, value)可以把el-input组件的值传回我们的实例v-model绑定的值，来实现组件之间的值传递。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">handleFocus(event) &#123;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'focus'</span>, event);</span><br><span class="line">&#125;,</span><br><span class="line">handleInput(event) &#123;</span><br><span class="line">	<span class="keyword">const</span> value = event.target.value;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'input'</span>, value);</span><br><span class="line">	<span class="keyword">this</span>.setCurrentValue(value);</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'change'</span>, value);</span><br><span class="line">&#125;,</span><br><span class="line">handleIconClick(event) &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.onIconClick) &#123;</span><br><span class="line">	    <span class="keyword">this</span>.onIconClick(event);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.$emit(<span class="string">'click'</span>, event);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h1 id="表单验证"><a href="#表单验证" class="headerlink" title="表单验证"></a>表单验证</h1><p>我们可以看官网的例子：<a href="http://element-cn.eleme.io/1.2/#/zh-CN/component/form" target="_blank" rel="noopener">点我点我点我看例子</a></p>
+<p>Form 组件提供了表单验证的功能，只需要通过 rule 属性传入约定的验证规则，并 Form-Item 的 prop属性设置为需校验的字段名即可。</p>
+<p>但是本质上他们是怎么实现表单验证的呢？</p>
+<p>在el-form里的mounted钩子，获取rules.可以看出同时获取了form的rules和form-item里面的rules。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rules = <span class="keyword">this</span>.getRules();</span><br><span class="line"><span class="keyword">if</span> (rules.length) &#123;</span><br><span class="line">          <span class="keyword">this</span>.$on(<span class="string">'el.form.blur'</span>, <span class="keyword">this</span>.onFieldBlur);</span><br><span class="line">          <span class="keyword">this</span>.$on(<span class="string">'el.form.change'</span>, <span class="keyword">this</span>.onFieldChange);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getRules() &#123;</span><br><span class="line">        <span class="keyword">var</span> formRules = <span class="keyword">this</span>.form.rules;</span><br><span class="line">        <span class="keyword">var</span> selfRules = <span class="keyword">this</span>.rules;</span><br><span class="line"></span><br><span class="line">        formRules = formRules ? formRules[<span class="keyword">this</span>.prop] : [];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [].concat(selfRules || formRules || []);</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<p>然后开始监听blur和change事件。这2个事件在el-input里我们也看到了，在发生input的时候，el-input就会触发这2个事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">onFieldBlur() &#123;</span><br><span class="line">	<span class="keyword">this</span>.validate(<span class="string">'blur'</span>);</span><br><span class="line">&#125;,</span><br><span class="line">onFieldChange() &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.validateDisabled) &#123;</span><br><span class="line">	    <span class="keyword">this</span>.validateDisabled = <span class="literal">false</span>;</span><br><span class="line">	    <span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.validate(<span class="string">'change'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，实际上进行校验的实际上是validate这个函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> AsyncValidator <span class="keyword">from</span> <span class="string">'async-validator'</span>;</span><br><span class="line"></span><br><span class="line">validate(trigger, callback = noop) &#123;</span><br><span class="line">	        <span class="keyword">var</span> rules = <span class="keyword">this</span>.getFilteredRule(trigger);</span><br><span class="line">	        <span class="keyword">if</span> (!rules || rules.length === <span class="number">0</span>) &#123;</span><br><span class="line">	          callback();</span><br><span class="line">	          <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">this</span>.validateState = <span class="string">'validating'</span>;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">var</span> descriptor = &#123;&#125;;</span><br><span class="line">	        descriptor[<span class="keyword">this</span>.prop] = rules;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">var</span> validator = <span class="keyword">new</span> AsyncValidator(descriptor);</span><br><span class="line">	        <span class="keyword">var</span> model = &#123;&#125;;</span><br><span class="line">	</span><br><span class="line">	        model[<span class="keyword">this</span>.prop] = <span class="keyword">this</span>.fieldValue;</span><br><span class="line">	</span><br><span class="line">	        validator.validate(model, &#123; <span class="attr">firstFields</span>: <span class="literal">true</span> &#125;, (errors, fields) =&gt; &#123;</span><br><span class="line">	          <span class="keyword">this</span>.validateState = !errors ? <span class="string">'success'</span> : <span class="string">'error'</span>;</span><br><span class="line">	          <span class="keyword">this</span>.validateMessage = errors ? errors[<span class="number">0</span>].message : <span class="string">''</span>;</span><br><span class="line">	</span><br><span class="line">	          callback(<span class="keyword">this</span>.validateMessage);</span><br><span class="line">	        &#125;);</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<p>可以看出Element也是用了async-validator库来做的验证，所以配置的rules的时候根据async-validator的规则来配置即可。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> vue </category>
+            
+            <category> element </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> vue </tag>
+            
+            <tag> element </tag>
+            
+            <tag> form </tag>
+            
+            <tag> 表单 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC3%E7%AB%A0%20IP%EF%BC%9A%E7%BD%91%E9%99%85%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>IP是TCP/IP协议族中最为核心的协议。<br>特点：</p>
+<ul>
+<li>不可靠：它不能保证IP数据报能成功地到达目的地。</li>
+<li>无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。</li>
+</ul>
+<hr>
+<h1 id="二、IP首部"><a href="#二、IP首部" class="headerlink" title="二、IP首部"></a>二、IP首部</h1><p>IP数据报的格式如下图所示：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808150524200" alt="IP数据报格式" title="" class="">
+                <p>IP数据报格式</p>
+            </figure></p>
+<p>普通IP的部首长为20个字节。<br>分析IP首部，最高位在左边，0bit；最低位在右边，31bit。<br><strong>大尾字节序</strong>：4个字节的32bit值以大尾字节序（网络字节序，先传0位bit，最后传31bit，每次传1byte）的次序传输，如果是以小尾字节序格式存储的，在传输数据之前要把收吧转换成网络字节序。</p>
+<h2 id="格式说明："><a href="#格式说明：" class="headerlink" title="格式说明："></a>格式说明：</h2><ul>
+<li>版本号：目前的协议版本号是4，所以IP有时也称作IPv4。</li>
+<li>首部长度：首部长度是指首部占32bit字的数目，因为首部长度是4位bit数，所以首部最长为60个字节。</li>
+<li><p>TOS服务类型：包括一个3bit的优先权子字段（现已被忽略），4bit的TOS子字段和1bit未用位但必须置0。4bit的TOS分别代表：最小时延、最大吞吐量、最高可靠性和最小费用。4个服务类型只能选1个置为1.如果4bit均为0，则说明是一般服务。<br>  如FTP文件传输要求有最大吞吐量，所以最大吞吐量的位置为1.<br>  <img src="http://img.blog.csdn.net/20160808151651795" alt="服务类型字段推荐值"></p>
+</li>
+<li><p><em>现在大多数的TCP/IP实现都不知道TOS特性（= = 都不支持还说</em>&amp;……%￥）*</p>
+</li>
+<li>总长度字段：整个IP数据报的长度，以字节byte为单位。（注意：首部长度是4byte为单位）利用首部长度和总长度字段就可以知道IP数据报中数据内容的起始位置和长度。<br>  该字段长16bit，所以数据报最长为65535字节。（超级通道的MTU位65535，它使用的就是最长的数据报长度）<ul>
+<li>尽管可以传送一个长达65535字节的IP数据报，但是大多数的链路层都会对它进行分片。而且主机也不能接收超过576字节的数据报。由于TCP把用户数据分成若干片，因此一般来说这个限制不会影响TCP。</li>
+<li>UDP都限制用户数据报长度为512字节，小于576字节。、</li>
+<li>但是现在大多数的实现（特别是安歇支持网络文件系统NFS的实现）允许超过8192字节的IP数据报。</li>
+<li>总长度字段是IP首部中必要的内容，因为一些数据链路（如以太网）需要填充一些数据以达到最小长度。</li>
+</ul>
+</li>
+<li>标识字段：唯一地标识主机发送的每一份数据报。通常每发送一份报文它的值就会加1.</li>
+<li>TTL生存时间字段：设置了数据报可以经过的最多路由器数。一旦经过一个处理它的路由器，它的值就减去1.</li>
+<li>协议字段：根据它可以识别是哪个协议向IP传送数据。</li>
+<li>首部检验和字段：是根据IP首部计算的检验和码。先把检验和字段置为0，对首部中每个16bit进行二进制反码求和，结果存在检验和字段中。在接收到一份IP数据报后，同样反码求和，如果正确，应该为全1.</li>
+<li>源地址和目的地址就不说了。。</li>
+<li>任选项字段：可变长的可选信息。（很少使用）</li>
+<li>IP首部始终是32bit的整数倍。</li>
+</ul>
+<hr>
+<h1 id="三、IP路由选择（选路）"><a href="#三、IP路由选择（选路）" class="headerlink" title="三、IP路由选择（选路）"></a>三、IP路由选择（选路）</h1><p>如果目的主机与源主机直接相连（如点对点链路）或者都在一个共享网络上（以太网或令牌环网），那么IP数据报就直接送到目的主机上。否则，主机把数据报发往一默认的路由器上，由路由器来转发该数据报。</p>
+<p>IP层在内存中有一个路由表，每转发一次数据，都要搜索一次该表。当数据报来自某个网络接口时，IP首先检查目的IP地址是否为本机的IP地址之一或者IP广播地址，如果不是，那么（1）如果IP层被设置为路由器的功能，那么对数据报进行转发；否则（2）数据报被丢弃。</p>
+<p>路由表每一项包括了一下信息：</p>
+<ol>
+<li>目的IP地址。它可以是一个完整的主机地址，也可以是一个网络地址（不含主机号）。</li>
+<li>下一站（下一跳）路由器的IP地址，或者直接连接的网络IP地址。</li>
+<li>标志。其中一个标志知名目的IP地址是网络地址还是主机地址，另一个标志指明下一站路由器是否为真正的下一站路由器，还是一个直接相连的接口。</li>
+<li>为数据报的传输指定一个网络接口。</li>
+</ol>
+<p>IP路由选择是逐跳地进行的，IP并不知道到达任何目的的完整路径。<br>IP路由选择主要完成以下这些功能：</p>
+<pre><code>1. 搜索路由表，寻找能与目的IP地址完全匹配的表目（网络号和主机号都要匹配）。
+2. 搜索路由表，寻找能与目的网络号相匹配的表目。
+3. 搜索路由表，寻找标为“默认”的表目。
+</code></pre><p>如果以上3步都不成功，那么该数据报不能被传送。</p>
+<p>为一个网络指定一个路由器，而不必为每个主机指定一个路由器，这个IP路由选择机制的另一个基本特性。</p>
+<ul>
+<li>数据报中的目的IP地址始终不发生任何变化。</li>
+<li>每个链路层可能具有不同的数据帧首部，而且链路层的目的地址（如果有的话）始终指的是下一站的链路层地址。</li>
+</ul>
+<hr>
+<h1 id="四、子网寻址"><a href="#四、子网寻址" class="headerlink" title="四、子网寻址"></a>四、子网寻址</h1><p>子网编码：网络号+子网号+主机号</p>
+<ul>
+<li>全0或全1的主机号都是无效的。</li>
+</ul>
+<p>自然划分方法：把B类的前16bit作为网络号，接下来的8bit作为子网地址，后8bit作为主机号。<br>大多数的子网例子都是B类地址，其实子网还可以用于C类地址，只是它可用的bit数较少而已。很少A类例子，因为A类地址本来就少，但是大多数A类地址都是子网划分的。</p>
+<ul>
+<li>子网对外部路由器来说隐藏了内部网络组织的细节。</li>
+<li>使用子网划分的好处是缩小了路由表的规模，子网内所有的主机都只需要1个路由表目。</li>
+<li>子网对于外部的路由器是透明的，子网对于内部的路由器是不透明的（外部知道这有一个子网，只需要知道网络号就行了；内部不管什么子网，它要找到完整的IP地址）。</li>
+</ul>
+<hr>
+<h1 id="五、子网掩码"><a href="#五、子网掩码" class="headerlink" title="五、子网掩码"></a>五、子网掩码</h1><p>子网掩码：确定IP地址中有多少bit用于子网号，多少bit用于主机号。1代表网络号，0代表主机号。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808162553155" alt="子网掩码" title="" class="">
+                <p>子网掩码</p>
+            </figure></p>
+<p>子网掩码经常用十六进制来表示，特别当界限不是一个字节时（比如网络号有20位，不是8的倍数）。<br>根据子网掩码，就可以确定一个IP是否为（1）本子网的 （2）本网络中其他子网的 （3）其他网络上的主机。</p>
+<hr>
+<h1 id="六、特殊情况的IP地址"><a href="#六、特殊情况的IP地址" class="headerlink" title="六、特殊情况的IP地址"></a>六、特殊情况的IP地址</h1><p>有7个特殊的IP地址：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160808163046694" alt="特殊的IP地址" title="" class="">
+                <p>特殊的IP地址</p>
+            </figure></p>
+<p>0表示所有bit全为0；-1表示所有bit全为1.netid、subnetid、hostid分别表示部位全0或全1的对应字段。子网号为空表示没有进行子网划分。<br>全为1的时候为广播地址。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 网际协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC11%E7%AB%A0%20UDP%EF%BC%9A%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="UDP：用户数据报协议"><a href="#UDP：用户数据报协议" class="headerlink" title="UDP：用户数据报协议"></a>UDP：用户数据报协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。</p>
+<p>UDP首部为8字节，IP首部为20字节。</p>
+<p>UDP是不可靠的。</p>
+<hr>
+<h2 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172012100" alt="UDP首部" title="" class="">
+                <p>UDP首部</p>
+            </figure>
+<p>在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪个应用服务。<br>UDP长度指的是UDP首部+UDP数据的<strong>字节长度</strong>（有些首部长度的单位是32bit，4个byte，这里是1个byte）。</p>
+<hr>
+<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172500686" alt="UDP首部+伪首部" title="" class="">
+                <p>UDP首部+伪首部</p>
+            </figure>
+<p>UDP检验和覆盖UDP首部和UDP数据。（IP的检验和只覆盖IP的首部，不覆盖数据）<br>UDP和TCP在首部中都有覆盖它们首部和数据的检验和。UDP的检验和是可选的，TCP的检验和是必须的。</p>
+<p>UDP和IP检验和的不同：</p>
+<pre><code>1. UDP数据报的长度可以为奇数字节，为了符合16bit反码相加的特性，会在数据最后填充字节0（这些0可能不被传送）。
+2. UDP数据报和TCP段都包含一个**12字节**长的伪首部，为了计算检验和而设置（包含IP首部的一些字段）。目的是让UDP两次检查数据是否已经正确到达目的地。
+</code></pre><ul>
+<li>UDP数据报的长度在检验和计算过程中出现两次。</li>
+<li>如果检验和的计算结果为0，则存入的值为全1（65535），如果检验和为0，说明发送端没有计算检验和。</li>
+<li>如果发送端没有计算检验和而接收端检测到检验和有错，那么UDP数据报就要被悄悄丢弃，不产生任何差错报文。</li>
+<li>UDP检验和虽然是可选的，但是默认都是打开的。</li>
+<li>UDP检验和是简单的16bit反码相加，检测不出交换2个16bit的差错。</li>
+</ul>
+<p>TCP发生检验和差错的比例比UDP高得多，因为TCP经常是“远程”连接，而UDP一般是本地通信。</p>
+<hr>
+<h2 id="IP分片"><a href="#IP分片" class="headerlink" title="IP分片"></a>IP分片</h2><ul>
+<li>物理网络层一般要限制每次发送数据帧的最大长度。</li>
+<li>分片可以发生在发送端主机上，也可以发生在中间路由器上（因为MTU可能发生变化）。- - 已经分片过的可能再次进行分片。</li>
+<li>只有到达目的地才进行重新组装（其他网络协议在下一站就重新组装），由IP层完成。<br><img src="http://img.blog.csdn.net/20160819171501444" alt="这里写图片描述"></li>
+<li>IP首部的标识字段都包含一个唯一的值，该值分片时赋值到每个片中。</li>
+<li>标志字段用一个bit来标识“更多的片”，最后一片置为0，其余置为1.</li>
+<li>片偏移字段是该片偏移原始数据报开始出的位置。</li>
+<li>分片后，每个片的总长度要改为该片的长度值。</li>
+<li>标识字段有一个bit称作“不分片”位，置1的时候不能分片，要分片的时候会产生一个ICMP差错报文。</li>
+<li>如果丢失了一片数据，就要重传整份数据，IP没有重传机制，这是根据TCP重传机制决定的。</li>
+<li>使用UDP很容易导致IP分片，TCP会试图避免分片。</li>
+</ul>
+<p>在一个以太网上，数据帧最大的长度是1500.<br>数据帧=IP首部（20字节）+UDP首部（8字节）+数据（最多1472字节）</p>
+<ul>
+<li>在分片时，除最后一片外，其他每一片的数据部分（UDP首部+数据）必须是8字节的整数倍。</li>
+<li>端口号在UDP首部，而UDP首部在第一片，所以端口号只能在第一片。</li>
+</ul>
+<p><strong>IP数据报</strong>：IP层端到端的传输单元<br><strong>分组</strong>：IP层和链路层之间传送的数据单元，一个分组可以使一个完整的IP数据报，也可以是一个分片。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160819172725359" alt="分片" title="" class="">
+                <p>分片</p>
+            </figure>
+<hr>
+<h2 id="ICMP不可达差错（需要分片）"><a href="#ICMP不可达差错（需要分片）" class="headerlink" title="ICMP不可达差错（需要分片）"></a>ICMP不可达差错（需要分片）</h2><p>如果数据需要分片，但是IP首部设置了不可分片（DF）的bit为1，那么就会发送ICMP不可达差错。<br>可以利用这个差错来判断路径的MTU。</p>
+<hr>
+<h2 id="UDP和ARP之间的交互作用"><a href="#UDP和ARP之间的交互作用" class="headerlink" title="UDP和ARP之间的交互作用"></a>UDP和ARP之间的交互作用</h2><p>如ARP缓存是清空的，那么在发送第一个数据报片前必须交换ARP请求和应答。<br>如果有多个数据报，在等待一个ARP应答时，只将最后一个报文发送给特定目的主机。</p>
+<hr>
+<h2 id="最大UDP数据报长度"><a href="#最大UDP数据报长度" class="headerlink" title="最大UDP数据报长度"></a>最大UDP数据报长度</h2><p>IP数据报的最大长度是65535字节，这是16bit的总长度字段所限制的。<br>那么UDP数据报最长长度为65535-20-8=65507.</p>
+<p>限制因素：</p>
+<pre><code>1. 程序接口限制。
+2. TCP/IP的内核实现限制。
+</code></pre><p>主机必须能够接收最短为576的IP数据报，所以在许多UDP应用程序的设计中，其应用程序数据被限制成512字节或更小（确保能接收）。</p>
+<hr>
+<h2 id="ICMP源站抑制差错"><a href="#ICMP源站抑制差错" class="headerlink" title="ICMP源站抑制差错"></a>ICMP源站抑制差错</h2><p>当一个系统接收数据报的速度比其处理速度快时，可能产生这个差错。（注意是<strong>可能</strong>，不一定会发送这个差错报文。）<br>采用UDP时，源站抑制报文可能会被忽略。<br>TCP也支持源站抑制报文。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> UDP </tag>
+            
+            <tag> 用户数据报协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC2%E7%AB%A0%20%E9%93%BE%E8%B7%AF%E5%B1%82/</url>
+      <content type="html"><![CDATA[<h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>链路层主要有三个目的：</p>
+<pre><code>1. 为IP模块发送和接收IP数据包
+2. 为ARP模块发送ARP请求和接收ARP应答
+3. 为RARP发送RARP请求和接收RARP应答
+</code></pre><hr>
+<h2 id="二、以太网和IEEE802封装"><a href="#二、以太网和IEEE802封装" class="headerlink" title="二、以太网和IEEE802封装"></a>二、以太网和IEEE802封装</h2><p>以太网是一个标准，是当今TCP/IP采用的主要的<strong>局域网技术</strong>。它的速率为10Mb/s，地址为48bit。<br>而IEEE是一个与以太网稍有不同的标准集。<br>以太网IP数据报的封装实在RFC894（最常用的）中定义的，IEEE802则是RFC1042。<br>两种帧格式都采用48bit的目的地址和源地址（硬件地址）。其封装格式如下：</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805165734816" alt="链路层封装格式" title="" class="">
+                <p>链路层封装格式</p>
+            </figure>
+<ul>
+<li>在802标准定义的帧格式中，<strong>长度</strong>指的是后续数据的字节长度，不包括CRC检验码。而以太网的<strong>类型</strong>字段定义了后续数据的类型。802中的类型字段则由后续的子网接入协议（SNAP）给出。</li>
+<li><strong>幸运的是，802定义的有效长度值和以太网的有效类型值无一相同，这样，就可以对两种帧格式进行区分。</strong></li>
+<li>CRC字段用于帧内后续字节差错的循环冗余码检验（检验和）。</li>
+<li>两种帧都有最小长度要求，802至少要38字节，以太网最小要46字节。</li>
+<li>以太网是最为常见的封装格式。</li>
+</ul>
+<hr>
+<h2 id="三、尾部封装"><a href="#三、尾部封装" class="headerlink" title="三、尾部封装"></a>三、尾部封装</h2><p>RFC893定义的一种以太网的封装格式，它通过调整IP数据报中字段的次序来提高性能。<br>不过现在尾部封装已遭到反对！= =</p>
+<hr>
+<h2 id="四、SLIP：串行线路IP（Serial-Line-IP）"><a href="#四、SLIP：串行线路IP（Serial-Line-IP）" class="headerlink" title="四、SLIP：串行线路IP（Serial Line IP）"></a>四、SLIP：串行线路IP（Serial Line IP）</h2><p>它是一种在串行线路上对IP数据报进行封装的简单形式。<br>下面描述SLIP的帧格式：</p>
+<pre><code>1. IP数据报以一个称作END（0xc0）的特殊字符结束。大多数实现在数据报的开始出也传一个END字符，防止噪声影响。
+2. 如果IP报文中某个字符为END，那么用0xdb0xdc来取代它。0xdb被称作SLIP的ESC字符，但是它与ASCII码的ESC字符（0x1b）不同。
+3. 如果IP报文中某个字符为SLIP的ESC字符，就要连续传输两个字节0xdb和0xdd来取代它。
+  ![这里写图片描述](http://img.blog.csdn.net/20160805171209806)
+</code></pre><p>SLIP是一种简单的帧封装方法，有一些缺陷：</p>
+<pre><code>1. 必须知道对方的IP，没办法把本端的IP地址通知给另一端。
+2. 数据帧中没有类型字段，如果一条串行线路用于SLIP，那么它不能同时使用其它协议。（无法判断是什么协议，所以只能用一种）
+3. 没有检验和，只能通过上层协议来发现错误。（其实新型的调制解调器可以检测并纠正错误报文）
+</code></pre><p>尽管如此，SLIP仍然被广泛使用。</p>
+<hr>
+<h2 id="五、压缩的SLIP（CSLIP）"><a href="#五、压缩的SLIP（CSLIP）" class="headerlink" title="五、压缩的SLIP（CSLIP）"></a>五、压缩的SLIP（CSLIP）</h2><p><strong>可以压缩TCP、IP首部。</strong><br>为了传送1个字节，需要40个字节的TCP+IP部首。<br>CSLIP一般能把上面的40个字节压缩到3或5个字节，能在CSLIP的每一端维持多达16个TCP连接。</p>
+<hr>
+<h2 id="六、PPP：点对点协议"><a href="#六、PPP：点对点协议" class="headerlink" title="六、PPP：点对点协议"></a>六、PPP：点对点协议</h2><p>PPP修改了SLIP中所有的缺陷，它包括三个部分：</p>
+<ol>
+<li>在串行链路上封装IP数据报的方法。既支持数据为8位和无奇偶检验的异步模式，还支持面向比特的同步链接。</li>
+<li>建立、配置及测试数据链路的链路控制协议（LCP）。它允许通信双方进行协商，以确定不同的选项。</li>
+<li>针对不同网络层协议的网络控制协议（NCP）。例如允许双方商定是否对报文首部进行压缩，类似于CSLIP。</li>
+</ol>
+<p>PPP数据帧的格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805172211617" alt="PPP数据帧的格式" title="" class="">
+                <p>PPP数据帧的格式</p>
+            </figure></p>
+<ul>
+<li>由于标志字符为0x7e，如果在信息字段中出现该字符，需要对其进行转义。</li>
+<li>利用链路控制协议，大多数的产品通过协商可以省略标识符和地址字段，并把协议字段由2个字节减少到1个字节。PPP与SLIP相比，只增加了3个额外的字节：1个协议字段，2个CRC字段。</li>
+<li>使用网络控制协议，可以减小IP和TCP首部长度。</li>
+</ul>
+<p>总的来说，PPP比SLIP具有以下优点：</p>
+<pre><code>1. PPP支持在单根串行线路上运行多种协议（因为有协议字段了）。
+2. 每一帧都有循环冗余检验。（有了CRC字段）
+3. 通信双方可以进行IP地址的动态协商（使用IP网络控制协议）。
+4. 与CSLIP类似，对TCP和IP报文首保进行压缩。
+5. 链路控制协议可以对多个数据链路选项进行设置。
+</code></pre><hr>
+<h2 id="七、环回接口"><a href="#七、环回接口" class="headerlink" title="七、环回接口"></a>七、环回接口</h2><p>环回接口允许运行在同一主机上的客户程序和服务器程序通过TCP/IP进行通信。A类网络号127就是为环回接口预留的。127.0.0.1就是localhost，大多数系统把127.0.0.1分配给环回接口。<br>一个传给环回接口的数据报不能在任何网络上出现，但是它还是会通过协议栈进行封装，封装完再返回给自己。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805173301499" alt="环回接口" title="" class="">
+                <p>环回接口</p>
+            </figure></p>
+<hr>
+<h2 id="八、最大传输单元MTU"><a href="#八、最大传输单元MTU" class="headerlink" title="八、最大传输单元MTU"></a>八、最大传输单元MTU</h2><p>如果数据的长度比链路层的MTU要大，那么IP层就需要进行分片，分成每一片都小于MTU。<br>以太网的MTU为1500字节，802.3的MTU为1492字节。</p>
+<hr>
+<h2 id="九、路径MTU"><a href="#九、路径MTU" class="headerlink" title="九、路径MTU"></a>九、路径MTU</h2><p>如果两台主机之间的通信要通过多个网络，那么每个网络的链路层就可能有不同的MTU。两台通信主机路径的最小MTU被称作路径MTU。<br>因为两台主机之间的来回选路不一定是对称的，往返可能是两条不同的路。</p>
+<hr>
+<h2 id="十、串行线路吞吐量计算"><a href="#十、串行线路吞吐量计算" class="headerlink" title="十、串行线路吞吐量计算"></a>十、串行线路吞吐量计算</h2><p>如果用SLIP同时运行一个交互式应用程序和一个FTP之类的传输程序。一般要等FTP传输了一半（533ms），才能把交互式应用程序的分组数据发送出去。<br>等待533ms太久了，于是要缩减MTU，这样一次要传递的数据量小了，传输一个数据的时间就短了。<br>一般SLIP把MTU缩减到256.</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 链路层 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC17%E7%AB%A0%20TCP%EF%BC%9A%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="TCP：传输控制协议"><a href="#TCP：传输控制协议" class="headerlink" title="TCP：传输控制协议"></a>TCP：传输控制协议</h1><p>这一章可以看成是TCP的概述</p>
+<h2 id="TCP的服务"><a href="#TCP的服务" class="headerlink" title="TCP的服务"></a>TCP的服务</h2><ul>
+<li>TCP提供一种面向连接的、可靠的字节流服务。（面向连接：在彼此交互数据前要先建立TCP连接，仅有两方进行通信）</li>
+<li>广播和多播不能用于TCP</li>
+</ul>
+<p>提供可靠性：</p>
+<ul>
+<li>应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据报长度将保持不变。</li>
+<li>TCP数据成为报文段或段（segment）</li>
+<li><strong>超时与重传</strong>：当TCP发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认，将重发这个报文段。</li>
+<li>当TCP收到发自另一端的数据，会发送一个确认ACK。</li>
+<li>TCP将保持它首部和数据的检验和，如果有错将丢弃这个报文段，不返回确认，则会超时并重发。</li>
+<li>封装在IP数据报中，IP到达另一端的时候可能会失序，TCP可以重新排序。</li>
+<li>IP数据报会发生重复，TCP接收端必须丢弃重复的数据。</li>
+<li><strong>拥塞控制</strong>：TCP还能提供流量控制（窗口win）</li>
+<li>字节流服务，TCP对字节流不作任何解释。</li>
+</ul>
+<hr>
+<h2 id="TCP的首部"><a href="#TCP的首部" class="headerlink" title="TCP的首部"></a>TCP的首部</h2><p>TCP的封装：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823171658535" alt="TCP封装" title="" class="">
+                <p>TCP封装</p>
+            </figure></p>
+<p>TCP首部格式如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823171714004" alt="TCP首部格式" title="" class="">
+                <p>TCP首部格式</p>
+            </figure></p>
+<ul>
+<li>每个TCP段都包含源端口和目的端端口号，用于寻找发端和收端应用程序。两个IP地址+两个端口号确定一个唯一的TCP连接。</li>
+<li>一个IP地址和一个端口号也被称为一个插口（socket）。</li>
+<li>序号用来标识从TCP发端向TCP收端发送的数据字节流，它标识在这个报文段中的第一个数据字节（18章中都是用偏移量来表示了）。</li>
+<li>当建立新的TCP连接时，SYN标志变成1，序号字段包含这个主机选择的初始序号ISN。（三次握手的时候，先发送SYN和ISN过去，还有mss（最大报文段长度）和win大小）。<strong>该主机要发送数据的第一个字节序号为这个ISN加1，因为SYN标志消耗了一个序号。</strong></li>
+<li>确认序号包含发送确认的一端所期望收到的下一个序号。因此，确认序号应当是上次已成功收到数据字节序号加1.</li>
+<li>当连接建立起来后，ACK标志总是置为1.</li>
+<li>TCP位应用层提供双全工服务，这意味着数据能在两个方向上独立地进行传输。</li>
+<li>TCP可以表述为一个没有选择确认或否认的滑动窗口协议。</li>
+<li>首部长度给出首部中32bit字的数目，因为任选字段的长度是可变的，这个字节占4bit，（1111最多为15），因此TCP最多有60字节的首部。正常的长度是20字节（IP和UDP首部都是固定的20和8）。</li>
+<li>TCP的流量控制由连接的每一端通过生命的窗口大小来提供。</li>
+<li>检验和覆盖了整个的TCP报文段：TCP首部和数据。</li>
+<li>只有当URG标志置为1时紧急指针才有效。</li>
+<li>最常见的可选字段是最长报文大小MSS，每个连接方通常在通信的第一个报文段中指明这个选项，它指明本段所能接收的最大长度的报文段。</li>
+<li>一个连接建立和终止时，双方交换的报文段仅有TCP首部。</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 传输控制协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC14%E7%AB%A0%20DNS%EF%BC%9A%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F/</url>
+      <content type="html"><![CDATA[<h1 id="DNS：域名系统"><a href="#DNS：域名系统" class="headerlink" title="DNS：域名系统"></a>DNS：域名系统</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>域名系统是一种用于TCP/IP应用程序的分布式数据库，它提供主机名字和IP地址之间的转换及有关电子邮件的选路信息。这里提到的分布式是指在Internet上的单个站点不能拥有所有的信息。<br>​<br>    只要是一堆机器，就可以叫集群，他们是不是一起协作着干活，这个谁也不知道；一个程序或系统，只要运行在不同的机器上，就可以叫分布式。</p>
+<p>对DNS的访问时通过一个地址解析器来完成的（一般在应用程序上，不像TCP/IP协议那样是操作系统的内核）。</p>
+<hr>
+<h2 id="DNS基础"><a href="#DNS基础" class="headerlink" title="DNS基础"></a>DNS基础</h2><p>DNS的名字空间具有层次结构：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823163854912" alt="DNS层次结构" title="" class="">
+                <p>DNS层次结构</p>
+            </figure></p>
+<ul>
+<li>每个结点有一个至多63字符长的标识。</li>
+<li>这棵树的树根是没有任何标识的特殊节点。</li>
+<li>命名标识中一律不区分大小写。</li>
+<li>命名树上任何一个结点的域名就是将<strong>从该结点到最高层的域名</strong>串连起来，中间用“.”隔开。</li>
+<li>域名树种的每个结点必须有一个唯一的域名，但是不同结点可以用相同的标识。</li>
+</ul>
+<p>FQDN（Full Qualified Domain Name）：完全域名、绝对域名。如：sun.tuc.noao.edu.</p>
+<ul>
+<li>如果一个域名不以点结尾，则认为该域名是不完全的。</li>
+<li>如果不完整的域名由两个或以上的标号组成，则认为它是完整的，或者在该域名的右边加一个局部后缀。</li>
+</ul>
+<p>顶级域名分为三个部分：</p>
+<pre><code>1. arpa是一个用作地址到名字转换的特殊域
+2. 7个3字符长的普通域
+3. 2字符长的都是国家域/地理域
+</code></pre><p>网络信息中心NIC负责分配顶级域和委派其他指定地区域的授权机构。</p>
+<p>一个独立管理的DNS子树称为一个区域，常见的区域是一个二级域，如noao.edu。</p>
+<p>当一个新系统加入到一个区域中时，DNS管理者为该新系统申请一个域名和一个IP地址，并加到名字服务器的数据库中。</p>
+<p>一个名字服务器负责一个或多个区域。<br>一个区域的管理者必须为该区域提供一个主名字服务器和至少一个辅助名字服务器（独立和冗余的，以免某个服务器故障时影响名字服务）。</p>
+<p>主、辅助名字服务器的区别：主名字服务器从磁盘文件中调入该区域的所有信息，辅助名字服务器从主服务器中调入所有信息。</p>
+<p>当一个名字服务器没有请求的信息时，它将于其他的名字服务器联系（DNS的分布特性），然而不是每个名字服务器都知道如何和其他的名字服务器联系，这时它会与根服务器联系，根服务器告诉它与另一个名字服务器联系。</p>
+<hr>
+<h2 id="NDS的报文格式"><a href="#NDS的报文格式" class="headerlink" title="NDS的报文格式"></a>NDS的报文格式</h2><p>DNS定义了一个用于查询和响应的报文格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164725935" alt="NDS的报文格式" title="" class="">
+                <p>NDS的报文格式</p>
+            </figure></p>
+<p>16bit的标志字段如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164801260" alt="这里写图片描述" title="" class="">
+                <p>这里写图片描述</p>
+            </figure></p>
+<h3 id="查询问题部分"><a href="#查询问题部分" class="headerlink" title="查询问题部分"></a>查询问题部分</h3><p>查询名是要查找的名字，它是一个或多个标识符的序列（长度+名字+0结尾，如下），该字段无需以整32bit边界结束，无需填充字节。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164852172" alt="域名的标识" title="" class="">
+                <p>域名的标识</p>
+            </figure></p>
+<p>每个问题有一个查询类型，每个响应也有一个类型。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160823164943673" alt="类型" title="" class="">
+                <p>类型</p>
+            </figure></p>
+<p>最常用的查询类型是A，表示获得查询名的IP地址。PTR表示获得IP地址对应的域名。</p>
+<p>查询类通常是1，指互联网地址。</p>
+<h3 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h3><p>DNS报文中的最后三个字段：回答、授权、附加信息，均采用一种称为<strong>资源记录RR（Resource Record）</strong>的相同格式。</p>
+<p>域名、类型、类和查询问题部分一样。<br>生存时间值位2天。</p>
+<hr>
+<h2 id="指针查询"><a href="#指针查询" class="headerlink" title="指针查询"></a>指针查询</h2><p>指针查询即给定一个IP地址，返回与该地址对应的域名。</p>
+<p>当一个组织加入Internet并获得DNS域名空间的授权，如noao.edu，则它们同事也获得了对应IP地址的in-addr.arpa域名空间的授权（2个域名空间的授权）。<br>在DNS树种结点in-addr.arpa的下一级必须是IP地址的第一节（140），再下一级是IP地址的再下一节，以此类推。<br>DNS名字是由DNS树的底部逐步往上书写的，这意味着140.252.13.33的sun主机，它的DNS名字是33.13.252.140.in-addr.arpa。</p>
+<p>从名字解析器传入IP时，先将IP转换成34.13.252.140.in-addr.arpa，再传送给名字服务器查询。</p>
+<hr>
+<h2 id="资源记录-1"><a href="#资源记录-1" class="headerlink" title="资源记录"></a>资源记录</h2><p>A – 知道名字查询IP<br>PTR – 知道IP查询域名</p>
+<hr>
+<p>##高速缓存<br>所有的名字服务器均使用高速缓存，高速缓存是名字服务器维护而不是名字解析器维护的（名字解析器在应用程序上，不能一直处于工作状态）。</p>
+<p>名字解析器将在本地主机上（UDP和TCP端口号53）寻找名字服务器。</p>
+<hr>
+<h2 id="用UDP还是TCP"><a href="#用UDP还是TCP" class="headerlink" title="用UDP还是TCP"></a>用UDP还是TCP</h2><ul>
+<li>DNS主要使用UDP。 </li>
+<li>如果发送的数据超过512字节，则用TCP重传。 </li>
+<li>因为UDP一般要求不能超过512字节。</li>
+</ul>
+<hr>
+<h2 id="查询过程"><a href="#查询过程" class="headerlink" title="查询过程"></a>查询过程</h2><pre><code>1. 客户程序启动后，调用它的名字解析器函数，将我们键入的主机名转换成一个IP地址，一个A类型的查询请求被送往一个根服务器。
+2. 由根服务器返回的相应中包含为该服务器所在域服务的名字服务器名。
+3. 客户端的名字解析器将向该服务器的名字服务器重发上述A类查询，这个查询通常将期望递归标志设置为1.
+4. 返回IP地址。
+</code></pre>]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> DNS </tag>
+            
+            <tag> 域名系统 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC19%E7%AB%A0%20TCP%E7%9A%84%E4%BA%A4%E4%BA%92%E6%95%B0%E6%8D%AE%E6%B5%81/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的交互数据流"><a href="#TCP的交互数据流" class="headerlink" title="TCP的交互数据流"></a>TCP的交互数据流</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>TCP通信量的研究：</p>
+<ul>
+<li>按照分组数量计算：一般TCP报文段包含<strong>成块数据</strong>（如FTP、电子邮件和Usenet新闻），另一半则包含<strong>交互数据</strong>（如Telnet和Rlogin）。</li>
+<li>按照字节计算：90%为成块数据，10%为交互数据。</li>
+</ul>
+<hr>
+<h2 id="交互式输入"><a href="#交互式输入" class="headerlink" title="交互式输入"></a><strong>交互式输入</strong></h2><p>在一个Rlogin连接上键入一个交互命令所产生的数据流，通常每一个交互按键都会产生一个数据分组，每次从客户传到服务器的是一个字节的按键。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905231113246" alt="交互按键回显的方法" title="" class="">
+                <p>交互按键回显的方法</p>
+            </figure></p>
+<hr>
+<h2 id="经受时延的确认"><a href="#经受时延的确认" class="headerlink" title="经受时延的确认"></a><strong>经受时延的确认</strong></h2><p>通常TCP在接收到数据时并不立即发送ACK；它会等到有需要发送的数据，再和ACK一起发送。（有时候称为数据捎带ACK）<br>绝大多数采用的时延为200ms，TCP将以最大200ms的时延等待是否有数据一起发送。每次等200ms，然后发一次。</p>
+<p>ACK等待发送的时间总是不大于定时器，因为ACK在1~200ms内到达，而定时器在200ms溢出，那它等待的时间肯定小于200ms啦。</p>
+<hr>
+<h2 id="Nagle算法"><a href="#Nagle算法" class="headerlink" title="Nagle算法"></a><strong>Nagle算法</strong></h2><p>交互数据可能是很多的小分组，比如一个字节，就要发送41字节的分组：IP首部+TCP首部+1=41.<br>在局域网上这些小分组通常不会有问题，局域网很少拥塞。但是在广域网上，这些小分组就增加了拥塞的可能。</p>
+<p>Nagle算法：要求一个TCP连接上最多只能有一个未被确认的未完成的小分组，在该分组<strong>确认到达之前</strong>不能发送其他的小分组；TCP收集这些小分组，在<strong>确认到来时</strong>一起以一个分组发出去。</p>
+<p>优点：减少拥塞的可能。<br>缺点：增加时延。</p>
+<h3 id="关闭Nagle算法"><a href="#关闭Nagle算法" class="headerlink" title="关闭Nagle算法"></a><strong>关闭Nagle算法</strong></h3><p>有时候需要关闭Nagle算法，因为有些应用必须无时延发送。</p>
+<hr>
+<h2 id="窗口大小通告"><a href="#窗口大小通告" class="headerlink" title="窗口大小通告"></a><strong>窗口大小通告</strong></h2><p>TCP报文段会通报窗口大小win，一般为4096.表示缓存可以接收的数据大小。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> TCP的交互数据流 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC21%E7%AB%A0%20TCP%E7%9A%84%E8%B6%85%E6%97%B6%E4%B8%8E%E9%87%8D%E4%BC%A0/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的超时与重传"><a href="#TCP的超时与重传" class="headerlink" title="TCP的超时与重传"></a>TCP的超时与重传</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>TCP提供<strong>可靠</strong>的运输层，方法之一就是<strong>确认从另一端收到的数据</strong>。但是数据和确认都有可能会丢失。<br>如果当定时器溢出时还没有收到确认，它就重传该数据。</p>
+<p>对每个连接，TCP管理4个不同的定时器：</p>
+<ol>
+<li>重传定时器适用于当希望收到另一端的确认。</li>
+<li>坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。</li>
+<li>保活（keepalive）定时器可检测到一个空闲连接的另一端何时崩溃或重启。</li>
+<li>2MSL定时器测量一个连接处于TIME_WAIT状态的时间。（2MSL在结束一个连接的时候说过）</li>
+</ol>
+<hr>
+<h2 id="超时"><a href="#超时" class="headerlink" title="超时"></a><strong>超时</strong></h2><p>连续重传之间的时间差是不同的，每次重传时增加1倍，直至64秒，超出一定时间之后选择放弃重传。这个倍乘关系称为“指数退避”。</p>
+<h3 id="往返时间测量"><a href="#往返时间测量" class="headerlink" title="往返时间测量"></a><strong>往返时间测量</strong></h3><p><strong>RTT的测量是超时重传中最重要的部分。</strong><br>路由器和网络流量均会改变，TCP应该跟踪这些变化并相应改变其超时时间。</p>
+<p>最初的RTT估计器：<br>R←αR+ ( 1- α)M<br>式中M表示测量到的RTT，α为权重，一般为0.9.</p>
+<p>后来提出了一个RTO（重传超时时间）<br>RTO=Rβ<br>这里β一般为2。</p>
+<p>但是以上的方法在RTT变化范围很大的时候，显然跟不上这种变化，会引起不必要的重传。于是提出了新的方案：<br>除了被平滑的RTT估计器，所需要做的还有跟踪RTT的方差。在往返时间变化起伏很大时，基于均值和方差来计算RTO，将比作为均值的常数倍数来计算RTO能提供更好的响应。<br>Err = M-A<br>A←A + g Err<br>D←D + h( | Err |-D)<br>RTO = A + 4D<br>这里的A是被平滑的RTT（均值的估计器）而D则是被平滑的均值偏差。E rr是刚得到的测量结<br>果与当前的RTT估计器之差。A和D均被用于计算下一个重传时间（RTO）。增量g起平均作用，取为1/8（0.125）。偏差的增益是h，取值为0.25。当RTT变化时，较大的偏差增益将使RTO快速上升。</p>
+<h3 id="Karn算法"><a href="#Karn算法" class="headerlink" title="Karn算法"></a><strong>Karn算法</strong></h3><p>当一个超时和重传发生时，在<strong>重传数据的确认</strong>最后<strong>到达</strong>之前，不能更新RTT估计器，因为我们并不知道ACK对应哪次传输（也许第一次传输被延迟而并没有被丢弃，也有可能第一次传输的ACK被延迟）。<br><strong>在任何时候对每个连接仅测量一次RTT值</strong>。在发送一个报文段时，如果该连接的定时器已经被使用，则该报文段不会被计时。</p>
+<p>对一个没有被重传的报文段来说，也要在收到一个ACK之后才能计算新的RTO。</p>
+<hr>
+<h2 id="拥塞"><a href="#拥塞" class="headerlink" title="拥塞"></a><strong>拥塞</strong></h2><p>分组丢失的指示：超时、收到重复的确认ACK（3次重复）。</p>
+<p>###<strong>拥塞避免算法</strong><br>拥塞避免算法是一种处理丢失分组的方法。</p>
+<p>拥塞避免算法和慢启动算法是两个不同目的、独立的算法。但是这两个算法经常一起实现。</p>
+<p>拥塞避免算法和慢启动算法需要2个变量：拥塞窗口cwnd和一个慢启动门限ssthresh。</p>
+<p>工作流程如下：</p>
+<pre><code>1. 初始化cwnd为1个报文段，ssthresh为65535字节。
+2. TCP输出例程的输出不能超过cwnd和接收方通告窗口的大小。（慢启动说过了）
+3. 拥塞发生时（超时或收到重复确认），ssthresh被设置为当前窗口的一半（cwnd和通告窗口大小的最小值，但至少为2个报文段）。此外,如果是超时引起了拥塞,则cwnd被设置为1个报文段（这就是慢启动）。
+4. 如果cwnd &lt;= ssthresh,则正在进行慢启动,否则正在进行拥塞避免. 当慢启动过程cwnd大小到达ssthresh，就变为拥塞避免，每次只增加1报文段.
+</code></pre><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906170514879" alt="拥塞避免算法" title="" class="">
+                <p>拥塞避免算法</p>
+            </figure>
+<h3 id="快速重传和快速恢复算法"><a href="#快速重传和快速恢复算法" class="headerlink" title="快速重传和快速恢复算法"></a><strong>快速重传和快速恢复算法</strong></h3><p>在收到一个失序的报文段的时候，TCP立即返回一个ACK，告诉对方希望收到的序号。</p>
+<p>当收到3个以上的重复ACK时，判断一个报文段丢失了。无需等待定时器溢出，马上重传丢失的数据报文段，这就是<strong>快速重传</strong>。接下来执行的不是慢启动算法，而是拥塞避免算法的话，这就是<strong>快速恢复算法</strong>。<br>没有执行慢启动的原因：收到重复ACK告诉我们两端还有流动的数据，不想用慢启动来突然减少数据流。</p>
+<p>流程：</p>
+<pre><code>1. 收到3个重复ACK之后，将ssthresh设置为cwnd的一半。重传丢失的报文段，设置cwnd为ssthresh加上3倍的报文段大小。
+2. 每次收到另一个重复的ACK，cwnd就增加1个报文段大小并发送一个分组。
+3. 当下一个确认新数据的ACK到达时，设置cwnd为ssthresh（第1步中设置的值）。
+</code></pre><hr>
+<h2 id="ICMP的差错"><a href="#ICMP的差错" class="headerlink" title="ICMP的差错"></a>ICMP的差错</h2><p>TCP能够遇到的最常见的ICMP差错就是源站抑制、主机不可达和网络不可达。</p>
+<ul>
+<li>收到源站抑制，会引起慢启动，但是ssthresh没有变化。</li>
+<li>主机不可达和网络不可达都会被忽略。</li>
+</ul>
+<hr>
+<h2 id="重新分组"><a href="#重新分组" class="headerlink" title="重新分组"></a>重新分组</h2><p>当TCP超时重传时，不一定要重传相同的报文段。比如可以重新分组，发送一个较大的报文段。    </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 超时与重传 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC18%E7%AB%A0%20TCP%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%BB%BA%E7%AB%8B%E4%B8%8E%E7%BB%88%E6%AD%A2/</url>
+      <content type="html"><![CDATA[<h1 id="TCP连接的建立与终止"><a href="#TCP连接的建立与终止" class="headerlink" title="TCP连接的建立与终止"></a>TCP连接的建立与终止</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。</p>
+<p>UDP是无连接协议。</p>
+<hr>
+<h2 id="连接的建立与终止"><a href="#连接的建立与终止" class="headerlink" title="连接的建立与终止"></a>连接的建立与终止</h2><h3 id="建立过程（三次握手）："><a href="#建立过程（三次握手）：" class="headerlink" title="建立过程（三次握手）："></a>建立过程（三次握手）：</h3><pre><code>1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
+2. 服务器发回包含服务器初始序号的SYN报文段，同时将确认序号（ACK）设置为客户的ISN+1，表示期望得到ISN+1的报文段。
+3. 将确认序号置为ISN+1，发送给服务器。
+</code></pre><p>发送第一个SYN的一端成为<strong>主动打开</strong>，接受这个SYN并发回下一个SYN的一端执行<strong>被动打开</strong>。<br>当一端为建立连接而发送它的SYN时，它为连接选择一个初始序号ISN。ISN随着时间变化而变化，所以每个连接的ISN都是不同的。</p>
+<h3 id="终止过程（四次握手）："><a href="#终止过程（四次握手）：" class="headerlink" title="终止过程（四次握手）："></a>终止过程（四次握手）：</h3><p>建立连接的时候发送SYN，终止连接的时候发送FIN。发送FIN通常是应用层进行关闭的结果。<br>发送FIN的一端没有数据流动，但是一个TCP连接在收到一个FIN后仍能发送数据。（半关闭 half close）</p>
+<pre><code>1. 首先主动关闭的一方发送一个FIN。
+2. 另一方收到这个FIN，执行被动关闭。发回一个ACK，确认序号+1.
+3. 服务器向应用程序传送一个文件结束符，接着这个服务器程序就关闭连接，导致服务器发送一个FIN。
+4. 客户收到FIN，返回一个ACK给服务器。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，我Client端也可以关闭连接了。
+</code></pre><p>一般而言，一方完成<strong>主动关闭</strong>，另一方完成<strong>被动关闭</strong>。<br><strong>也有情况为双方主动打开，或双方主动关闭的。</strong></p>
+<hr>
+<h2 id="最大报文段长度MSS"><a href="#最大报文段长度MSS" class="headerlink" title="最大报文段长度MSS"></a>最大报文段长度MSS</h2><p>MSS表示TCP传往另一端的最大数据块的长度。</p>
+<ul>
+<li>当一个连接建立时，连接的双方都要通告各自的MSS。如果一方不接受</li>
+<li>另一方的MSS值，则MSS就定为默认的536字节（因为主机要求IP数据报不能超过576字节，576-40首部长度=536）</li>
+<li>对于一个以太网来说，MSS值可以达到1460字节。（因为以太网MTU为1500，除去40首部剩下1460）</li>
+<li>如果目的IP地址是“非本地的”，那么MSS通常为536.（在传输过程中避免分片）</li>
+</ul>
+<hr>
+<h2 id="TCP的半关闭"><a href="#TCP的半关闭" class="headerlink" title="TCP的半关闭"></a>TCP的半关闭</h2><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。（少用）<br>发送了FIN的一方停止发送数据，但是还没收到另一个FIN之前，还是能接收数据。</p>
+<hr>
+<h2 id="TCP的状态变迁图"><a href="#TCP的状态变迁图" class="headerlink" title="TCP的状态变迁图"></a>TCP的状态变迁图</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905111514841" alt="TCP的状态变迁" title="" class="">
+                <p>TCP的状态变迁</p>
+            </figure>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905114915973" alt="TCP正常连接建立和终止所对应的状态" title="" class="">
+                <p>TCP正常连接建立和终止所对应的状态</p>
+            </figure>
+<p>###2MSL等待状态<br>TIME_WAIT状态也成为2MSL等待状态。每个具体TCP实现必须选择一个报文段最大生存时间MSL（Maximum Segment Lifetime）。它是任何报文段被丢弃前在网络内的最长时间。</p>
+<p>当TCP执行一个主动关闭，并发回最后一个ACK，该连接必须在TIME_WAIT状态停留的时间为2倍的MSL。这样可让TCP再次发送最后的ACK以防这个ACK丢失。</p>
+<p>而且在2MSL期间，这个TCP连接的插口不能再被使用。只能在2MSL过去之后才能再被使用。此时任何迟到的报文段将被丢弃。（如果我们关闭一个客户程序，并马上重启，那么这个程序将不能重用相同的本地端口，但是客户程序一般不关心本地端口；但是服务器就不一样了，服务器一般都是用固定端口对应固定的服务，立即重启服务器的话就不能用这个熟知端口了，所以重启服务器程序之前，一般需要1~4分钟）。</p>
+<p>于是给出了一个“<strong>平静时间</strong>”的概念，在重启动后的MSL秒内不能建立任何连接，这就成为<strong>平静时间</strong>。</p>
+<h3 id="FIN-WAIT-2状态"><a href="#FIN-WAIT-2状态" class="headerlink" title="FIN_WAIT_2状态"></a>FIN_WAIT_2状态</h3><p>客户端发送一个FIN，并且收到ACK之后的状态。它将在接收到服务器端发送的FIN后进入TIME_WAIT状态。<br>如果另一端一直处于CLOSE_WAIT状态，不发送FIN，这意味着我们这端可能永远保持这个状态（半关闭）。</p>
+<hr>
+<h2 id="复位报文段"><a href="#复位报文段" class="headerlink" title="复位报文段"></a>复位报文段</h2><p>RST比特是用于“复位”的。<br>无论何时一个发往目的地的报文段出错，TCP都会发出一个复位报文段。</p>
+<h3 id="到不存在的端口的连接请求"><a href="#到不存在的端口的连接请求" class="headerlink" title="到不存在的端口的连接请求"></a>到不存在的端口的连接请求</h3><p>在UDP中，一个数据报达到目的端口时，该端口没在使用，它将产生一个ICMP端口不可达的信息。而<strong>TCP则使用复位</strong>。</p>
+<h3 id="异常终止一个连接"><a href="#异常终止一个连接" class="headerlink" title="异常终止一个连接"></a>异常终止一个连接</h3><p>发送FIN终止连接的方式叫做<strong>有序释放</strong>。<br>中途发送一个复位报文段来释放一个连接，叫做<strong>“异常”释放</strong>。</p>
+<p>异常终止一个连接对应用程序来说有两个优点： </p>
+<ol>
+<li>丢弃任何待发数据并立即发送复位报文段； </li>
+<li>RST的接收方会区分另一端执行的是异常关闭还是正常关闭。应用程序使用的API必须提供产生异常关闭而不是正常关闭的手段。</li>
+</ol>
+<p><strong>需要注意的是RST报文段不会导致另一端产生任何响应，另一端根本不进行确认。收到RST的一方将终止该连接，并通知应用层连接复位。</strong></p>
+<h3 id="检测半打开连接"><a href="#检测半打开连接" class="headerlink" title="检测半打开连接"></a>检测半打开连接</h3><p>如果一方已经关闭或异常终止连接而另一方却还不知道，我们将这样的TCP连接成为<strong>半打开</strong>的。只要不打算在半打开的连接上传输数据，仍除去连接状态的一方就不会检测另一方已经出现异常。</p>
+<p>半打开连接的另一个常见原因是当服务器主机突然掉电而不是正常的结束服务应用程序后再关机，服务器主机重启后，从客户向服务器发送另一行字符。由于服务器的TCP已经重新启动，它将丢失复位前连接的所有信息，因此它不知道数据报文段中提到的连接。TCP的处理原则是接收方以复位作为应答。</p>
+<hr>
+<h2 id="同时打开与同时关闭"><a href="#同时打开与同时关闭" class="headerlink" title="同时打开与同时关闭"></a>同时打开与同时关闭</h2><p>很少用到，发生的概率很小。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> TCP连接的建立与终止 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC20%E7%AB%A0%20TCP%E7%9A%84%E6%88%90%E5%9D%97%E6%95%B0%E6%8D%AE%E6%B5%81/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的成块数据流"><a href="#TCP的成块数据流" class="headerlink" title="TCP的成块数据流"></a>TCP的成块数据流</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>一种流量控制方法——滑动窗口协议</p>
+<p>该协议允许发送方在停止并等待确认前可以连续发送多个分组，由于发送发不必每发送一个分组就停下来等待确认，因此该协议可以加速数据的传输。</p>
+<hr>
+<h2 id="正常数据流"><a href="#正常数据流" class="headerlink" title="正常数据流"></a><strong>正常数据流</strong></h2><h3 id="隔一个报文段确认的策略"><a href="#隔一个报文段确认的策略" class="headerlink" title="隔一个报文段确认的策略"></a><strong>隔一个报文段确认的策略</strong></h3><pre><code>1. 每2个报文段返回一次ACK。
+2. 如果定时器溢出，那不管有没有确认2个报文段，也返回一次ACK。
+</code></pre><h3 id="ACK是积累的"><a href="#ACK是积累的" class="headerlink" title="ACK是积累的"></a><strong>ACK是积累的</strong></h3><p>使用TCP的滑动窗口协议时，接收方不必确认每一个收到的分组，在TCP中，ACK是积累的——它们表示接收到已经正确收到了一直到确认序号减1的所有字节。</p>
+<p>下图是传输8192字节的一种时间序列<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906114509561" alt="TCP成块数据流传输" title="" class="">
+                <p>TCP成块数据流传输</p>
+            </figure></p>
+<h3 id="发送同一段数据可能有不同的时间序列"><a href="#发送同一段数据可能有不同的时间序列" class="headerlink" title="发送同一段数据可能有不同的时间序列"></a><strong>发送同一段数据可能有不同的时间序列</strong></h3><ul>
+<li>由于发送方和接收方处理数据的能力不同，那么时间序列也可能不同。</li>
+<li>比如接收方处理得慢，那么发送方必须等到接收方处理完窗口里面的数据才能发送。</li>
+<li>如果接收方的缓冲区数据满了，会返回一个ACK，并通知窗口为0.</li>
+<li>过一段时间缓冲区有位置了，会再发一个ACK通知窗口大小。（并不是有位置就马上通知）</li>
+</ul>
+<hr>
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a><strong>滑动窗口</strong></h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906121052546" alt="滑动窗口" title="" class="">
+                <p>滑动窗口</p>
+            </figure>
+<p>接收方通告的窗口称为“提供的窗口”（通告窗口），表示对面有那么多个位置可以接收礼物啊，快把东西丢过去呀。<br>然后发送方知道还有6个位置，所以发了4~6一共3个鱼丸过去，对面还有3个位置，现在还能发送3个。</p>
+<p>窗口移动：</p>
+<pre><code>1. 左边沿往右移成为**窗口合拢**。也就是发送出去的窗口被确认，但是对面可用的窗口位置没有增多。
+2. 右边沿向右移动称为**窗口张开**。也就是对面已经处理了缓冲区的数据，又腾出地方可以让你送鱼丸了。
+3. 右边沿向左移动称为**窗口收缩**。强烈建议不使用这种方式。
+</code></pre><p>如果左边沿到达右边沿，则称其为一个<strong>零窗口</strong>，此时发送方一般不能再发送数据报。</p>
+<p>总结：</p>
+<pre><code>1. 发送方不必发送一个全窗口大小的数据。
+2. 来自接收方的一个ACK并把窗口右移，因为窗口的大小是相对于确认序号的。（这个想想就理解了）
+3. 窗口大小可以减小，但是右边沿不能左移。
+4. 接收方返回一个ACK前不必等待窗口被填满才返回。（应该可以设定的，例如前面提到的“隔一个报文段确认”）
+</code></pre><hr>
+<h2 id="窗口大小"><a href="#窗口大小" class="headerlink" title="窗口大小"></a><strong>窗口大小</strong></h2><p>默认为4096，但是并非最理想的。16384字节可以增加约40%的吞吐量。</p>
+<hr>
+<h2 id="PUSH标志"><a href="#PUSH标志" class="headerlink" title="PUSH标志"></a><strong>PUSH标志</strong></h2><p>该标志通知接收方将所收到的数据全部提交给接收进程。这里的数据包括与PUSH一起传送的数据以及接收方TCP已经为接收进程收到的其它数据。<br>同时也会将发送缓冲区里面的数据立即发送出去。</p>
+<hr>
+<h2 id="慢启动（重点）"><a href="#慢启动（重点）" class="headerlink" title="慢启动（重点）"></a><strong>慢启动（重点）</strong></h2><p>如果在发送方和接收方之间存在多个路由器和速度较慢的链路时（广域网），一开始就不断发送报文段直至达到接收方的窗口满为止，这样的行为可能导致拥塞。</p>
+<p><strong>慢启动算法（slow start）</strong>通过观察到新分组进入网络的速率应该与另一端<strong>返回确认的速率相同</strong>而进行工作。</p>
+<p>慢启动需要加入一个新的窗口概念——拥塞窗口，cwnd.<br>拥塞窗口初始化为1个报文段，每接收到一个ACK就增加一个报文段。（cwnd以字节为单位，但是慢启动以报文段大小为单位，也就是1个报文段。）</p>
+<p>大小变化：1-&gt;2-&gt;4-&gt;8……   可以看出拥塞窗口的大小是以指数方式增长的。</p>
+<p><strong>发送方取拥塞窗口与通告窗口的最小值作为发送上限。</strong>（就是你能发送的大小和对方能接收的大小的最小值）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906132012918" alt="拥塞窗口" title="" class="">
+                <p>拥塞窗口</p>
+            </figure>
+<p>在某些点上可能达到了互联网的容量，于是中间路由器开始丢弃分组，这就通知发送方它的拥塞窗口开得过大。（流量控制）</p>
+<hr>
+<h2 id="成块数据的吞吐量"><a href="#成块数据的吞吐量" class="headerlink" title="成块数据的吞吐量"></a><strong>成块数据的吞吐量</strong></h2><p>发送方和接收方之间的路径称为<strong>管道</strong>。</p>
+<p><strong>带宽时延乘积</strong> capacity(bit)=bandwidth(b/s) x round-trip time(s)<br>通道容量=带宽 x 往返时间   （容量=时间 x 速度）也就是整个通道能装下的容量大小</p>
+<hr>
+<h2 id="紧急方式"><a href="#紧急方式" class="headerlink" title="紧急方式"></a><strong>紧急方式</strong></h2><p>“紧急方式”使一端可以告诉另一端有些具有某种方式的“紧急数据”已经放置在普通的数据流中，接收方收到通知，并决定如何处理。</p>
+<p>可以通过设置TCP首部中的两个字段来发出这种从一端到另一端的紧急数据已经被放置在数据流中的通知。<strong>URG比特</strong>被置为1，并且一个16bit的紧急指针放置为一个正的偏移量，该偏移量必须与TCP首部中的序号字段相加，以便得出紧急数据的<strong>最后一个字节的序号</strong>。</p>
+<p>当紧急数据进入发送缓冲区后，下一个将要发送的数据（可能是紧急，也可能不是）的URG比特置为1，发送给接收方。接收方知道后就知道发送方处于紧急状态（仅仅知道而已，不会采取什么措施，它会通知应用层现在有紧急数据，你自己看着办），直到接收到最后一个字节的紧急数据后解除这种状态。</p>
+<p>如果接收方通告窗口为0，那么数据无法发送出去，但是URG比特这个报文还是会发送出去，通知对面我这边有紧急数据。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 成块数据流 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC10%E7%AB%A0%20%E5%8A%A8%E6%80%81%E9%80%89%E8%B7%AF%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="动态选路协议"><a href="#动态选路协议" class="headerlink" title="动态选路协议"></a>动态选路协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>第9章学了<strong>静态选路</strong>。在配置接口时，通过route命令增加表项（通常从系统自引导程序文件），或是通过ICMP重定向生成表项（出错时）。</p>
+<p>但是静态选路受制于三种情况：</p>
+<pre><code>1. 网络很小
+2. 与其他网络只有单个连接点
+3. 没有多余路由
+</code></pre><p>如果上述三种情况不能全部满足，通常使用<strong>动态选路</strong>。</p>
+<hr>
+<h2 id="动态选路"><a href="#动态选路" class="headerlink" title="动态选路"></a>动态选路</h2><p>当相邻路由器之间进行通信，以告知对方每个路由器当前所连接的网络，这时就出现了<strong>动态选路</strong>。<br> 路由器上有一个进程——路由守护程序，它运行选路协议，并与其相邻的一些路由器进行通信。</p>
+<p>第9章所描述的选路方式称为<strong>选路机制</strong>：内核搜索路由表，查找现有的线路。<br>路由守护程序将<strong>选路策略</strong>加入到系统中，选择（最佳）路由并加入到内核的路由表中；如果发现一条链路断开，它可以删除或增加另一条路由来解决。路由是路由守护程序动态地增加或删除的。</p>
+<p>Internet是以一组自治系统（AS,Autonomous System）的方式组织的,每个自治系统通常由单个实体管理。<br>每个自治系统可以选择该自治系统中各个路由器之间的<strong>选路协议</strong>。这种协议我们称之为<strong>内部网关协议IGP</strong>(Interior Gateway Protocol)或<strong>域内选路协议</strong>(intradomain routing protocol)。</p>
+<ul>
+<li>最常用的IGP是<strong>RIP(Routing Information Protocol)</strong>，新的开放<strong>最短路径优先OSPF协议</strong>，则意在取代RIP。</li>
+</ul>
+<p><strong>外部网关协议EGP</strong>或<strong>域内选路协议的分隔选路协议</strong>用于不同AS之间的路由器。</p>
+<hr>
+<h2 id="Unix选路守护程序"><a href="#Unix选路守护程序" class="headerlink" title="Unix选路守护程序"></a>Unix选路守护程序</h2><p>routed程序——RIP<br>gated程序——IGP、EGP</p>
+<hr>
+<h2 id="RIP：选路信息协议"><a href="#RIP：选路信息协议" class="headerlink" title="RIP：选路信息协议"></a>RIP：选路信息协议</h2><p>最广为使用的选路协议。</p>
+<h3 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h3><p>RIP报文包含在UDP数据报中。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818160411546" alt="RIP格式" title="" class="">
+                <p>RIP格式</p>
+            </figure></p>
+<p>命令字段1表示请求，2表示应答。<br>请求表示要求其他系统发送其全部或部分路由表。应答则包含发送者全部或部分路由表。<br>RIP报文最多可以通告25条路由。</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li>RIP常用的UDP端口号是520.</li>
+<li>定期选路更新：每过30秒，所有或者部分路由器会将其完整路由表发送给相邻路由器。</li>
+<li>触发更新：每当一条路由的度量发生变化时，就对它进行更新，不需要发送完整路由表。</li>
+</ul>
+<h3 id="度量"><a href="#度量" class="headerlink" title="度量"></a>度量</h3><ul>
+<li>RIP所使用的度量是以跳（hop）计算的，所有直接连接接口的跳数为1.</li>
+<li>跳数最大为15，被限制了网络的规模。</li>
+</ul>
+<h3 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h3><ul>
+<li>没有子网地址的概念</li>
+<li>在路由器或链路发生故障后，需要很长的一段时间才能稳定下来，一般需要几分钟。</li>
+</ul>
+<hr>
+<h2 id="OSPF：开放最短路径优先（Open-Shortest-Path-First）"><a href="#OSPF：开放最短路径优先（Open-Shortest-Path-First）" class="headerlink" title="OSPF：开放最短路径优先（Open Shortest Path First）"></a>OSPF：开放最短路径优先（Open Shortest Path First）</h2><p>OSPF是除RIP外的另一个内部网关协议，它克服了RIP的所有限制。</p>
+<ul>
+<li>与采用距离向量的RIP协议不同的是, OSPF是一个链路状态协议。距离向量的意思是,RIP发送的报文包含一个距离向量(跳数)。每个路由器都根据它所接收到邻站的这些距离向量来更新自己的路由表。</li>
+<li>在一个链路状态协议中,路由器<strong>并不与其邻站交换距离信息</strong>。它采用的是每个路由器主动地测试与其邻站相连链路的状态,将这些信息发送给它的其他邻站,而邻站将这些信息在自治系统中传播出去。每个路由器接收这些链路状态信息,并建立起完整的路由表。</li>
+<li>链路状态协议总是比距离向量协议收敛更快。收敛的意思是在路由发生变化后，例如在路由器关闭或链路除故障后，可以稳定下来。</li>
+<li>OSPF直接使用IP，不使用TCP或UDP。</li>
+</ul>
+<hr>
+<h2 id="BGP：边界网关协议"><a href="#BGP：边界网关协议" class="headerlink" title="BGP：边界网关协议"></a>BGP：边界网关协议</h2><ul>
+<li>BGP是一种不同自治系统的路由器之间进行通信的外部网关协议。</li>
+<li>BGP系统与其他BGP系统之间交换网络可到达信息。这些信息包括数据到达这些网络所必须经过的自治系统AS中的所有路径。这些信息足以构造一幅自治系统连接图。然后,可以根据连接图删除选路环,制订选路策略。</li>
+<li>BGP使用TCP作为其传输层协议。</li>
+<li>BGP是一个距离向量协议,但是与(通告到目的地址跳数的)RIP不同的是,BGP列举了到每个目的地址的路由(自治系统到达目的地址的序列号)。这样就排除了一些距离向量协议的问题。采用16 bit 数字表示自治系统标识。</li>
+</ul>
+<hr>
+<h2 id="CIDR：无类型域间选路"><a href="#CIDR：无类型域间选路" class="headerlink" title="CIDR：无类型域间选路"></a>CIDR：无类型域间选路</h2><p>无类型域间选路(CIDR)是一个防止Internet路由表膨胀的方法,它也称为超网(supernetting)。<br>CIDR的基本观点是采用一种分配多个IP地址的方式，使其能够将路由表中的许多表项总和成更小的数目。例如，给单个站点分配16个C类地址，以一种可以用总和的方式来分配这16个地址，这样这<strong>16个</strong>地址可以参照Internet上的<strong>单个</strong>路由表表项。</p>
+<p>例如：172.168.0.0/16</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 动态选路 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC23%E7%AB%A0%20TCP%E7%9A%84%E4%BF%9D%E6%B4%BB%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的保活定时器"><a href="#TCP的保活定时器" class="headerlink" title="TCP的保活定时器"></a>TCP的保活定时器</h1><p>有时一个TCP连接会是空闲的，没有任何数据通过，双方都不交换信息。<br>许多时候一个服务器希望知道客户主机是否崩溃并关机或者崩溃又重启。使用<strong>保活定时器</strong>来进行检测。保活功能就是试图在服务器端检测到这种半开放的连接。</p>
+<p>如果一个给定的连接在两个小时之内没有任何动作，则服务器就向客户发送一个探查报文段。<br>客户主机必须处于以下4个状态之一：</p>
+<ol>
+<li>客户主机依然正常运行，并从服务器可达。客户的TCP响应正常，而服务器也知道对方是正常工作的。服务器在两小时以后将保活定时器复位。如果在两个小时定时器到时间之前有应用程序的通信量通过此连接，则定时器在交换数据后的未来2小时再复位。</li>
+<li>客户主机已经崩溃，并且关闭或者正在重新启动。在任何一种情况下，客户的TCP都没有响应。服务器将不能够收到对探查的响应，并在75秒后超时。服务器总共发送10个这样的探查，每个间隔75秒。如果服务器没有收到一个响应，它就认为客户主机已经关闭并终止连接。</li>
+<li>客户主机崩溃并已经重新启动。这时服务器将收到一个对其保活探查的响应，但是这个响应是一个复位，使得服务器终止这个连接。</li>
+<li>客户主机正常运行，但是从服务器不可达。这与状态2相同，因为TCP不能够区分状态4与状态2之间的区别，它所能发现的就是没有收到探查的响应。</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> 保活定时器 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC22%E7%AB%A0%20TCP%E7%9A%84%E5%9D%9A%E6%8C%81%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的坚持定时器"><a href="#TCP的坚持定时器" class="headerlink" title="TCP的坚持定时器"></a>TCP的坚持定时器</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。<br>有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。<br>为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window probe）</p>
+<hr>
+<h2 id="坚持定时器"><a href="#坚持定时器" class="headerlink" title="坚持定时器"></a><strong>坚持定时器</strong></h2><p>当通告窗口为0之后，引起客户设置其坚持定时器，当定时器溢出时还没有接收到窗口更新的话，它就探查这个空的窗口来判断窗口更新的报文是否丢失了。</p>
+<ul>
+<li>如果得知窗口非0了，就可以开始发送数据了</li>
+<li>如果窗口还是0，就重新计时，这个过程将会持续到窗口被打开，或者连接被终止（所以叫做“坚持”定时器）</li>
+<li>坚持定时器使用了TCP指数退避，但是坚持定时器总是在5~60秒之间。</li>
+</ul>
+<hr>
+<h2 id="糊涂窗口综合征症SWS（Silly-Window-Syndrome）"><a href="#糊涂窗口综合征症SWS（Silly-Window-Syndrome）" class="headerlink" title="糊涂窗口综合征症SWS（Silly Window Syndrome）"></a><strong>糊涂窗口综合征症SWS（Silly Window Syndrome）</strong></h2><p>基于窗口的流量控制，会导致SWS——少量的数据将通过连接进行交换，而不是满长度的报文段。</p>
+<ul>
+<li>接收方可以通告一个<strong>小窗口</strong>，发送方也可以发送少量的数据（不用等到其他数据一起发送一个大的报文段）。</li>
+<li>这样会导致在通道中有很多小数据，可能导致拥塞，影响网络利用率。</li>
+</ul>
+<p>避免的方法：</p>
+<pre><code>1. **接收方**不通告小窗口，除非窗口有了一个满长度的报文段大小，或者有了一半缓存空间。
+2. **发送方**有3个条件，必须满足任一条件才发送数据：
+</code></pre><ul>
+<li>可以发送一个满长度的报文段</li>
+<li>可以发送至少是接收方通告窗口大小一半的报文段</li>
+<li>可以发送任何数据并且不希望接收ACK（就是说没有未被确认的数据）或者该连接上不能使用Nagle算法（连接上只能有一个未被确认的分组，确认后才能发送新的）。（<strong>一半会用Nagle来防止这种SWS的情况</strong>）</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> TCP的坚持定时器 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC4%E7%AB%A0%20ARP%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。<br>地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。</p>
+<ul>
+<li>ARP为IP地址到对应的硬件地址之间提供动态映射。</li>
+<li>RARP是被那些<strong>没有磁盘驱动器</strong>的系统使用的。</li>
+</ul>
+<hr>
+<h1 id="二、ARP运行过程"><a href="#二、ARP运行过程" class="headerlink" title="二、ARP运行过程"></a>二、ARP运行过程</h1><p>一个FTP客户端传输过程如下：</p>
+<pre><code>1. FTP调用函数gethostbyname把主机名用DNS转换成32bit的IP地址。
+2. 用IP地址建立TCP连接。
+3. TCP发送一个连接请求到远端的主机上。
+4. 如果目的主机在本地网络上，那么直接发送到该主机；如果不在本地，那么就需要通过IP选路函数来确定下一跳路由器地址。
+5. 如果链路层是以太网，那么发送端主机需要把32bit的IP地址变换成48bit的以太网地址，这个时候就要用到ARP。
+6. ARP广播发送一份**ARP请求**的以太网数据帧到以太网上的每个主机，请IP地址相符的拥有者返回硬件地址
+7. 目的主机收到广播报文，返回一个**ARP应答**。
+8. 发送IP数据报。
+</code></pre><p>在ARP背后有一个基本概念，那就是网络接口有一个硬件地址（48bit）。内核（如以太网驱动程序）必须知道目的端的硬件地址才能发送数据。<br><em>点对点链路不使用ARP，点对点链路发送数据肯定是到另一个点，并不涉及硬件地址。</em></p>
+<hr>
+<h1 id="三、ARP高速缓存"><a href="#三、ARP高速缓存" class="headerlink" title="三、ARP高速缓存"></a>三、ARP高速缓存</h1><p>ARP高效运行的关键是每个主机上都有一个ARP高速缓存，存放着IP和MAC地址的映射。<br>48bit的以太网地址用6个十六进制的数来表示，中间以冒号隔开。</p>
+<hr>
+<h1 id="四、ARP的分组格式"><a href="#四、ARP的分组格式" class="headerlink" title="四、ARP的分组格式"></a>四、ARP的分组格式</h1><p>ARP请求和应答分组的格式如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809140010563" alt="ARP格式" title="" class="">
+                <p>ARP格式</p>
+            </figure></p>
+<ul>
+<li>目的地址和源地址：全1的为广播地址。电缆上所有以太网接口都要接受广播的数据帧。</li>
+<li>帧类型：表示后面的数据类型（ARP请求/ARP应答/RARP请求/RARP应答），请求的值为0x0806.</li>
+<li>硬件类型：比如以太网。</li>
+<li>协议类型：比如IP协议。</li>
+<li>硬件地址长度和协议地址长度：以字节为单位。</li>
+<li>op操作：支出4种操作类型，ARP请求/ARP应答/RARP请求/RARP应答，值分别为1/2/3/4.</li>
+</ul>
+<p>可以用<em>tcpdum</em>指令来查看运行过程。<br> 当系统受到ARP请求或发送ARP应答时，都要把请求端的硬件地址和IP地址存入ARP高速缓存中。</p>
+<hr>
+<h1 id="ARP代理"><a href="#ARP代理" class="headerlink" title="ARP代理"></a>ARP代理</h1><p>如果ARP请求是从一个网络的主机发往另一个网络上的主机，那么连接这两个网络的路由器就可以回答该请求，这个过程称作<strong>委托ARP</strong>或<strong>ARP代理</strong>。（也就是说返回的是路由器的MAC地址和主机的IP）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809141848009" alt="ARP代理" title="" class="">
+                <p>ARP代理</p>
+            </figure>
+<p>拨号SLIP链路的两端只拥有一个IP地址140.252.1.183，而SLIP链路的两端却分别有一个IP地址，为什么？因为路由不需要知道拨号SLIP链路每一端的IP地址，它通过分组到达的串行链路接口来确定发送分组的拨号主机。<em>（<strong>其实这里不是很懂，希望理解的朋友们给我留言解答一下</strong>）</em></p>
+<p>ARP代理也称作混合ARP或ARP出租，这些名字来自于它的其他用途：通过两个物理网络之间的路由器可以互相隐藏物理网络。</p>
+<hr>
+<h1 id="七、免费ARP"><a href="#七、免费ARP" class="headerlink" title="七、免费ARP"></a>七、免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址。<br>主要有2个作用：</p>
+<pre><code>1. 一个主机可以通过它来确定另一个主机是否设置了相同的IP地址。
+2. 如果发送免费ARP的主机正好改变了硬件地址，那么这个分组就可以使其他主机高速缓存中旧的硬件地址进行相应的更新。
+</code></pre><hr>
+<h1 id="八、arp命令"><a href="#八、arp命令" class="headerlink" title="八、arp命令"></a>八、arp命令</h1><p>arp -a显示ARP高速缓存中的所有内容<br>arp -d删除某一项内容<br>arp -s增加一项内容<br>位于命令行末尾的关键字pub和-s选项一起，可以使系统起着主机ARP代理的作用。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> ARP </tag>
+            
+            <tag> 地址解析协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1：协议》 读书笔记 第5章 RARP：逆地址解析协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC5%E7%AB%A0%20RARP%EF%BC%9A%E9%80%86%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="反向地址转换协议（RARP：Reverse-Address-Resolution-Protocol）"><a href="#反向地址转换协议（RARP：Reverse-Address-Resolution-Protocol）" class="headerlink" title="反向地址转换协议（RARP：Reverse Address Resolution Protocol）"></a>反向地址转换协议（RARP：Reverse Address Resolution Protocol）</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>具有本地磁盘的系统引导时，一般是从磁盘上的配置文件中读取IP地址。<strong>但是无盘机，如X终端或五盘工作站，则需要采用其他方法来获得IP地址。</strong><br>网络上的每个系统都具有唯一的硬件地址，它是由网络接口生产厂家配置的。无盘系统的RARP实现过程是从接口卡上读取唯一的硬件地址，然后发送一份RARP请求，请求某个主机响应该无盘系统的IP地址。</p>
+<hr>
+<h2 id="RARP的分组格式"><a href="#RARP的分组格式" class="headerlink" title="RARP的分组格式"></a>RARP的分组格式</h2><p>与ARP基本一致，RARP请求或应答的帧类型代码为0x8035，而且RARP请求的op代码为3，应答op代码为4.</p>
+<hr>
+<h2 id="RARP请求过程"><a href="#RARP请求过程" class="headerlink" title="RARP请求过程"></a>RARP请求过程</h2><p>和ARP一样，RARP请求是广播方式，RARP应答是单播方式。<br>如果没有响应，会等待一段时间重新发送请求，每一次等待时间会倍增。<br>1.21s –&gt; 2.42s –&gt; 4.83s –&gt; …<br>当时间到达某个阈值（42.80s）时，就会重置。</p>
+<p>超时间隔采用这样的递增方式比每次都采用相同值的方法要好。为什么？请参考超时重发机制。</p>
+<hr>
+<h2 id="RARP服务器的设计"><a href="#RARP服务器的设计" class="headerlink" title="RARP服务器的设计"></a>RARP服务器的设计</h2><p>RARP服务器的复杂性在于，服务器一般要为多个主机（网络上所有的无盘系统）提供硬件地址到IP地址的映射。该映射包含在一个磁盘文件中。由于内核一般不读取和分析磁盘文件，因此RARP服务器的功能就由用户进程来提供，而不是作为内核的TCP/IP实现的一部分。</p>
+<p>一个复杂因素：RARP请求实在硬件层上进行广播的，不经过路由器进行转发。为了让无盘系统在RARP服务器关机的状态下也能引导，通常在一个网络上要提供多个RARP服务器。</p>
+<p>（卧槽？？网络层和链路层传输是分离的吗？）<br>（网络层——选路，链路层——提供路）</p>
+<p>与ARP的区别：</p>
+<ul>
+<li>ARP通常是TCP/IP在内核中实现的，RARP则是用户进程中</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> RARP </tag>
+            
+            <tag> 逆地址解析协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC6%E7%AB%A0%20ICMPInternet%E6%8E%A7%E5%88%B6%E6%8A%A5%E6%96%87%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="ICMP-Internet控制报文协议"><a href="#ICMP-Internet控制报文协议" class="headerlink" title="ICMP:Internet控制报文协议"></a>ICMP:Internet控制报文协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>ICMP通常被认为是IP层的一个组成部分。它传递差错报文及其他需要注意的信息。<br>ICMP实在IP数据报内部被传输的。（封装在IP中）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160908200645561" alt="ICMP报文" title="" class="">
+                <p>ICMP报文</p>
+            </figure>
+<ul>
+<li>所有ICMP报文前4个字节是一样的。（也就是类型的前4位不变，所以类型只有15个）</li>
+<li>检验和字段覆盖整个ICMP报文，ICMP的检验和是必需的。</li>
+</ul>
+<hr>
+<h2 id="ICMP报文的类型"><a href="#ICMP报文的类型" class="headerlink" title="ICMP报文的类型"></a>ICMP报文的类型</h2><p>ICMP的类型由<strong>类型</strong>字段和<strong>代码</strong>字段共同决定。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160908200835642" alt="ICMP报文类型" title="" class="">
+                <p>ICMP报文类型</p>
+            </figure></p>
+<p>在对ICMP差错报文进行响应时，永远不会生成另一份ICMP差错报文（如果一个差错引起了另一个差错……一直循环下去）</p>
+<p>当发送一份ICMP差错报文时，报文始终包含IP首部和产生ICMP差错报文的IP数据报的前8个字节。（后面会讲）</p>
+<p>下面情况不会产生ICMP差错报文：</p>
+<pre><code>1. ICMP差错报文（上面已经提到，不过ICMP查询报文可以差生ICMP差错报文）
+2. 目的地址是广播或多播地址的IP数据报。
+3. 作为链路层广播的数据报。
+4. 不是IP分片的第一片。
+5. 源地址不是单个主机的数据报。（源地址不能为0地址、环回地址、广播地址和多播地址）
+</code></pre><hr>
+<h2 id="ICMP地址掩码请求与应答"><a href="#ICMP地址掩码请求与应答" class="headerlink" title="ICMP地址掩码请求与应答"></a>ICMP地址掩码请求与应答</h2><p>ICMP地址掩码请求用于无盘系统在引导过程中获取自己的子网掩码。系统广播它的ICMP请求报文(这一过程与无盘系统在引导过程中用RARP获取I P地址是类似的)。无盘系统获取子网掩码的另一个方法是 BOOTP协议。</p>
+<p>ICMP报文中的标识符和序列号字段由发送端任意选择设定,这些值在应答中将被返回。这样,发送端就可以把应答与请求进行匹配。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160908202014955" alt="报文" title="" class="">
+                <p>报文</p>
+            </figure>
+<hr>
+<h2 id="ICMP时间戳请求与应答"><a href="#ICMP时间戳请求与应答" class="headerlink" title="ICMP时间戳请求与应答"></a>ICMP时间戳请求与应答</h2><p>ICMP时间戳请求允许系统向另一个系统查询当前的时间。返回的建议值是自午夜开始计算的毫秒数,协调的统一时间( Coordinated Universal Time, UTC )，<strong>不知道日期</strong>。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160908202354631" alt="时间戳" title="" class="">
+                <p>时间戳</p>
+            </figure>
+<hr>
+<h2 id="ICMP端口不可达差错"><a href="#ICMP端口不可达差错" class="headerlink" title="ICMP端口不可达差错"></a>ICMP端口不可达差错</h2><p>UDP的规则之一——如果收到一份UDP数据报而目的端口与某个正在使用的进程不相符，那么返回一个ICMP不可达报文。</p>
+<p>注意，ICMP报文是在主机之间交换的，而不用目的端口好，而每个20字节的UDP数据报则是从一个特定端口发送到另一个特定端口。</p>
+<p>ICMP的一个规则是，ICMP差错报文必须包括生成该差错报文的数据报IP首部，还必须至少包括跟在该IP首部后面的前8个字节。IP首部后面的8个字节实际上是TCP或UDP首部的内容。<br>因为IP首部中包含了协议字段，使得ICMP可以知道如何解释后面的8个字节。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> ICMP </tag>
+            
+            <tag> Internet控制报文协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCP/IP详解 卷1:协议》 读书笔记 第7章 Ping程序]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC7%E7%AB%A0%20Ping%E7%A8%8B%E5%BA%8F/</url>
+      <content type="html"><![CDATA[<h1 id="Ping程序"><a href="#Ping程序" class="headerlink" title="Ping程序"></a>Ping程序</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>目的：测试另一台主机是否可达。<br>过程：该程序发送一份ICMP回显请求报文给主机，并等待返回ICMP回显应答。</p>
+<p>一般而言，如果不能Ping到某台主机，那么就不能Telnet或者FTP到那台主机；反过来，如果不能Telnet到某台主机，可以用Ping程序来确定问题出在哪里。Ping程序还能测出到这台主机的往返时间，表明主机离我们“多远”。</p>
+<hr>
+<h2 id="Ping的ICMP报文格式"><a href="#Ping的ICMP报文格式" class="headerlink" title="Ping的ICMP报文格式"></a>Ping的ICMP报文格式</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160810104556330" alt="ICMP报文格式" title="" class="">
+                <p>ICMP报文格式</p>
+            </figure>
+<p>ping程序——客户<br>被ping的主机——服务器<br>大多数的TCP/IP实现都在内核中直接支持Ping服务器。</p>
+<ul>
+<li>Unix系统在实现ping程序时是把ICMP报文中的标识符字段置成发送进程的ID号。这样即使在同一台主机上同时运行了多个ping程序实例, ping程序也可以识别出返回的信息。</li>
+<li>序列号从0开始，每发送一次新的回显请求就加1.</li>
+<li>ping程序会打印出序列号，方便查看分组返回的情况。</li>
+</ul>
+<hr>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>ping程序是对两个TCP/IP系统连通性进行测试的基本工具。 </li>
+<li>它只利用ICMP回显请求和回显应答报文，而不用经过传输层。</li>
+<li>ping服务器一般在内核中实现ICMP的功能。</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> ping </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC9%E7%AB%A0%20IP%E9%80%89%E8%B7%AF/</url>
+      <content type="html"><![CDATA[<h1 id="IP选路"><a href="#IP选路" class="headerlink" title="IP选路"></a><strong>IP选路</strong></h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>选路是IP最重要的功能之一。<br><strong>主要目的：了解单个IP层如何作出路由决策。</strong></p>
+<hr>
+<h2 id="选路的原理"><a href="#选路的原理" class="headerlink" title="选路的原理"></a><strong>选路的原理</strong></h2><p>IP搜索路由表的几个步骤：</p>
+<pre><code>1. 搜索匹配的主机地址
+2. 搜索匹配的网络地址
+3. 搜索默认表项
+</code></pre><p>IP层进行的选路实际上是一种<strong>选路机制</strong>，它搜索路由表并决定向哪个网络接口发送分组。<br>这区别于<strong>选路策略</strong>，它只是一组决定把哪些路由放入路由表的规则。</p>
+<h3 id="简单路由表"><a href="#简单路由表" class="headerlink" title="简单路由表"></a><strong>简单路由表</strong></h3><p>netstat -r列出路由表，-n以数字格式打印出IP地址。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160811152711748" alt="简单路由表" title="" class="">
+                <p>简单路由表</p>
+            </figure>
+<p>从左到右分别是目的IP地址、网关（下一站路由器的IP地址，<strong>如果是本地计算机直接连接到的网络，网关通常是本地计算机对应的网络接口</strong>）、标志、参考记数Refcnt、发送的分组数use、本地接口名字</p>
+<p>五种标志：<br>以下的<strong>“该路由”</strong>指的是目的地址所代表的主机。</p>
+<ul>
+<li>U 该路由可以使用</li>
+<li>G 该路由是到一个网关（路由器）。如果没有该标志，说明目的地是直接相连的。（意思是说没有G标志的话，就直接发到目的地，有的话就是发到中间路由）</li>
+<li>H 该路由是到一个主机，目的地址是一个完整的主机地址。没有H标志的话，目的地址是一个网络号或者网络号+子网号。</li>
+<li>D 该路由是由重定向报文创建的。</li>
+<li>M 该路由已被重定向报文修改。</li>
+</ul>
+<p>标志G很重要，区分了“间接路由”和“直接路由”。发往直接路由的分组包含目的地址的IP和链路层地址。发往间接路由的分组包含目的地址的IP，但链路层地址为间接路由的地址。</p>
+<ul>
+<li>参考记数Refcnt：正在使用路由的活动进程个数。</li>
+<li>use：通过该路由发送的分组数。</li>
+<li>Interface：本地接口的名字。环回接口的名字为lo0。默认路由为emd0。</li>
+</ul>
+<h3 id="初始化路由表"><a href="#初始化路由表" class="headerlink" title="初始化路由表"></a><strong>初始化路由表</strong></h3><p>一个常用的方法是在系统引导时显式地在初始化文件中运行route命令：<br>route add default sun 1<br>route add slip bsdi 1<br>第3个参数代表目的端，第4个参数代表网关（路由器），最后一个参数代表路由的度量。当度量值&gt;0时要为该路由设置G标志，否则不设置。</p>
+<h3 id="没有到达目的地的路由"><a href="#没有到达目的地的路由" class="headerlink" title="没有到达目的地的路由"></a><strong>没有到达目的地的路由</strong></h3><p>如果路由表中没有默认项，而又没有找到匹配项。这时会发生什么情况呢？<br>如果数据报是<strong>本地主机产生</strong>的，那么就发送该数据报的应用程序返回一个差错，或是“主机不可达差错”或是“网络不可达差错”。如果是<strong>被转发的</strong>数据报，那么就给原始发送端发送一份ICMP主机不可达的差错报文。</p>
+<hr>
+<h2 id="ICMP主机与网络不可达差错"><a href="#ICMP主机与网络不可达差错" class="headerlink" title="ICMP主机与网络不可达差错"></a><strong>ICMP主机与网络不可达差错</strong></h2><p>当路由器收到一份IP数据报但又不能转发时，就要发送一份ICMP“主机不可达”差错报文。<br>当接通SLIP链路启动时，就要在路由表中增加一项实用SLIP链路的表项，而当断开时则删除该表项。</p>
+<hr>
+<h2 id="ICMP重定向差错"><a href="#ICMP重定向差错" class="headerlink" title="ICMP重定向差错"></a><strong>ICMP重定向差错</strong></h2><p>当IP数据报应该被发送到另一个路由器时，收到数据报的路由器就要发送ICMP重定向差错报文给IP数据报的发送端。<br>只有当主机可以选择路由器发送分组的情况下，我们才可能看到ICMP重定向报文。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160811161319940" alt="ICMP重定向" title="" class="">
+                <p>ICMP重定向</p>
+            </figure>
+<pre><code>1. 主机发送一份IP数据报给默认路由R1。
+2. R1检查路由表，发现R2是发送该数据报的下一站。当它把数据报发给R2时，R1检测到它正在发送数据报的接口与数据报到达R1的接口是相同的（即主机和两个路由器所在的局域网LAN）。
+3. R1发送一份ICMP重定向报文告诉主机，您以后直接发给R2就好了，别再发给我了。
+</code></pre><p><strong>重定向一般用来让具有很少选路信息的主机逐渐建立更完善的路由表。</strong></p>
+<p>重定向报文创建的路由，标志带有D。</p>
+<h3 id="更多的细节"><a href="#更多的细节" class="headerlink" title="更多的细节"></a><strong>更多的细节</strong></h3><p>ICMP重定向报文的接受者必须查看三个IP地址：</p>
+<pre><code>1. 导致重定向的IP地址（目的IP？）
+2. 发送重定向报文的路由器的IP地址
+3. 应该采用的路由器IP地址
+</code></pre><hr>
+<h2 id="ICMP路由器发现报文"><a href="#ICMP路由器发现报文" class="headerlink" title="ICMP路由器发现报文"></a><strong>ICMP路由器发现报文</strong></h2><p>初始化路由表的方法：</p>
+<ol>
+<li>通过在配置文件中指定静态路由，这种方法常用来设置默认路由。</li>
+<li>利用ICMP路由器通告和请求报文。</li>
+</ol>
+<p>主机在引导以后要广播或多播传送一份路由器请求报文。一台或更多台路由器响应一份路由器通告报文。另外，路由器定期地广播或多播传送它们的路由器通告报文，允许每个正在监听的主机相应地更新它们的路由表。</p>
+<ul>
+<li>主机在引导期间一般发送三份路由器请求报文，每3秒钟发一次。一旦接收到一个有效的通告报文就停止发送请求报文。</li>
+<li>只要有一般的默认路由器，该路由器就会每隔10分钟发送通告报文，报文的生命周期是30分钟。</li>
+<li>路由器发现报文一般由用户进程（守护进程）创建和处理。</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> IP选路 </tag>
+            
+            <tag> 选路 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCP/IP详解卷1：协议》读书笔记-第1章-概述]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC1%E7%AB%A0%20%E6%A6%82%E8%BF%B0/</url>
+      <content type="html"><![CDATA[<h2 id="一、分层"><a href="#一、分层" class="headerlink" title="一、分层"></a>一、分层</h2><p>网络协议通常分不同层次进行开发，每一层分别负责不同的通信功能。<br>TCP/IP通常被认为是一个四层协议系统：</p>
+<ol>
+<li>应用层<br>负责处理特定的应用程序细节。</li>
+<li>运输层<br>主要为两台主机上的应用程序提供端到端的通信。</li>
+<li>网络层(互联网层)<br>处理分组在网络中的活动。</li>
+<li>链路层(数据链路层、网络接口层)<br>通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡。一起处理与电缆(或其他任何传输媒介的物理接口细节)</li>
+</ol>
+<p>下图为TCP/IP协议族的四个层次以及常见的协议：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805150308363" alt="TCP/IP协议族的四个层次" title="" class="">
+                <p>TCP/IP协议族的四个层次</p>
+            </figure></p>
+<hr>
+<h3 id="局域网上运行FTP的两台主机"><a href="#局域网上运行FTP的两台主机" class="headerlink" title="局域网上运行FTP的两台主机"></a><strong>局域网上运行FTP的两台主机</strong></h3><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805151223499" alt="局域网上运行FTP的两台主机" title="" class="">
+                <p>局域网上运行FTP的两台主机</p>
+            </figure>
+<ul>
+<li>大多数的网络应用程序都被设计成客户-服务器模式。</li>
+<li>在同一层上，双方都可以有一个或多个协议进行通信。</li>
+<li>应用层通常是一个用户进程，而下三层一般在操作系统内核中执行。</li>
+<li>应用层关心的是应用程序的细节；下三层对应用层一无所知，它们负责处理所有的通信细节。</li>
+<li>TCP/IP协议族是一组不同的协议组合在一起构成的协议族，TCP/IP只是其中的两种协议而已。</li>
+</ul>
+<hr>
+<h3 id="通过路由器连接的两个网络"><a href="#通过路由器连接的两个网络" class="headerlink" title="通过路由器连接的两个网络"></a><strong>通过路由器连接的两个网络</strong></h3><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805152656678" alt="通过路由器连接的两个网络" title="" class="">
+                <p>通过路由器连接的两个网络</p>
+            </figure>
+<p> 网络通过路由器进行连接，形成互联网。路由器是网关，但是网关不一定是路由器。<br> 应用层和运输层使用<strong>端到端</strong>（End-to-End）协议，网络层使用<strong>逐跳</strong>（Hop-by-hop）协议，两个端系统和每个中建系统都要使用它。（从第3章IP协议可以更好理解，在IP选路的过程中，选路表中只有下一跳的IP地址，只能一个一个地往目的地跳，所以称为逐跳）</p>
+<ul>
+<li>网络层IP提供的是一种<strong>不可靠</strong>的服务。它<strong>尽可能快</strong>地把数据发送到目的地，但是不提供任何可靠性保证。</li>
+<li>TCP提供的是<strong>可靠的</strong>服务，采用了超时重传、发送和接收端到端的确认分组等机制。</li>
+<li>所以让网络层尽快传送数据，然后到了传输层再来检测对错咯。</li>
+<li>路由器具有多个网络接口层（链路层），任何具有多个接口的系统，称为<strong>多接口的</strong>。一个主机也可以有多个接口。大多数的TCP/IP实现也允许一个多接口主机来但当路由器的功能（需要进行特殊配置）。</li>
+</ul>
+<p>连接网络的另一个途径是使用网桥，与路由器的区别：<br>链路层——网桥<br>网络层——路由器<br>TCP/IP更倾向于使用路由器来连接网络。</p>
+<hr>
+<h2 id="二、TCP-IP的分层"><a href="#二、TCP-IP的分层" class="headerlink" title="二、TCP/IP的分层"></a>二、TCP/IP的分层</h2><p>TCP/IP协议中不同层次的协议：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805154019320" alt="TCP、IP协议族中不同层次的协议" title="" class="">
+                <p>TCP、IP协议族中不同层次的协议</p>
+            </figure></p>
+<ul>
+<li>TCP和UDP是两种最为著名的运输层协议，都是用IP作为网络层协议。</li>
+<li>UDP是不可靠的，它不能保证数据包安全无误地到达最终目的。</li>
+<li>TCP和UDP的每组数据都通过端系统和每个中间路由器中的IP层在互联网中进行传输。</li>
+<li>ICMP是IP协议的负数协议。IP层用它来与其它主机或路由器交换错误报文和其他重要信息。</li>
+<li>IGMP是Internet组管理协议。它用来把一个UDP数据报多播到多个主机。</li>
+</ul>
+<hr>
+<h2 id="三、互联网的地址"><a href="#三、互联网的地址" class="headerlink" title="三、互联网的地址"></a>三、互联网的地址</h2><p>互联网上的<strong>每个接口</strong>都必须有一个<strong>唯一的IP地址</strong>。IP地址长32bit。<br>有五类不同的互联网地址格式：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805154819765" alt="五类不同的互联网地址格式" title="" class="">
+                <p>五类不同的互联网地址格式</p>
+            </figure><br>32位的IP地址通常写成4个十进制数的形式，每个整数对应一个字节——点分十进制表示法。<br>多接口主机具有多个IP地址，其中每个接口都对应一个IP地址。<br>互联网络信息中心（InterNIC）负责分配IP地址，但是它只分配<strong>网络号</strong>。（跟子网有关，别人只知道你的网络号，你的<strong>主机号</strong>由内网的管理员来分配。）</p>
+<p>各类IP地址有一个范围：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805155614843" alt="IP地址范围" title="" class="">
+                <p>IP地址范围</p>
+            </figure></p>
+<hr>
+<h2 id="四、域名系统"><a href="#四、域名系统" class="headerlink" title="四、域名系统"></a>四、域名系统</h2><p>人们可以通过IP地址或主机名来访问一台主机，不过人们更喜欢主机名。<br>DNS是一个分布的数据库，由它来提供IP地址和主机名之间的映射信息。</p>
+<hr>
+<h2 id="五、封装"><a href="#五、封装" class="headerlink" title="五、封装"></a>五、封装</h2><p>实际上数据是通过链路层传到其他网络的，那么数据从应用程序一直往下，通过4个层，每一层都给数据添加一些首部（尾部）信息。这就叫封装。下图为封装的过程：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805160059177" alt="封装过程" title="" class="">
+                <p>封装过程</p>
+            </figure></p>
+<p>TCP传给IP的数据单元：TCP报文段（TCP segment）<br>UDP传给IP的数据单元：UDP数据报（UDP datagram）<br>IP传给网络接口层的数据单元：IP数据报（IP datagram）<br>以太网传输的比特流：帧（Frame），长度必须在46~1500字节之间。（涉及到MTU最大传输单位）</p>
+<p>每一层的首部信息中，都会包含上一层的标识，以标识上一层的协议。</p>
+<hr>
+<h2 id="六、分用"><a href="#六、分用" class="headerlink" title="六、分用"></a>六、分用</h2><p><strong>分用与封装对应</strong>：当主机收到一个以太网数据帧的时候，数据就开始从协议栈中由底向上升，同时去掉各层协议加上的报文首部。每层协议盒都要去检查报文首部中的协议标识，以确定接收数据的上层协议。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805161302772" alt="分用过程" title="" class="">
+                <p>分用过程</p>
+            </figure>
+<hr>
+<h2 id="七、客户-服务器模型（Client-Server）"><a href="#七、客户-服务器模型（Client-Server）" class="headerlink" title="七、客户-服务器模型（Client-Server）"></a>七、客户-服务器模型（Client-Server）</h2><ul>
+<li>重复型：服务器处理一个客户请求的时候，不能为其他客户机提供服务。</li>
+<li>并发型：利用生成其他服务器的方法来处理客户的请求。</li>
+<li>TCP服务器是并发的，UDP服务器是重复的。</li>
+</ul>
+<hr>
+<h2 id="八、端口号"><a href="#八、端口号" class="headerlink" title="八、端口号"></a>八、端口号</h2><ul>
+<li>服务器一般都是通过知名端口号来识别的，知名端口号介于1~255之间，256~1023之间的端口号通常由Unix系统占用。</li>
+<li>而客户端通常对它所使用的端口号并不关心，只需保证该端口号在本机上市唯一的就可以了。客户端口号又称临时端口号。</li>
+<li>大多数TCP/IP实现给临时端口分配1024~5000.</li>
+</ul>
+<p><strong>保留端口号</strong><br>Unix系统有保留端口号，具有超级用户特权的进程才能够分配。介于1~1023之间。</p>
+<hr>
+<h2 id="九、标准的简单服务"><a href="#九、标准的简单服务" class="headerlink" title="九、标准的简单服务"></a>九、标准的简单服务</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160805162634219" alt="标准的简单服务" title="" class="">
+                <p>标准的简单服务</p>
+            </figure>
+<ul>
+<li>当使用TCP和UDP提供相同的服务时，一般选择相同的端口号。</li>
+<li>这些端口都是奇数的。<br>因为这些端口号都是从NCP（TCP前身）端口号派生出来的，NCP是单工的，不是双全工的，因此每个应用程序需要两个连接，需预留一对奇数和偶数端口号。而现在TCP和UDP只需要一个端口号，因此用了奇数。</li>
+</ul>
+<hr>
+<h2 id="十、应用编程接口"><a href="#十、应用编程接口" class="headerlink" title="十、应用编程接口"></a>十、应用编程接口</h2><p>常用：socker和TLI（运输层接口：Transport Layer Interface）</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC8%E7%AB%A0%20Traceroute%E7%A8%8B%E5%BA%8F/</url>
+      <content type="html"><![CDATA[<h1 id="Traceroute程序"><a href="#Traceroute程序" class="headerlink" title="Traceroute程序"></a>Traceroute程序</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Traceroute程序是一个能更深入探索TCP/IP协议的方便可用的工具，它可以让我们看到IP数据报从一台主机到另一台主机所经过的路由，还可以让我们使用IP源路由选项。</p>
+<hr>
+<h2 id="Traceroute程序的操作"><a href="#Traceroute程序的操作" class="headerlink" title="Traceroute程序的操作"></a>Traceroute程序的操作</h2><p>为什么不使用IP记录路由选项而是用Traceroute？<br>原因有三：</p>
+<pre><code>1. 并非所有路由器都支持记录路由选项。
+2. 记录路由一般是单向的选项。
+3. **主要原因：IP首部中留给选项的空间有限，不能存放当前大多数的路径。**
+</code></pre><p>Traceroute运行原理：</p>
+<ul>
+<li>使用ICMP报文和IP首部中的TTL字段（生存周期）。</li>
+<li>每个处理数据包的路由器都需要把TTL的值-1.TTL字段的目的是防止数据报在选路是无休止地在网络中流动。</li>
+<li>当TTL被减为0的时候，路由器不转发数据报，并且返回一份ICMP“超时”信息。</li>
+<li>当数据报已经到达最终目的的时候，不会返回ICMP“超时”报文，那就不知道已经到达了目的地。所以！Traceroute程序会发一份UDP数据报给目的主机（<strong>它使用一个不可能的值作为UDP端口号</strong>，应该封装在IP中），当数据报到达目的主机，就可以往上分用，抵达传输层，这个时候产生一份“端口不可达”错误的ICMP报文。</li>
+</ul>
+<h3 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h3><pre><code>1. 发送一个TTL为1的IP数据报出去，第一个路由器把TTL减为0，返回一份ICMP“超时”报文。
+2. 发送TTL为2的IP数据报，以此类推。我们就可以知道数据报经过的路由IP了。
+3. 到达目的主机之后，返回一个“端口不可达”的UDP数据报，这样就知道了目的主机的IP。
+</code></pre><hr>
+<h2 id="IP源站选路选项"><a href="#IP源站选路选项" class="headerlink" title="IP源站选路选项"></a>IP源站选路选项</h2><p>通常IP路由是动态的，即每个路由器都要判断数据报下面该转发到哪个路由器。<br>源站选路的思想是由发送者指定路由，有两种形式：</p>
+<pre><code>1. 严格的源路由选择。发送端指明IP数据报所必须采用的确切路由。如果发现下一个指定的路由器不在其直接连接的网络上，就返回一个“源站路由失败”的ICMP差错报文。
+2. 宽松的源站选路。发送端指明了一个数据报经过的IP地址清单。只要经过上面的IP即可，不限制经过其他的路由以及顺序。
+</code></pre>]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[多态和虚函数]]></title>
+      <url>/2017/12/31/%E5%A4%9A%E6%80%81%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0/</url>
+      <content type="html"><![CDATA[<ol>
+<li>在子类转化成父类之后，只有<strong>虚函数</strong>会调用<strong>子类的</strong>重载函数。如果<strong>不是虚函数</strong>，那么调用的还是<strong>父类的</strong>函数。这叫做<strong>动态绑定</strong>。<br><strong>多态：</strong>指父类的对象可以指向一个子类的对象。指允许不同类的对象对同一消息做出响应。即同一消息可以根据发送对象的不同而采用多种不同的行为方式。（发送消息就是函数调用）<br>把不同的子类对象都当作父类来看，可以屏蔽不同子类对象之间的差异，写出通用的代码，做出通用的编程，以适应需求的不断变化。赋值之后，<strong>父对象就可以根据当前赋值给它的子对象的特性以不同的方式运作</strong>。也就是说，<strong>父亲的行为像儿子</strong>，而不是儿子的行为像父亲。</li>
+<li>如果需要<strong>动态绑定</strong>，那么在用这些对象作为参数的时候，必须使用<strong>引用传参</strong>，或者<strong>指针</strong>。如果使用<strong>形参</strong>的话，调用的会是<strong>父类的函数</strong>。</li>
+<li>如果父类中一个函数是virtual的，那么子类全都是virtual的，不需要额外标明。</li>
+<li>虚函数的作用：使得系统在运行时可以根据实际指向的对象来调用相应的函数。</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> C++ </category>
+            
+            <category> 继承 </category>
+            
+            <category> 多态 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> 继承 </tag>
+            
+            <tag> 多态 </tag>
+            
+            <tag> 虚函数 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[指针]]></title>
+      <url>/2017/12/17/%E6%8C%87%E9%92%88/</url>
+      <content type="html"><![CDATA[<h1 id="什么是指针"><a href="#什么是指针" class="headerlink" title="什么是指针"></a>什么是指针</h1><p>指针用于<strong>指向对象</strong>。与迭代器一样，指针提供对其所指对象的<strong>间接访问</strong>，只是指针结构更加通用一点。<br>与迭代器不同的是，指针用于指向单个对象，而迭代器只能用于访问容器内的对象。</p>
+<p>指针保存的是另一个对象的地址。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string *sp=&amp;s;//*表明sp是一个指针变量，&amp;是取地址操作符（只能作用于左值）。</span><br></pre></td></tr></table></figure></p>
+<p><strong>尽量避免使用指针和数组！</strong>多用vector和string。</p>
+<hr>
+<h1 id="指针的定义和初始化"><a href="#指针的定义和初始化" class="headerlink" title="指针的定义和初始化"></a>指针的定义和初始化</h1><p>指针需要有一个关联的数据类型，决定了指针所指向的对象的类型。（应该是因为不同类型所占的字节数不同）</p>
+<p><strong>注意：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int dp,*dp2;//只有dp2才是指针，也就是说连续声明的时候，每一个指针前面都要用*</span><br></pre></td></tr></table></figure></p>
+<p>最好是贴着变量名声明 int *dp2；</p>
+<hr>
+<h1 id="避免使用未初始化的指针"><a href="#避免使用未初始化的指针" class="headerlink" title="避免使用未初始化的指针"></a>避免使用未初始化的指针</h1><p>使用未初始化的指针，很容易导致程序崩溃。未初始化的指针，会将指针中存放的不确定值视为地址。<br>​    </p>
+<ul>
+<li>不要提前定义指针</li>
+<li>如果一定要分开定义，那么要初始化为0值。</li>
+</ul>
+<hr>
+<h1 id="初始化和赋值的约束"><a href="#初始化和赋值的约束" class="headerlink" title="初始化和赋值的约束"></a>初始化和赋值的约束</h1><ul>
+<li>0值或NULL</li>
+<li>同类型的变量地址或另一指针</li>
+</ul>
+<hr>
+<h1 id="void-指针"><a href="#void-指针" class="headerlink" title="void*指针"></a>void*指针</h1><p>它可以保存任何类型对象的地址。但是不允许使用void*指针操纵所指向的对象。<br>​    </p>
+<hr>
+<h1 id="指针操作"><a href="#指针操作" class="headerlink" title="指针操作"></a>指针操作</h1><ol>
+<li>*解引用操作符，可以返回对象的值。</li>
+<li>指针和引用的比较（两个重要区别）</li>
+</ol>
+<ul>
+<li>引用<strong>总是指向某个对象</strong>，一经初始化之后就始终指向同一个对象（所以引用必须在定义时初始化）。</li>
+<li><strong>赋值</strong>的差异：引用赋值，修改的是对象的值。</li>
+</ul>
+<ol>
+<li>指向指针的指针（多维）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int **ppi=new int*[10];</span><br><span class="line">for(int i=0;i&lt;10;i++)</span><br><span class="line">ppi[i] = new int[10];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>表明ppi是二维指针，那么<em>ppi指向的是一个指针，可以把</em>ppi看成一个大小为10的int<em>数组，里面存储的都是int</em>指针。<br>        如上便相当于声明了一个</strong>二维数组**。</p>
+<hr>
+<h1 id="使用指针访问数组元素"><a href="#使用指针访问数组元素" class="headerlink" title="使用指针访问数组元素"></a>使用指针访问数组元素</h1><p>在表达式中使用数组名，名字会自动转换为指向数组第一个元素的指针（也就是代表那个元素的地址）。<br>当使用下表访问指针的时候，下标是可以为<strong>负的</strong>。<br>​    </p>
+<hr>
+<h1 id="指针是数组的迭代器"><a href="#指针是数组的迭代器" class="headerlink" title="指针是数组的迭代器"></a>指针是数组的迭代器</h1><hr>
+<h1 id="指针和const限定符"><a href="#指针和const限定符" class="headerlink" title="指针和const限定符"></a>指针和const限定符</h1><ol>
+<li><p>指向const对象的指针<br>const double <em>cptr;<br>这里的cptr是一个指向double类型const对象的指针，const限定了cptr指针所指向的对象类型，而非cptr本身。cptr并不是const。<strong>不能通过cptr修改对象的值。</strong><br>把一个<strong>const对象</strong>的地址给一个<strong>非指向const对象的指针</strong>也会<strong>编译错误</strong>。但是允许把<strong>非const对象</strong>的地址赋给<strong>指向const对象的指针</strong>（但是不能通过cptr修改这个对象的值）。<br>指向const的指针常用作函数的<em>*形参</em></em>。</p>
+</li>
+<li><p>const指针<br>const指针本身的值不能被修改，即不能指向其它对象了。但是其对象的值还是可以修改的。<br>与任何const量一样，const指针也必须在定义时就初始化。</p>
+</li>
+<li>指向const对象的const指针<br>const double *const pi_ptr=&amp; pi;</li>
+<li>指针和typedef<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef string *pstring;</span><br><span class="line">const pstring cstr;</span><br><span class="line">这里const修饰的是pstring的类型，即修饰的是指针，等价于</span><br><span class="line">string *const cstr;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> pointer </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello Mellow]]></title>
+      <url>/2017/12/09/hello-mellow/</url>
+      <content type="html"><![CDATA[<p>这是一片傲娇的功能展示页。</p>
+<a id="more"></a>
+<h1 id="正文及自动收缩目录测试"><a href="#正文及自动收缩目录测试" class="headerlink" title="正文及自动收缩目录测试"></a>正文及自动收缩目录测试</h1><h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h2 id="目录a"><a href="#目录a" class="headerlink" title="目录a"></a>目录a</h2><p>目录a目录a目录a目录a目录a</p>
+<h2 id="目录b"><a href="#目录b" class="headerlink" title="目录b"></a>目录b</h2><p>目录b目录b目录b目录b目录b</p>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h1 id="引用测试"><a href="#引用测试" class="headerlink" title="引用测试"></a>引用测试</h1><h2 id="普通引用"><a href="#普通引用" class="headerlink" title="普通引用"></a>普通引用</h2><blockquote>
+<p>红红火火恍恍惚惚</p>
+</blockquote>
+<h2 id="引用文章"><a href="#引用文章" class="headerlink" title="引用文章"></a>引用文章</h2><blockquote><p>一个使用 <code>hexo</code> 从零搭建博客的系列教程文章。</p>
+<footer><strong>Michael.Lu</strong><cite><a href="http://blog.lujingtao.com/2017/11/07/hexo-new/" target="_blank" rel="noopener">玩转hexo - 1 - 蠢萌的序</a></cite></footer></blockquote>
+<h1 id="代码片段测试"><a href="#代码片段测试" class="headerlink" title="代码片段测试"></a>代码片段测试</h1><h2 id="普通代码"><a href="#普通代码" class="headerlink" title="普通代码"></a>普通代码</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> theme = <span class="string">"mellow"</span></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Hello <span class="subst">$&#123; name &#125;</span>!`</span>);</span><br><span class="line"></span><br><span class="line">&#125;)(theme);</span><br></pre></td></tr></table></figure>
+<h2 id="带标题及链接的代码"><a href="#带标题及链接的代码" class="headerlink" title="带标题及链接的代码"></a>带标题及链接的代码</h2><figure class="highlight js"><figcaption><span>jQuery</span><a href="http://api.jquery.com/delegate/" target="_blank" rel="noopener">$.delegate()</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$( <span class="string">"table"</span> ).delegate( <span class="string">"td"</span>, <span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  $( <span class="keyword">this</span> ).toggleClass( <span class="string">"chosen"</span> );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="数学公式测试"><a href="#数学公式测试" class="headerlink" title="数学公式测试"></a>数学公式测试</h1><h2 id="普通公式"><a href="#普通公式" class="headerlink" title="普通公式"></a>普通公式</h2><p>$T(n) = \Theta(n)$</p>
+<h2 id="居中公式"><a href="#居中公式" class="headerlink" title="居中公式"></a>居中公式</h2><p>$$<br>\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.<br>$$</p>
+<h1 id="自定义markdown语法测试"><a href="#自定义markdown语法测试" class="headerlink" title="自定义markdown语法测试"></a>自定义markdown语法测试</h1><h2 id="分栏模块"><a href="#分栏模块" class="headerlink" title="分栏模块"></a>分栏模块</h2><h3 id="双栏结构"><a href="#双栏结构" class="headerlink" title="双栏结构"></a>双栏结构</h3><p>@column-2{</p>
+<p>@card{</p>
+<p>左</p>
+<p>}</p>
+<p>@card{</p>
+<p>右</p>
+<p>}</p>
+<p>}</p>
+<h3 id="控制文本对齐方式的三栏结构"><a href="#控制文本对齐方式的三栏结构" class="headerlink" title="控制文本对齐方式的三栏结构"></a>控制文本对齐方式的三栏结构</h3><p>@column-3{</p>
+<p>@card{</p>
+<p>左</p>
+<p>}</p>
+<p>@card{</p>
+<p>@center{</p>
+<p>中</p>
+<p>}</p>
+<p>}</p>
+<p>@card{</p>
+<p>@right{</p>
+<p>右</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<h2 id="时间轴"><a href="#时间轴" class="headerlink" title="时间轴"></a>时间轴</h2><p>@timeline{</p>
+<h5 id="2016"><a href="#2016" class="headerlink" title="2016"></a>2016</h5><p>@item{</p>
+<h6 id="11月6日"><a href="#11月6日" class="headerlink" title="11月6日"></a>11月6日</h6><p>为 <code>Card theme</code> 添加 <code>page layout</code>。<br>第二行测试</p>
+<p>}</p>
+<p>@item{</p>
+<h6 id="11月20日"><a href="#11月20日" class="headerlink" title="11月20日"></a>11月20日</h6><p>另一个 Time line .<br>第二行测试</p>
+<p>}</p>
+<p>}</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>更多说明见主题文档<a href="https://github.com/codefine/hexo-theme-mellow/wiki" target="_blank" rel="noopener">https://github.com/codefine/hexo-theme-mellow/wiki</a></p>
+<iframe type="music" frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=22822516&auto=1&height=66"></iframe>]]></content>
+      
+        
+        <tags>
+            
+            <tag> tag1 </tag>
+            
+            <tag> tag2 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+</search>

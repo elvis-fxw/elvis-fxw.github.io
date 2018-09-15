@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,成块数据流">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/成块数据流/">成块数据流</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="TCP的成块数据流"><a href="#TCP的成块数据流" class="headerlink" title="TCP的成块数据流"></a>TCP的成块数据流</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>一种流量控制方法——滑动窗口协议</p>
+<p>该协议允许发送方在停止并等待确认前可以连续发送多个分组，由于发送发不必每发送一个分组就停下来等待确认，因此该协议可以加速数据的传输。</p>
+<hr>
+<h2 id="正常数据流"><a href="#正常数据流" class="headerlink" title="正常数据流"></a><strong>正常数据流</strong></h2><h3 id="隔一个报文段确认的策略"><a href="#隔一个报文段确认的策略" class="headerlink" title="隔一个报文段确认的策略"></a><strong>隔一个报文段确认的策略</strong></h3><pre><code>1. 每2个报文段返回一次ACK。
+2. 如果定时器溢出，那不管有没有确认2个报文段，也返回一次ACK。
+</code></pre><h3 id="ACK是积累的"><a href="#ACK是积累的" class="headerlink" title="ACK是积累的"></a><strong>ACK是积累的</strong></h3><p>使用TCP的滑动窗口协议时，接收方不必确认每一个收到的分组，在TCP中，ACK是积累的——它们表示接收到已经正确收到了一直到确认序号减1的所有字节。</p>
+<p>下图是传输8192字节的一种时间序列<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906114509561" alt="TCP成块数据流传输" title="" class="">
+                <p>TCP成块数据流传输</p>
+            </figure></p>
+<h3 id="发送同一段数据可能有不同的时间序列"><a href="#发送同一段数据可能有不同的时间序列" class="headerlink" title="发送同一段数据可能有不同的时间序列"></a><strong>发送同一段数据可能有不同的时间序列</strong></h3><ul>
+<li>由于发送方和接收方处理数据的能力不同，那么时间序列也可能不同。</li>
+<li>比如接收方处理得慢，那么发送方必须等到接收方处理完窗口里面的数据才能发送。</li>
+<li>如果接收方的缓冲区数据满了，会返回一个ACK，并通知窗口为0.</li>
+<li>过一段时间缓冲区有位置了，会再发一个ACK通知窗口大小。（并不是有位置就马上通知）</li>
+</ul>
+<hr>
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a><strong>滑动窗口</strong></h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906121052546" alt="滑动窗口" title="" class="">
+                <p>滑动窗口</p>
+            </figure>
+<p>接收方通告的窗口称为“提供的窗口”（通告窗口），表示对面有那么多个位置可以接收礼物啊，快把东西丢过去呀。<br>然后发送方知道还有6个位置，所以发了4~6一共3个鱼丸过去，对面还有3个位置，现在还能发送3个。</p>
+<p>窗口移动：</p>
+<pre><code>1. 左边沿往右移成为**窗口合拢**。也就是发送出去的窗口被确认，但是对面可用的窗口位置没有增多。
+2. 右边沿向右移动称为**窗口张开**。也就是对面已经处理了缓冲区的数据，又腾出地方可以让你送鱼丸了。
+3. 右边沿向左移动称为**窗口收缩**。强烈建议不使用这种方式。
+</code></pre><p>如果左边沿到达右边沿，则称其为一个<strong>零窗口</strong>，此时发送方一般不能再发送数据报。</p>
+<p>总结：</p>
+<pre><code>1. 发送方不必发送一个全窗口大小的数据。
+2. 来自接收方的一个ACK并把窗口右移，因为窗口的大小是相对于确认序号的。（这个想想就理解了）
+3. 窗口大小可以减小，但是右边沿不能左移。
+4. 接收方返回一个ACK前不必等待窗口被填满才返回。（应该可以设定的，例如前面提到的“隔一个报文段确认”）
+</code></pre><hr>
+<h2 id="窗口大小"><a href="#窗口大小" class="headerlink" title="窗口大小"></a><strong>窗口大小</strong></h2><p>默认为4096，但是并非最理想的。16384字节可以增加约40%的吞吐量。</p>
+<hr>
+<h2 id="PUSH标志"><a href="#PUSH标志" class="headerlink" title="PUSH标志"></a><strong>PUSH标志</strong></h2><p>该标志通知接收方将所收到的数据全部提交给接收进程。这里的数据包括与PUSH一起传送的数据以及接收方TCP已经为接收进程收到的其它数据。<br>同时也会将发送缓冲区里面的数据立即发送出去。</p>
+<hr>
+<h2 id="慢启动（重点）"><a href="#慢启动（重点）" class="headerlink" title="慢启动（重点）"></a><strong>慢启动（重点）</strong></h2><p>如果在发送方和接收方之间存在多个路由器和速度较慢的链路时（广域网），一开始就不断发送报文段直至达到接收方的窗口满为止，这样的行为可能导致拥塞。</p>
+<p><strong>慢启动算法（slow start）</strong>通过观察到新分组进入网络的速率应该与另一端<strong>返回确认的速率相同</strong>而进行工作。</p>
+<p>慢启动需要加入一个新的窗口概念——拥塞窗口，cwnd.<br>拥塞窗口初始化为1个报文段，每接收到一个ACK就增加一个报文段。（cwnd以字节为单位，但是慢启动以报文段大小为单位，也就是1个报文段。）</p>
+<p>大小变化：1-&gt;2-&gt;4-&gt;8……   可以看出拥塞窗口的大小是以指数方式增长的。</p>
+<p><strong>发送方取拥塞窗口与通告窗口的最小值作为发送上限。</strong>（就是你能发送的大小和对方能接收的大小的最小值）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906132012918" alt="拥塞窗口" title="" class="">
+                <p>拥塞窗口</p>
+            </figure>
+<p>在某些点上可能达到了互联网的容量，于是中间路由器开始丢弃分组，这就通知发送方它的拥塞窗口开得过大。（流量控制）</p>
+<hr>
+<h2 id="成块数据的吞吐量"><a href="#成块数据的吞吐量" class="headerlink" title="成块数据的吞吐量"></a><strong>成块数据的吞吐量</strong></h2><p>发送方和接收方之间的路径称为<strong>管道</strong>。</p>
+<p><strong>带宽时延乘积</strong> capacity(bit)=bandwidth(b/s) x round-trip time(s)<br>通道容量=带宽 x 往返时间   （容量=时间 x 速度）也就是整个通道能装下的容量大小</p>
+<hr>
+<h2 id="紧急方式"><a href="#紧急方式" class="headerlink" title="紧急方式"></a><strong>紧急方式</strong></h2><p>“紧急方式”使一端可以告诉另一端有些具有某种方式的“紧急数据”已经放置在普通的数据流中，接收方收到通知，并决定如何处理。</p>
+<p>可以通过设置TCP首部中的两个字段来发出这种从一端到另一端的紧急数据已经被放置在数据流中的通知。<strong>URG比特</strong>被置为1，并且一个16bit的紧急指针放置为一个正的偏移量，该偏移量必须与TCP首部中的序号字段相加，以便得出紧急数据的<strong>最后一个字节的序号</strong>。</p>
+<p>当紧急数据进入发送缓冲区后，下一个将要发送的数据（可能是紧急，也可能不是）的URG比特置为1，发送给接收方。接收方知道后就知道发送方处于紧急状态（仅仅知道而已，不会采取什么措施，它会通知应用层现在有紧急数据，你自己看着办），直到接收到最后一个字节的紧急数据后解除这种状态。</p>
+<p>如果接收方通告窗口为0，那么数据无法发送出去，但是URG比特这个报文还是会发送出去，通知对面我这边有紧急数据。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:56.084Z" itemprop="dateUpdated">2018-09-09 12:40:56</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/成块数据流/">成块数据流</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP的成块数据流"><span class="post-toc-number">1.</span> <span class="post-toc-text">TCP的成块数据流</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正常数据流"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">正常数据流</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#隔一个报文段确认的策略"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">隔一个报文段确认的策略</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ACK是积累的"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">ACK是积累的</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#发送同一段数据可能有不同的时间序列"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">发送同一段数据可能有不同的时间序列</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#滑动窗口"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">滑动窗口</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#窗口大小"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">窗口大小</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PUSH标志"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">PUSH标志</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#慢启动（重点）"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">慢启动（重点）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#成块数据的吞吐量"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">成块数据的吞吐量</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#紧急方式"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">紧急方式</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD6klEQVR42u3aS27bQBAFQN//0so2gE3qve6hYAPFlaBQw5ligHZ/vr7i6/Xfdf9N8qvv//r9zu/r3H+f7OfYhQMHDhw44qNebe5qu8mG7pla1hw9of+BDAcOHDhwHOJIwlh+mOQA90fKw+rsj4DL73HgwIEDx8c5ku22v5q9kvzpOHDgwIHj93MkITYv822Cbh6YceDAgQPHJzlmBbt9C2pTyHsF14O1Uhw4cODA8T5+1UHrr3x+ZL4DBw4cOHDcJkt50MrDZDvWkBxjP75weTocOHDgwLHmmBXs8gbPJuzlKWX+AqJCJA4cOHDgWHAkLaL2wW0BbvP0Nqx+1f9VcODAgQPHhCMPmS3ErGXVvrDZ9z98xoEDBw4chzjyIYB2fGE2TJAH5jZdfHMWHDhw4MCx5ng6oUqwZoN3m7JgkdrhwIEDB46SY9ZGmqVk7ZDErNSYv38cOHDgwPEcR9tzyRO8tgiYPysZcWhfBg4cOHDg2HO0oXHT8tkXHGdPaVlx4MCBA8cpjnYUIE+Q8uZWjvjEajhw4MCB4xRHOwzXjim0CV4e1GdNqWhlHDhw4MAx4ihaMuVkxD7BOxXmi/YYDhw4cOBYcxwrqJVtpBZ3Vlhs00scOHDgwHGKI2/2zDY6W+25+9/8FgcOHDhwHOJoh+ESyra8OCv8bdZfJW84cODAgaNEmTWc2sbV0+W//Fk4cODAgWPPsQlU7SjDbP3PFB9x4MCBA8cpjs2VJ29tuXDf6NoUNHHgwIEDxymOJ4bb8jXzQHufKCYpZbJDHDhw4MCx4TiVjCWrteliOxKXB/XLO3HgwIEDx4Jj02TKvffBuIVLypGXbSccOHDgwLHgmBXXZi2itkTYrpP/KbAqDuLAgQMHjluOfBxtlqQ9HRpnieWbFA4HDhw4cCw42jZSnnq195wtNbaUOHDgwIHjCY5N2JtljbPmVl5kbJM6HDhw4MCx55gV19phtby8uB+qyNe5LA7iwIEDB441x6xplA9D5DE/2c+sARaVF3HgwIEDx1GOti2UIyZ35qMP7cvIW1Y4cODAgeMURx5i82DWtn/yIuCp14MDBw4cOJ7g2LRtNmW+fXrWvpLiHhw4cODAseB4lVf+mFn7Z1N83KSROHDgwIHjFEcb9vYluTxw5mXBdv1kbzhw4MCBY8ORBNdN8a4dLEiKgPl+kqE9HDhw4MDxBEey9fwY++JdO+iwycJw4MCBA8dv4MiDaHv4FiUva0a7woEDBw4cH+c4Wy7Mn5K3kTYNMxw4cODAcYqjDVFtkpYX6dpj7/9owIEDBw4cZznyUtqmFdQO0rVDFe2QxKrUiAMHDhw4fv78D7FVw6Zbzc3JAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

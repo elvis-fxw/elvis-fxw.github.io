@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,ARP,地址解析协议">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议" title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。<br>地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。</p>
+<ul>
+<li>ARP为IP地址到对应的硬件地址之间提供动态映射。</li>
+<li>RARP是被那些<strong>没有磁盘驱动器</strong>的系统使用的。</li>
+</ul>
+<hr>
+<h1 id="二、ARP运行过程"><a href="#二、ARP运行过程" class="headerlink" title="二、ARP运行过程"></a>二、ARP运行过程</h1><p>一个FTP客户端传输过程如下：</p>
+<pre><code>1. FTP调用函数gethostbyname把主机名用DNS转换成32bit的IP地址。
+2. 用IP地址建立TCP连接。
+3. TCP发送一个连接请求到远端的主机上。
+4. 如果目的主机在本地网络上，那么直接发送到该主机；如果不在本地，那么就需要通过IP选路函数来确定下一跳路由器地址。
+5. 如果链路层是以太网，那么发送端主机需要把32bit的IP地址变换成48bit的以太网地址，这个时候就要用到ARP。
+6. ARP广播发送一份**ARP请求**的以太网数据帧到以太网上的每个主机，请IP地址相符的拥有者返回硬件地址
+7. 目的主机收到广播报文，返回一个**ARP应答**。
+8. 发送IP数据报。
+</code></pre><p>在ARP背后有一个基本概念，那就是网络接口有一个硬件地址（48bit）。内核（如以太网驱动程序）必须知道目的端的硬件地址才能发送数据。<br><em>点对点链路不使用ARP，点对点链路发送数据肯定是到另一个点，并不涉及硬件地址。</em></p>
+<hr>
+<h1 id="三、ARP高速缓存"><a href="#三、ARP高速缓存" class="headerlink" title="三、ARP高速缓存"></a>三、ARP高速缓存</h1><p>ARP高效运行的关键是每个主机上都有一个ARP高速缓存，存放着IP和MAC地址的映射。<br>48bit的以太网地址用6个十六进制的数来表示，中间以冒号隔开。</p>
+<hr>
+<h1 id="四、ARP的分组格式"><a href="#四、ARP的分组格式" class="headerlink" title="四、ARP的分组格式"></a>四、ARP的分组格式</h1><p>ARP请求和应答分组的格式如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809140010563" alt="ARP格式" title="" class="">
+                <p>ARP格式</p>
+            </figure></p>
+<ul>
+<li>目的地址和源地址：全1的为广播地址。电缆上所有以太网接口都要接受广播的数据帧。</li>
+<li>帧类型：表示后面的数据类型（ARP请求/ARP应答/RARP请求/RARP应答），请求的值为0x0806.</li>
+<li>硬件类型：比如以太网。</li>
+<li>协议类型：比如IP协议。</li>
+<li>硬件地址长度和协议地址长度：以字节为单位。</li>
+<li>op操作：支出4种操作类型，ARP请求/ARP应答/RARP请求/RARP应答，值分别为1/2/3/4.</li>
+</ul>
+<p>可以用<em>tcpdum</em>指令来查看运行过程。<br> 当系统受到ARP请求或发送ARP应答时，都要把请求端的硬件地址和IP地址存入ARP高速缓存中。</p>
+<hr>
+<h1 id="ARP代理"><a href="#ARP代理" class="headerlink" title="ARP代理"></a>ARP代理</h1><p>如果ARP请求是从一个网络的主机发往另一个网络上的主机，那么连接这两个网络的路由器就可以回答该请求，这个过程称作<strong>委托ARP</strong>或<strong>ARP代理</strong>。（也就是说返回的是路由器的MAC地址和主机的IP）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809141848009" alt="ARP代理" title="" class="">
+                <p>ARP代理</p>
+            </figure>
+<p>拨号SLIP链路的两端只拥有一个IP地址140.252.1.183，而SLIP链路的两端却分别有一个IP地址，为什么？因为路由不需要知道拨号SLIP链路每一端的IP地址，它通过分组到达的串行链路接口来确定发送分组的拨号主机。<em>（<strong>其实这里不是很懂，希望理解的朋友们给我留言解答一下</strong>）</em></p>
+<p>ARP代理也称作混合ARP或ARP出租，这些名字来自于它的其他用途：通过两个物理网络之间的路由器可以互相隐藏物理网络。</p>
+<hr>
+<h1 id="七、免费ARP"><a href="#七、免费ARP" class="headerlink" title="七、免费ARP"></a>七、免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址。<br>主要有2个作用：</p>
+<pre><code>1. 一个主机可以通过它来确定另一个主机是否设置了相同的IP地址。
+2. 如果发送免费ARP的主机正好改变了硬件地址，那么这个分组就可以使其他主机高速缓存中旧的硬件地址进行相应的更新。
+</code></pre><hr>
+<h1 id="八、arp命令"><a href="#八、arp命令" class="headerlink" title="八、arp命令"></a>八、arp命令</h1><p>arp -a显示ARP高速缓存中的所有内容<br>arp -d删除某一项内容<br>arp -s增加一项内容<br>位于命令行末尾的关键字pub和-s选项一起，可以使系统起着主机ARP代理的作用。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:49.368Z" itemprop="dateUpdated">2018-09-09 12:40:49</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/&title=《《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/&title=《《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1：协议》 读书笔记 第5章 RARP：逆地址解析协议</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、引言"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、引言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、ARP运行过程"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、ARP运行过程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、ARP高速缓存"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、ARP高速缓存</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、ARP的分组格式"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、ARP的分组格式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ARP代理"><span class="post-toc-number">5.</span> <span class="post-toc-text">ARP代理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#七、免费ARP"><span class="post-toc-number">6.</span> <span class="post-toc-text">七、免费ARP</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#八、arp命令"><span class="post-toc-number">7.</span> <span class="post-toc-text">八、arp命令</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/&title=《《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/&title=《《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD8UlEQVR42u3aQY7bQAwEQP//0w6Q0wKJ5G5yhPWhdDK0jjVTOjBD9usVX++/18/PP69/71/dSX7t6pqt5/XEhQMHDhw4gq3eLyK/0y7xfsPtlaz2HhoHDhw4cJziyIvr/cbaf5uUwxl68hQcOHDgwPG7HHkZu7+fnJ42d3J0HDhw4MDxzRyzIprTRJvBgQMHDhxfw5G0255rC+aDpdmw6pFeKQ4cOHDgSE9SdXvu+z8/nu/AgQMHDhyj0MCsQOZPz0MPbQmPdocDBw4cOM7kyuoQ8+aY18YXZoOl2YgLBw4cOHDsOdp2W1782jhCPgY7FZ74z3pw4MCBA8eao/1zWwJPjaba35wVchw4cODAsedoQwNJwZsxzRqOsyJ9uTscOHDgwLHmKA4z5eGtHRclpX3WuJwdI3HgwIEDx4ajHS/NGn95uOFUmR8WWhw4cODAseZImmibdmEbdJhtry35efQBBw4cOHDk328PbEmx3BfRPLc2O1i+2g3gwIEDB47y2kQN9kXx/n4CsWkOfjjR4sCBAweOBUfeOFs9bN0cbIdkdeMSBw4cOHAsOJKNzYZAm3Kbhxvq1Mb9enDgwIEDx5pj04Y7FWLI24tPANUnWhw4cODAccuxGdXkbbhZnmLTChxOmnDgwIEDxyGOdpq/GSnNohKbll+xfhw4cODAcZQjoWlHRLPDXn6knK3/cs04cODAgWPN0Y6U8m0kD561INt11k1DHDhw4MDxGEfbtksePLvyIEXdENyfLHHgwIEDRxALyEc7swDB7HN72GvbiDhw4MCBY8/RxhHyQjsLt+XfyUMV+cpx4MCBA8cTHHkoYdawy7edHNhmr+Rydzhw4MCB4wGOpNAmjbZZBKGN2eWvLbqPAwcOHDjWHMXxJkbcLDF/bjsnqqMYOHDgwIFjxDGLr82iA/my2qNd+6pWuQkcOHDgwBEXszyI1jYNE6YnjnN1UxIHDhw4cJxMERw4DrUHs1m4oX15s1eFAwcOHDhmHPkQqO41lpGFzTApZ/qwEhw4cODAcYijDTQkwbV3cM36cm1Lsf5fBg4cOHDgWHO0abE21jD7/qxgz0IPOHDgwIHjFEf+E/ly98GCWXGNtpqsDQcOHDhwLDje5bUZUCUHraTqnZ254cCBAweOsxz5NQs65GV7NqBqj3arrAcOHDhw4Ig52jHSLAY3GynNKNsCjwMHDhw4nuBot7cZHbUF/v5Zm18u/oADBw4cOB7gmMEl5XwW0ZuFMz7sCwcOHDhw/BJHPmrKh0mzqjdrIF4+HQcOHDhwHOLIm4Oz0NtmG5vYREuDAwcOHDj2HKcCDW3IYLPQpEjXhzccOHDgwLHl+ANMyhaoucwgEQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

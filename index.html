@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <ul class="post-list">
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-Element可编辑表格的实现" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/01/20/Element可编辑表格的实现/">Element可编辑表格的实现</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            最近在重构一个页面，需要把表格做成可编辑的。但是不巧的是Element框架里是没有可编辑表格的，所以只好自己来实现一个了。
+实现起来不难，下面我给大家分享一下我是怎么做的。
+表格怎么实现可编辑其实思路很简单，主要利用普通显示和输入框之间的切换，来实现表格的编辑。
+1234&lt;template slot-scope="scope"&gt;   &lt;span v-if="!scope.r...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-20 23:50:04" datetime="2018-01-20T15:50:04.000Z" itemprop="datePublished">
+    2018-01-20</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/">vue</a></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/20/Element可编辑表格的实现/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/20/Element可编辑表格的实现/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Element/">Element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/可编辑表格/">可编辑表格</a></li></ul>
+
+                    
+	<span id="/2018/01/20/Element可编辑表格的实现/" class="leancloud_visitors" data-flag-title="Element可编辑表格的实现" title="Element可编辑表格的实现"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-A+B问题" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/01/16/A+B问题/">A+B问题</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            
+给出两个整数a和b, 求他们的和, 但不能使用 + 等数学运算符。
+说明
+a和b都是 32位 整数么？
+
+是的
+
+我可以使用位运算符么？
+
+当然可以
+
+
+异或相当于的加法，实现加法器的时候就是用很多个异或。
+
+当前位相加，当前位的结果：
+0 + 0 = 0 
+0 + 1 = 1 
+1 + 0 = 1 
+1 + 1 = 0
+很明显这和我们异或的结果的一样的。
+
+两数相加，有可能进位。我们知道...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-16 21:19:32" datetime="2018-01-16T13:19:32.000Z" itemprop="datePublished">
+    2018-01-16</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/16/A+B问题/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/16/A+B问题/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lintCode/">lintCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/位运算/">位运算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+                    
+	<span id="/2018/01/16/A+B问题/" class="leancloud_visitors" data-flag-title="A+B问题" title="A+B问题"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-el-form源码解析" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/01/13/el-form源码解析/">el-form源码解析</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            最近一直在用vue来开发页面，使用的ui框架是饿了么的前端框架Element-ui，个人还在一直学习的阶段。用了那么久的Element，但是它的内部到底是怎么实现的？I know nothing…Jhon S…咳咳，我也不知道它是怎么实现的。
+现如今心血来潮，想分析一下Element的源码，也能进一步了解vue的使用。于是挑选了比较常用的表单插件 el-form 来进行分析。
+组件的使用先来...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-13 19:06:58" datetime="2018-01-13T11:06:58.000Z" itemprop="datePublished">
+    2018-01-13</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/">vue</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/element/">element</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/13/el-form源码解析/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/13/el-form源码解析/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/element/">element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/form/">form</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/表单/">表单</a></li></ul>
+
+                    
+	<span id="/2018/01/13/el-form源码解析/" class="leancloud_visitors" data-flag-title="el-form源码解析" title="el-form源码解析"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
+
+不可靠：它不能保证IP数据报能成功地到达目的地。
+无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
+
+
+二、IP首部IP数据报的格式如下图所示：
+                
+                IP数据报格式
+            
+普通IP的部首长为20个字节。分析IP首部，最高...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            UDP：用户数据报协议引言UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。
+UDP首部为8字节，IP首部为20字节。
+UDP是不可靠的。
+
+UDP首部
+                
+                UDP首部
+            
+在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+    </ul>
+    
+<nav id="page-nav">
+    <div class="inner">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    </div>
+</nav>
+
+</div>
+
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="../css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/&title=方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/&title=方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABw0lEQVR42u3aQY7DIBAEwPz/015pTys5drohsIlUnCzLhuIyGmZ4POJx/I5HOY7TmJ8TFxd3D/e4Heepr57Ps91v+/x8b8DFxd3PTabOF2i3lBhwcXE/kzuTxCSbx8XF/UbufUhKghcuLu53cZM0ZSyhmU+YcHFx93PbgumK54X1XVxc3JJ7lKMNajNrPZkTFxd3Czc5qKwIZzPHIVxc3NXc+/A09k1+waIuwuLi4m7kzhRM25BUJzR/Z8DFxd3Cnckf8gCUbyBp3OLi4q7mzizQHqLatOmJBBcXdwu3nTopgLahqoi1uLi4G7ltWBkrjCbbjpqvuLi4G7nvarWOXfcsNoCLi7uYmx9+xt7PhDlcXNz/5Y6VNto0pS2+XHZ+cHFxF3PnL1XkdZc2ebqcHxcXdzG3/WGs4doGPlxc3E/gts2M/Jv2rxdr4eLibuS2pdK81TrTtnlbEwUXF7fktgFl7M1MITVqu+Li4i7gtqWKfMdtEIz+xcXF3chtC6PJhYyxCPrie1xc3A/j5qXPtllSrI6Li/sl3Dy5aTvASwIZLi5uzE1Cz7sucrWFmMGyCC4u7gR3rGA6UxDJGzm4uLjbuT8kYU3Uu5h0ogAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

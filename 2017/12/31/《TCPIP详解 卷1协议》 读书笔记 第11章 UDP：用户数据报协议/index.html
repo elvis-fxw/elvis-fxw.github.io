@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,UDP,用户数据报协议">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="UDP：用户数据报协议"><a href="#UDP：用户数据报协议" class="headerlink" title="UDP：用户数据报协议"></a>UDP：用户数据报协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。</p>
+<p>UDP首部为8字节，IP首部为20字节。</p>
+<p>UDP是不可靠的。</p>
+<hr>
+<h2 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172012100" alt="UDP首部" title="" class="">
+                <p>UDP首部</p>
+            </figure>
+<p>在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪个应用服务。<br>UDP长度指的是UDP首部+UDP数据的<strong>字节长度</strong>（有些首部长度的单位是32bit，4个byte，这里是1个byte）。</p>
+<hr>
+<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172500686" alt="UDP首部+伪首部" title="" class="">
+                <p>UDP首部+伪首部</p>
+            </figure>
+<p>UDP检验和覆盖UDP首部和UDP数据。（IP的检验和只覆盖IP的首部，不覆盖数据）<br>UDP和TCP在首部中都有覆盖它们首部和数据的检验和。UDP的检验和是可选的，TCP的检验和是必须的。</p>
+<p>UDP和IP检验和的不同：</p>
+<pre><code>1. UDP数据报的长度可以为奇数字节，为了符合16bit反码相加的特性，会在数据最后填充字节0（这些0可能不被传送）。
+2. UDP数据报和TCP段都包含一个**12字节**长的伪首部，为了计算检验和而设置（包含IP首部的一些字段）。目的是让UDP两次检查数据是否已经正确到达目的地。
+</code></pre><ul>
+<li>UDP数据报的长度在检验和计算过程中出现两次。</li>
+<li>如果检验和的计算结果为0，则存入的值为全1（65535），如果检验和为0，说明发送端没有计算检验和。</li>
+<li>如果发送端没有计算检验和而接收端检测到检验和有错，那么UDP数据报就要被悄悄丢弃，不产生任何差错报文。</li>
+<li>UDP检验和虽然是可选的，但是默认都是打开的。</li>
+<li>UDP检验和是简单的16bit反码相加，检测不出交换2个16bit的差错。</li>
+</ul>
+<p>TCP发生检验和差错的比例比UDP高得多，因为TCP经常是“远程”连接，而UDP一般是本地通信。</p>
+<hr>
+<h2 id="IP分片"><a href="#IP分片" class="headerlink" title="IP分片"></a>IP分片</h2><ul>
+<li>物理网络层一般要限制每次发送数据帧的最大长度。</li>
+<li>分片可以发生在发送端主机上，也可以发生在中间路由器上（因为MTU可能发生变化）。- - 已经分片过的可能再次进行分片。</li>
+<li>只有到达目的地才进行重新组装（其他网络协议在下一站就重新组装），由IP层完成。<br><img src="http://img.blog.csdn.net/20160819171501444" alt="这里写图片描述"></li>
+<li>IP首部的标识字段都包含一个唯一的值，该值分片时赋值到每个片中。</li>
+<li>标志字段用一个bit来标识“更多的片”，最后一片置为0，其余置为1.</li>
+<li>片偏移字段是该片偏移原始数据报开始出的位置。</li>
+<li>分片后，每个片的总长度要改为该片的长度值。</li>
+<li>标识字段有一个bit称作“不分片”位，置1的时候不能分片，要分片的时候会产生一个ICMP差错报文。</li>
+<li>如果丢失了一片数据，就要重传整份数据，IP没有重传机制，这是根据TCP重传机制决定的。</li>
+<li>使用UDP很容易导致IP分片，TCP会试图避免分片。</li>
+</ul>
+<p>在一个以太网上，数据帧最大的长度是1500.<br>数据帧=IP首部（20字节）+UDP首部（8字节）+数据（最多1472字节）</p>
+<ul>
+<li>在分片时，除最后一片外，其他每一片的数据部分（UDP首部+数据）必须是8字节的整数倍。</li>
+<li>端口号在UDP首部，而UDP首部在第一片，所以端口号只能在第一片。</li>
+</ul>
+<p><strong>IP数据报</strong>：IP层端到端的传输单元<br><strong>分组</strong>：IP层和链路层之间传送的数据单元，一个分组可以使一个完整的IP数据报，也可以是一个分片。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160819172725359" alt="分片" title="" class="">
+                <p>分片</p>
+            </figure>
+<hr>
+<h2 id="ICMP不可达差错（需要分片）"><a href="#ICMP不可达差错（需要分片）" class="headerlink" title="ICMP不可达差错（需要分片）"></a>ICMP不可达差错（需要分片）</h2><p>如果数据需要分片，但是IP首部设置了不可分片（DF）的bit为1，那么就会发送ICMP不可达差错。<br>可以利用这个差错来判断路径的MTU。</p>
+<hr>
+<h2 id="UDP和ARP之间的交互作用"><a href="#UDP和ARP之间的交互作用" class="headerlink" title="UDP和ARP之间的交互作用"></a>UDP和ARP之间的交互作用</h2><p>如ARP缓存是清空的，那么在发送第一个数据报片前必须交换ARP请求和应答。<br>如果有多个数据报，在等待一个ARP应答时，只将最后一个报文发送给特定目的主机。</p>
+<hr>
+<h2 id="最大UDP数据报长度"><a href="#最大UDP数据报长度" class="headerlink" title="最大UDP数据报长度"></a>最大UDP数据报长度</h2><p>IP数据报的最大长度是65535字节，这是16bit的总长度字段所限制的。<br>那么UDP数据报最长长度为65535-20-8=65507.</p>
+<p>限制因素：</p>
+<pre><code>1. 程序接口限制。
+2. TCP/IP的内核实现限制。
+</code></pre><p>主机必须能够接收最短为576的IP数据报，所以在许多UDP应用程序的设计中，其应用程序数据被限制成512字节或更小（确保能接收）。</p>
+<hr>
+<h2 id="ICMP源站抑制差错"><a href="#ICMP源站抑制差错" class="headerlink" title="ICMP源站抑制差错"></a>ICMP源站抑制差错</h2><p>当一个系统接收数据报的速度比其处理速度快时，可能产生这个差错。（注意是<strong>可能</strong>，不一定会发送这个差错报文。）<br>采用UDP时，源站抑制报文可能会被忽略。<br>TCP也支持源站抑制报文。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:03.840Z" itemprop="dateUpdated">2018-09-09 12:41:03</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#UDP：用户数据报协议"><span class="post-toc-number">1.</span> <span class="post-toc-text">UDP：用户数据报协议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UDP首部"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">UDP首部</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UDP检验和"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">UDP检验和</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#IP分片"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">IP分片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP不可达差错（需要分片）"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">ICMP不可达差错（需要分片）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UDP和ARP之间的交互作用"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">UDP和ARP之间的交互作用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大UDP数据报长度"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">最大UDP数据报长度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP源站抑制差错"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">ICMP源站抑制差错</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD50lEQVR42u3ayW7cQAwFQP//TyfXAM7I75GcOAZKJ0PW0l06cLh8fMTHrz+OV2c+n391V3Ll52c+n39+1/GBAwcOHDjirT5vI9ne8/UtWfK0nCb6ADhw4MCB44gjeUGyxHx7SSBPNjxbw8vzOHDgwIHjv+TYJIfJlnJiHDhw4MDxszgOXr++ZrZ+HDhw4MDxbo59uygvz+VJ4KzI+I9qpThw4MCB46lr8zELbD/l77fMd+DAgQMHjsfCXB60kqRoNlSXbKMNosXucODAgQPHmqMtxs1G1vbtqDylfP4AUdMLBw4cOHAsOJLbknLeDC4vEbYBe1gExIEDBw4cRxzJ4mZJVP6WZKv56MPwRwAOHDhw4DjiaANVPpQwG4BoA38+2PdF8MaBAwcOHEccV6G0Tbpu0782KS2qpDhw4MCBI+aYDcm1WLNrZkCbd+HAgQMHjluOJA1LHtcG3SQZmyWWmxCOAwcOHDhmHEly1TaT8qfNWkf5f+t2Fw4cOHDgWHM8B7bZwFzbxGq3l5cphwkeDhw4cOBYcNy2iBLc2UDDLOi2a8OBAwcOHLccs0A7S6I2dyX1zuEucODAgQPHKUfeEGoTpKuRtTxtG7agcODAgQPHm7v5+eLatlD+/PbK9q6X1+PAgQMHjjdwzJKlNgS2YXJWmqw/Dw4cOHDgWHO0AWw2VJf/fVX+y9+FAwcOHDj2HPnYWfua5MzVEEMbjF8+DQcOHDhwrDneV7ZLKPN7NyMUV00vHDhw4MDRcmzKf/um1Gz4OzkzzGVx4MCBA8eIY9akmY1KX7WgNkNyXySBOHDgwIFjzZE3bJJjk+bNAv+mMfbFOnHgwIEDx4gjCV1t06gNsW1Rctb0iv6LAwcOHDjWHHl6s5nCa1HyBLIdlZslezhw4MCBo+W4ailthgmS0uQs0LYlSBw4cODAseHIFzErurVBcXNNOyTxl7XhwIEDB441R96bagcL2iRt9rS2KLlqPuHAgQMHjhFHG0TbdlQSqttUcPMBXg7J4cCBAweOEcds7GCfSrWp4KxEWBcxceDAgQPHEUfSHGrD3iwJbMPqZp0vf3HgwIEDB44Fx1UxbpZutcd+zO5jo4UDBw4cOEqIdnytLfBtCoKzWfK64IgDBw4cONYcV8F4lp7th7/bUbz9zwUcOHDgwJFwJMF1U7xLksCWox3OLgqLOHDgwIHjiGMTCGeDCHlQn32eNn3FgQMHDhzfxZGT5YW/TXKYlzWjT4IDBw4cOL6VYx8m8/A8I66TTxw4cODAccSxD1FtUS/Zdv7B9j8IcODAgQPHFUcePvNiX467Lxrm9LOROxw4cODAEXP8BqB0XP9DsGagAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Element可编辑表格的实现 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="vue,Element,可编辑表格">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-Element可编辑表格的实现" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                Element可编辑表格的实现
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2018-01-20 23:50:04" datetime="2018-01-20T15:50:04.000Z" itemprop="datePublished">
+    2018-01-20</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/vue/">vue</a></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Element/">Element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/可编辑表格/">可编辑表格</a></li></ul>
+
+                
+	<span id="/2018/01/20/Element可编辑表格的实现/" class="leancloud_visitors" data-flag-title="Element可编辑表格的实现" title="Element可编辑表格的实现"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2018/01/20/Element可编辑表格的实现/#comment">
+            <span class="valine-comment-count" data-xid="/2018/01/20/Element可编辑表格的实现/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近在重构一个页面，需要把表格做成可编辑的。但是不巧的是Element框架里是没有可编辑表格的，所以只好自己来实现一个了。</p>
+<p>实现起来不难，下面我给大家分享一下我是怎么做的。</p>
+<h1 id="表格怎么实现可编辑"><a href="#表格怎么实现可编辑" class="headerlink" title="表格怎么实现可编辑"></a>表格怎么实现可编辑</h1><p>其实思路很简单，主要利用普通显示和输入框之间的切换，来实现表格的编辑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比如像上面的代码这样，我们使用v-if(或v-show)指令来实现普通的显示和输入之间的切换。</p>
+<p>这里使用到了<a href="https://cn.vuejs.org/v2/guide/components.html#%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD" target="_blank" rel="noopener">slot-scope</a>，这主要是用于把el-table-column的值传递到input里。</p>
+<h1 id="监听表格的点击"><a href="#监听表格的点击" class="headerlink" title="监听表格的点击"></a>监听表格的点击</h1><p>首先第一步肯定是去监听点击事件，看看点击了表格的哪里，我好切换输入框。</p>
+<p>我本来是想在span上面绑定click的处理的，但是我发现el-table有一个cell-click的事件更加好用！</p>
+<table>
+<thead>
+<tr>
+<th>cell-click</th>
+<th>当某个单元格被点击时会触发该事</th>
+<th>row, column, cell, event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>cell-click事件有row,column,cell这三个参数，我们可以凭这3个参数来判断现在被点击的是哪一行哪一列的表格。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;el-table :data=<span class="string">"list"</span> @cell-click=<span class="string">"edit"</span>&gt;</span><br><span class="line">       ……</span><br><span class="line">&lt;<span class="regexp">/el-table&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比如这样，当表格某个格子被点击的时候，我们就调用edit函数，可以在edit函数中进行处理，来切换输入框等。</p>
+<h1 id="怎么实现表格的文本与输入框的切换"><a href="#怎么实现表格的文本与输入框的切换" class="headerlink" title="怎么实现表格的文本与输入框的切换"></a>怎么实现表格的文本与输入框的切换</h1><p>现在我们知道，使用cell-click时间来监听表格的点击，在edit函数中实现文本与输入框的切换。</p>
+<p>一开始的时候，我是想给表格的每一列都加一个对应的状态，比如isEditing1，isEditing2…用第一列v-if可以绑定row.isEditing1，我只要改变这个isEditing1的值为true或false，就可以控制切换了。像下面这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing1"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing1"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但是这样的话还要加上那么多个状态，多少列数据就加多少个状态，太麻烦了，这个方案想了一下就被我放弃了。</p>
+<p>后来我发现column里面有一个property属性，这个属性其实是数据的变量名。比如上面代码中，column.property = “name”。我只要加一个变量，存储被编辑的数据的变量名即可。当然column还有其他属性可以选择~</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"scope.row.editingColumn != 'name'"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.editingColumn == 'name'"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我给每一行数据加了一个属性editingColumn，顾名思义，是用来指明现在被编辑的是哪一列的数据。我只要在cell-click绑定的edit函数里，修改这个row.editingColumn即可：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edit: <span class="function"><span class="keyword">function</span>(<span class="params">row, column, cell, event</span>)</span>&#123;</span><br><span class="line">	row[<span class="string">'editingColumn'</span>] = column.property;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而且不用担心这一整列数据都会变成输入框，因为我们是根据row参数来修改的，只是改了被点击的这一行的数据。所以只有这一行这一列的格子会变成输入框~</p>
+<h1 id="修改之后提交到后台保存"><a href="#修改之后提交到后台保存" class="headerlink" title="修改之后提交到后台保存"></a>修改之后提交到后台保存</h1><p>这是需求方提的需求，每修改一个数据就要刷新一次整个表格的数据。</p>
+<p>我采用了2种方法：</p>
+<ol>
+<li>@blur失去焦点事件。当输入完成后，用户点击一下其他地方，输入框失去焦点后，就把输入框切换成文本，然后把数据提交到后台。</li>
+<li>监听回车键<a href="https://cn.vuejs.org/v2/guide/events.html#%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6" target="_blank" rel="noopener">@keyup.enter</a>，如果输入完后用户点击了回车键，就把输入框切换成文本，然后把数据提交到后台。</li>
+</ol>
+<p>输入框切换成文本跟文本切换成输入框一样，修改editingColumn的值即可。</p>
+<p>后来我优化了一下，当数据被修改后再提交到后台，免得没修改也提交，浪费资源，影响体验。</p>
+<h1 id="获取焦点的问题"><a href="#获取焦点的问题" class="headerlink" title="获取焦点的问题"></a>获取焦点的问题</h1><p>其实还有一个挺影响用户体验的问题，就是你把文本切换成输入框之后，这时候的输入框还是blur的，你还需要再点击一下，才能开始输入。</p>
+<p>所以我们的目标也很明确了，就是要切换到输入框之后，马上给输入框获得焦点。</p>
+<p>我们可以用vue的自定义指令来实现，大家可以看一下自定义指令的demo——<br><a href="https://cn.vuejs.org/v2/guide/custom-directive.html#%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">v-focus</a>，刚好自定义指令的demo就是做了聚焦的例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">directives: &#123;</span><br><span class="line">  focus: &#123;</span><br><span class="line">    <span class="comment">// 指令的定义</span></span><br><span class="line">    inserted: <span class="function"><span class="keyword">function</span> (<span class="params">el</span>) </span>&#123;</span><br><span class="line">      el.focus()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你在input标签加上v-focus属性，即可在被插入到DOM的时候获取到聚焦了。</p>
+<p>研究了一个下午的，做出来我感觉体验还挺好的哈哈哈~</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:41:16.458Z" itemprop="dateUpdated">2018-09-09 12:41:16</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/01/20/Element可编辑表格的实现/" target="_blank" rel="external">https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Element/">Element</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/可编辑表格/">可编辑表格</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2018/01/16/A+B问题/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">A+B问题</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#表格怎么实现可编辑"><span class="post-toc-number">1.</span> <span class="post-toc-text">表格怎么实现可编辑</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#监听表格的点击"><span class="post-toc-number">2.</span> <span class="post-toc-text">监听表格的点击</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#怎么实现表格的文本与输入框的切换"><span class="post-toc-number">3.</span> <span class="post-toc-text">怎么实现表格的文本与输入框的切换</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#修改之后提交到后台保存"><span class="post-toc-number">4.</span> <span class="post-toc-text">修改之后提交到后台保存</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#获取焦点的问题"><span class="post-toc-number">5.</span> <span class="post-toc-text">获取焦点的问题</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtUlEQVR42u3aQW7jMAwF0Nz/0h1gltPK/STFphg8rwLbifW0sJhPvV7x8fH3+HzmdCTfPX3+fP/pd64deHh4eK2hPw/0dOb56vO3eiOsTi4eHh7eHu/5RZwMNL9afVby+8fzeHh4eG/lPS8nyWIzvwcPDw/v/+A9v9zzMr0XYeDh4eG9i5cMpfp5EuzmU3Mta8HDw8OLedUG2G/4vNjfw8PDwxt01ScxQfKanrz6o9Hi4eHhLfAmUWl1KNVBJ4HF86jw8PDwtnl5C78asya/k28sKJ/Hw8PDu8qrlr/5QpI0zJKrkyUHDw8Pb4+XMHJAPtzkKfkUHBcGPDw8vDVer9XUK4WrzbZqSV3o2uHh4eG1eJPX9BycT2u5IYeHh4e3wKsGDXkrKw8yqmV3PgV4eHh4e7xebNoLfCfB8bwEx8PDw5vz7jbA5qVwNSAuhBF4eHh4V3l5iZyfn8Sv1eceP+Ph4eEt8PIvV6cg30CQT0R1EcLDw8Pb5lUbVPmkVDcfVMHfjAEPDw9vjdcLanvNsF4p39tVhYeHh3eXN29WTe6J5j5eur54Ch4eHt6P8PJiOl8woj0LMa8QRuDh4eGt8SabBqqNrl7Q0JxEPDw8vDVe8gqebyOYl8jVkAIPDw9vgzdp8OfbBfY2ByTTjYeHh3eXlwes1RL57hJSXWbw8PDwfoaXR6t5sZsje6HtNxONh4eHt8DLI9R82aiGBYXavwfDw8PDu8r7KB6T6KHabJvEEMd/DHh4eHhjXrVg7Q03H0reKsPDw8N7L68XLvQemZfdeRxcSFzw8PDwrvKqTf15MZ0P9zU58PDw8N7Ky1/Kkw0BvTj4eCceHh7eL+DlD+iFv3lIEU0oHh4e3hovf1lXA4V5cysv8b+4ioeHh7fAm/yjnxTT1VZWHn9cCyzw8PDw/j3+AJXbGDynVa62AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>

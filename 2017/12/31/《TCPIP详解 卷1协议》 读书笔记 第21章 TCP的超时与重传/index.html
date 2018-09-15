@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传 | 方小维 | 任意门</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="TCP,IP,TCP/IP详解,超时与重传">
+    <link rel="shortcut icon" href="/img/tiger.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.1.1">
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <main id="main">
+        
+
+<div class="container body-wrap" style="padding-bottom: 0">
+    <div>
+    <div class="header animated fadeInDown">
+        <div style="float: left;">
+            <a href="/">
+                <img src="/img/logo1.png" style="width:130px;">
+                <img src="/img/logo2.png" style="width:30px;margin-left: 50px !important">
+                <img src="/img/logo3.png" style="width:130px;margin-left: 20px !important">
+            </a>
+        </div>
+        <div class="self">
+            <p>生活需要一点调味品.</p>
+            <!-- <p>关于<a href="/code">代码</a>,<a href="/life">生活</a>,<a href="/message">细语</a>,以及<a href="/">一切</a>.</p> -->
+        </div>
+    </div>
+</div>
+
+    <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="post-article article-type-post fade" itemprop="blogPost">
+    <div class="post-card">
+        <div style="margin-bottom: 20px">
+            <h1 class="post-card-title">
+                《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传
+            </h1>
+            <div class="post-meta">
+                <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
+
+                
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+                <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+                
+            </div>
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="TCP的超时与重传"><a href="#TCP的超时与重传" class="headerlink" title="TCP的超时与重传"></a>TCP的超时与重传</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>TCP提供<strong>可靠</strong>的运输层，方法之一就是<strong>确认从另一端收到的数据</strong>。但是数据和确认都有可能会丢失。<br>如果当定时器溢出时还没有收到确认，它就重传该数据。</p>
+<p>对每个连接，TCP管理4个不同的定时器：</p>
+<ol>
+<li>重传定时器适用于当希望收到另一端的确认。</li>
+<li>坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。</li>
+<li>保活（keepalive）定时器可检测到一个空闲连接的另一端何时崩溃或重启。</li>
+<li>2MSL定时器测量一个连接处于TIME_WAIT状态的时间。（2MSL在结束一个连接的时候说过）</li>
+</ol>
+<hr>
+<h2 id="超时"><a href="#超时" class="headerlink" title="超时"></a><strong>超时</strong></h2><p>连续重传之间的时间差是不同的，每次重传时增加1倍，直至64秒，超出一定时间之后选择放弃重传。这个倍乘关系称为“指数退避”。</p>
+<h3 id="往返时间测量"><a href="#往返时间测量" class="headerlink" title="往返时间测量"></a><strong>往返时间测量</strong></h3><p><strong>RTT的测量是超时重传中最重要的部分。</strong><br>路由器和网络流量均会改变，TCP应该跟踪这些变化并相应改变其超时时间。</p>
+<p>最初的RTT估计器：<br>R←αR+ ( 1- α)M<br>式中M表示测量到的RTT，α为权重，一般为0.9.</p>
+<p>后来提出了一个RTO（重传超时时间）<br>RTO=Rβ<br>这里β一般为2。</p>
+<p>但是以上的方法在RTT变化范围很大的时候，显然跟不上这种变化，会引起不必要的重传。于是提出了新的方案：<br>除了被平滑的RTT估计器，所需要做的还有跟踪RTT的方差。在往返时间变化起伏很大时，基于均值和方差来计算RTO，将比作为均值的常数倍数来计算RTO能提供更好的响应。<br>Err = M-A<br>A←A + g Err<br>D←D + h( | Err |-D)<br>RTO = A + 4D<br>这里的A是被平滑的RTT（均值的估计器）而D则是被平滑的均值偏差。E rr是刚得到的测量结<br>果与当前的RTT估计器之差。A和D均被用于计算下一个重传时间（RTO）。增量g起平均作用，取为1/8（0.125）。偏差的增益是h，取值为0.25。当RTT变化时，较大的偏差增益将使RTO快速上升。</p>
+<h3 id="Karn算法"><a href="#Karn算法" class="headerlink" title="Karn算法"></a><strong>Karn算法</strong></h3><p>当一个超时和重传发生时，在<strong>重传数据的确认</strong>最后<strong>到达</strong>之前，不能更新RTT估计器，因为我们并不知道ACK对应哪次传输（也许第一次传输被延迟而并没有被丢弃，也有可能第一次传输的ACK被延迟）。<br><strong>在任何时候对每个连接仅测量一次RTT值</strong>。在发送一个报文段时，如果该连接的定时器已经被使用，则该报文段不会被计时。</p>
+<p>对一个没有被重传的报文段来说，也要在收到一个ACK之后才能计算新的RTO。</p>
+<hr>
+<h2 id="拥塞"><a href="#拥塞" class="headerlink" title="拥塞"></a><strong>拥塞</strong></h2><p>分组丢失的指示：超时、收到重复的确认ACK（3次重复）。</p>
+<p>###<strong>拥塞避免算法</strong><br>拥塞避免算法是一种处理丢失分组的方法。</p>
+<p>拥塞避免算法和慢启动算法是两个不同目的、独立的算法。但是这两个算法经常一起实现。</p>
+<p>拥塞避免算法和慢启动算法需要2个变量：拥塞窗口cwnd和一个慢启动门限ssthresh。</p>
+<p>工作流程如下：</p>
+<pre><code>1. 初始化cwnd为1个报文段，ssthresh为65535字节。
+2. TCP输出例程的输出不能超过cwnd和接收方通告窗口的大小。（慢启动说过了）
+3. 拥塞发生时（超时或收到重复确认），ssthresh被设置为当前窗口的一半（cwnd和通告窗口大小的最小值，但至少为2个报文段）。此外,如果是超时引起了拥塞,则cwnd被设置为1个报文段（这就是慢启动）。
+4. 如果cwnd &lt;= ssthresh,则正在进行慢启动,否则正在进行拥塞避免. 当慢启动过程cwnd大小到达ssthresh，就变为拥塞避免，每次只增加1报文段.
+</code></pre><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160906170514879" alt="拥塞避免算法" title="" class="">
+                <p>拥塞避免算法</p>
+            </figure>
+<h3 id="快速重传和快速恢复算法"><a href="#快速重传和快速恢复算法" class="headerlink" title="快速重传和快速恢复算法"></a><strong>快速重传和快速恢复算法</strong></h3><p>在收到一个失序的报文段的时候，TCP立即返回一个ACK，告诉对方希望收到的序号。</p>
+<p>当收到3个以上的重复ACK时，判断一个报文段丢失了。无需等待定时器溢出，马上重传丢失的数据报文段，这就是<strong>快速重传</strong>。接下来执行的不是慢启动算法，而是拥塞避免算法的话，这就是<strong>快速恢复算法</strong>。<br>没有执行慢启动的原因：收到重复ACK告诉我们两端还有流动的数据，不想用慢启动来突然减少数据流。</p>
+<p>流程：</p>
+<pre><code>1. 收到3个重复ACK之后，将ssthresh设置为cwnd的一半。重传丢失的报文段，设置cwnd为ssthresh加上3倍的报文段大小。
+2. 每次收到另一个重复的ACK，cwnd就增加1个报文段大小并发送一个分组。
+3. 当下一个确认新数据的ACK到达时，设置cwnd为ssthresh（第1步中设置的值）。
+</code></pre><hr>
+<h2 id="ICMP的差错"><a href="#ICMP的差错" class="headerlink" title="ICMP的差错"></a>ICMP的差错</h2><p>TCP能够遇到的最常见的ICMP差错就是源站抑制、主机不可达和网络不可达。</p>
+<ul>
+<li>收到源站抑制，会引起慢启动，但是ssthresh没有变化。</li>
+<li>主机不可达和网络不可达都会被忽略。</li>
+</ul>
+<hr>
+<h2 id="重新分组"><a href="#重新分组" class="headerlink" title="重新分组"></a>重新分组</h2><p>当TCP超时重传时，不一定要重传相同的报文段。比如可以重新分组，发送一个较大的报文段。    </p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-09-09T04:40:53.581Z" itemprop="dateUpdated">2018-09-09 12:40:53</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" target="_blank" rel="external">https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/</a>
+        
+    </div>
+    <footer>
+        <a href="https://elvis-fxw.github.io">
+            <img src="/img/avatar.jpg" alt="方小维 Elvis">
+            方小维 Elvis
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+        
+        
+        <div class="post-footer">
+            
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/&title=《《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/&title=《《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+        
+    <div id="comment"></div>
+
+
+        
+    </div>
+</article>
+<!-- 
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</h4>
+      </a>
+    </div>
+  
+</nav>
+
+ -->
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP的超时与重传"><span class="post-toc-number">1.</span> <span class="post-toc-text">TCP的超时与重传</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#超时"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">超时</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#往返时间测量"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">往返时间测量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Karn算法"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">Karn算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拥塞"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">拥塞</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#快速重传和快速恢复算法"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">快速重传和快速恢复算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ICMP的差错"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">ICMP的差错</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重新分组"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">重新分组</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+
+<footer class="footer">
+    <div class="toolbar">
+        
+        <a href="/"  >
+            首页
+        </a>
+        
+        <a href="/categories"  >
+            目录
+        </a>
+        
+        <a href="/tags"  >
+            标签
+        </a>
+        
+        <a href="/archives"  >
+            归档
+        </a>
+        
+        <a href="/message"  >
+            留言
+        </a>
+        
+        <a href="/about"  >
+            关于
+        </a>
+        
+        <a href="https://github.com/elvis-fxw" target="_blank"
+             >
+            Github
+        </a>
+        
+    </div>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                方小维 Elvis &copy;
+                
+                2017 -
+                
+                2018
+            </span>
+
+            
+
+            
+            <span>
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a>
+            </span>
+            
+
+            
+            <span>
+                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
+            </span>
+            
+        </p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/&title=《《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/&title=《《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAEBklEQVR42u3au3LbQBAEQP7/T9NVjuyyAM7sHmQFjUglicShGQz38XrF1/v3lf/P/f+//7iufn/116uf/31VcubhhQMHDhw4gse4upJbzl61eYfkw0ju8sV74sCBAweOQxx5cN7frA3sfWQm50meEQcOHDhwfD9HEod5URfFXlDgze6OAwcOHDh+Mse+sZj362aPigMHDhw4vp8jidJNedYWbO2H0TYZD/RKceDAgQNHl49Fo/Dn//zgfgcOHDhw4IgjdhbAeZjl6w778VX0RDhw4MCBY82Rl1XtikPy2G2ot6sMw0UHHDhw4MDxMMe+iEraefkCxIymGIbhwIEDB44Fx2y00/bTZksGM6zZgAoHDhw4cJzlqF92G2N5265diWuDvJ0u4cCBAweOPUcebLNFhxarfYy8RVisPuDAgQMHjkMcebDN1heSoJ1FaV4KRh8GDhw4cOBYcBRm8eAnCd28Rfgqr3ZsdlnR4sCBAweONUdbCLUraJuBVttAzAMbBw4cOHA8x7EZNbUhl4dlEsD75mD9Rjhw4MCBIzjPbJwzO1zegtwMw/KvEThw4MCB4xRHOy7Ky6R8jpMHcxvzbTDjwIEDB45THHmBtBlHtY9RLLfFaw0fPkIcOHDgwLHm2K8R5I86axHOysv8nT+cCgcOHDhwlBz1Mlk5ZJotTJwaSrUrFDhw4MCBY8/RtvDy+GwDb9byy89QfIHAgQMHDhwPc2wW0dr1iPZU7VpDhIUDBw4cOB7jaJtrs5KsvdfszMVrceDAgQPHgiNfa5u19k7F8GyS1i7t4cCBAweOPUfbsMsjNl+ea4deG7j6CwEOHDhw4BhxJGsHbTmXh1kexqfWKT6g4MCBAweOBUfbessPMSsR299sGpcfmoM4cODAgWNRVc3WDjaLDvlA6GzLMkLEgQMHDhxrjraQmw2ZNjSbcdSBLQ8cOHDgwBFzPBGT+brDqbW52cLE8AFw4MCBA0dwktmwJ3/sfElisxjXlmrD5iAOHDhw4Li9V36U/eJCXk22fG2gXr4/Dhw4cOA4xJEXb/nhzq41zIZM+Ufy16ocDhw4cOBYc5yKwzZok8dO/nP/paGoC3HgwIEDRzx8ytt2sxZeTrZacRuNsi4LORw4cODAUXK8y+v+uHlTLyn5knXqfEgWEePAgQMHjjVHG0ht2y4nmy097Is6HDhw4MDxBEfbmGv7afnD5EybIP/wVxw4cODAcYijDddiUeCJ5F83H+tZHA4cOHDgeIxjE7RJrdRG6X2oJ18jcODAgQPH/+JoVxCS4+ZlZNsoTD62y1kcDhw4cOBYc+TNwf2SQf5gs/hvi8xVrxQHDhw4cKQ9tChKZwsQScBvhkybcRQOHDhw4Fhw/AJCyJ/KSFpBLwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.1.1"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.1.1"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.1.1"></script>
+
+<!-- third-party -->
+<!-- github版块 -->
+
+
+
+
+
+
+
+    
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script type="text/javascript" src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script type="text/javascript" src="/js/plugins/valine.js?v=1.1.1"></script>
+    
+
+
+
+<script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script type="text/javascript" src="/js/plugins/leancloud_visitors.js?v=1.1.1"></script>
+
+
+
+
+
+    
+</body>
+
+</html>
