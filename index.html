@@ -256,13 +256,13 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/">《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议</a>
     </span>
   
 
@@ -272,17 +272,14 @@ a和b都是 32位 整数么？
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
+                            动态选路协议引言第9章学了静态选路。在配置接口时，通过route命令增加表项（通常从系统自引导程序文件），或是通过ICMP重定向生成表项（出错时）。
+但是静态选路受制于三种情况：
+1. 网络很小
+2. 与其他网络只有单个连接点
+3. 没有多余路由
+如果上述三种情况不能全部满足，通常使用动态选路。
 
-不可靠：它不能保证IP数据报能成功地到达目的地。
-无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
-
-
-二、IP首部IP数据报的格式如下图所示：
-                
-                IP数据报格式
-            
-普通IP的部首长为20个字节。分析IP首部，最高...
+动态选路当相邻路由器之间进行通信，以告知对方每个路由器当前所连接的网络，这时就出现了动态选路。...
                                 
         </div>
 </article>
@@ -300,8 +297,8 @@ a和b都是 32位 整数么？
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -310,10 +307,10 @@ a和b都是 32位 整数么？
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动态选路/">动态选路</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -326,13 +323,13 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》读书笔记 第2章 链路层" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/">《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层</a>
     </span>
   
 
@@ -342,15 +339,12 @@ a和b都是 32位 整数么？
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            UDP：用户数据报协议引言UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。
-UDP首部为8字节，IP首部为20字节。
-UDP是不可靠的。
+                            一、引言链路层主要有三个目的：
+1. 为IP模块发送和接收IP数据包
+2. 为ARP模块发送ARP请求和接收ARP应答
+3. 为RARP发送RARP请求和接收RARP应答
 
-UDP首部
-                
-                UDP首部
-            
-在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪...
+二、以太网和IEEE802封装以太网是一个标准，是当今TCP/IP采用的主要的局域网技术。它的速率为10Mb/s，地址为48bit。而IEEE是一个与以太网稍有不同的标准集。以太网IP数据报的封装实在RFC894（最常用...
                                 
         </div>
 </article>
@@ -368,8 +362,8 @@ UDP首部
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -378,10 +372,10 @@ UDP首部
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链路层/">链路层</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层" title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>

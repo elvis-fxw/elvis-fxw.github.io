@@ -50,13 +50,13 @@
     <ul class="post-list">
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/">《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流</a>
     </span>
   
 
@@ -66,12 +66,12 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            TCP的超时与重传引言TCP提供可靠的运输层，方法之一就是确认从另一端收到的数据。但是数据和确认都有可能会丢失。如果当定时器溢出时还没有收到确认，它就重传该数据。
-对每个连接，TCP管理4个不同的定时器：
+                            TCP的成块数据流引言一种流量控制方法——滑动窗口协议
+该协议允许发送方在停止并等待确认前可以连续发送多个分组，由于发送发不必每发送一个分组就停下来等待确认，因此该协议可以加速数据的传输。
 
-重传定时器适用于当希望收到另一端的确认。
-坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。
-保活（keepalive）定时器可检测到一个空闲连接的另一...
+正常数据流隔一个报文段确认的策略1. 每2个报文段返回一次ACK。
+2. 如果定时器溢出，那不管有没有确认2个报文段，也返回一次ACK。
+ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一个收...
                                 
         </div>
 </article>
@@ -89,8 +89,8 @@
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -99,10 +99,10 @@
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/成块数据流/">成块数据流</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -175,13 +175,13 @@
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/">《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</a>
     </span>
   
 
@@ -191,12 +191,12 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            Traceroute程序引言Traceroute程序是一个能更深入探索TCP/IP协议的方便可用的工具，它可以让我们看到IP数据报从一台主机到另一台主机所经过的路由，还可以让我们使用IP源路由选项。
+                            TCP的超时与重传引言TCP提供可靠的运输层，方法之一就是确认从另一端收到的数据。但是数据和确认都有可能会丢失。如果当定时器溢出时还没有收到确认，它就重传该数据。
+对每个连接，TCP管理4个不同的定时器：
 
-Traceroute程序的操作为什么不使用IP记录路由选项而是用Traceroute？原因有三：
-1. 并非所有路由器都支持记录路由选项。
-2. 记录路由一般是单向的选项。
-3. **主要原因...
+重传定时器适用于当希望收到另一端的确认。
+坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。
+保活（keepalive）定时器可检测到一个空闲连接的另一...
                                 
         </div>
 </article>
@@ -214,8 +214,8 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -224,10 +224,10 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序" title="《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -240,13 +240,13 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议/">《TCPIP详解 卷1：协议》 读书笔记 第5章 RARP：逆地址解析协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
     </span>
   
 
@@ -256,7 +256,17 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            反向地址转换协议（RARP：Reverse Address Resolution Protocol）引言具有本地磁盘的系统引导时，一般是从磁盘上的配置文件中读取IP地址。但是无盘机，如X终端或五盘工作站，则需要采用其他方法来获得IP地址。网络上的每个系统都具有唯一的硬件地址，它是由网络接口生产厂家配置的。无盘系统的RARP实现过程是从接口卡上读取唯一的硬件地址，然后发送一份RARP请求，请求...
+                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
+
+不可靠：它不能保证IP数据报能成功地到达目的地。
+无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
+
+
+二、IP首部IP数据报的格式如下图所示：
+                
+                IP数据报格式
+            
+普通IP的部首长为20个字节。分析IP首部，最高...
                                 
         </div>
 </article>
@@ -274,8 +284,8 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -284,10 +294,10 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RARP/">RARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆地址解析协议/">逆地址解析协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第5章 RARP：逆地址解析协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1：协议》 读书笔记 第5章 RARP：逆地址解析协议" title="《TCPIP详解 卷1：协议》 读书笔记 第5章 RARP：逆地址解析协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -300,13 +310,13 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/">《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器</a>
     </span>
   
 
@@ -316,13 +326,10 @@ Traceroute程序的操作为什么不使用IP记录路由选项而是用Tracerou
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。
+                            TCP的保活定时器有时一个TCP连接会是空闲的，没有任何数据通过，双方都不交换信息。许多时候一个服务器希望知道客户主机是否崩溃并关机或者崩溃又重启。使用保活定时器来进行检测。保活功能就是试图在服务器端检测到这种半开放的连接。
+如果一个给定的连接在两个小时之内没有任何动作，则服务器就向客户发送一个探查报文段。客户主机必须处于以下4个状态之一：
 
-ARP为IP地址到对应的硬件地址之间提供动态映射。
-RARP是被那些没有磁盘驱动器的系统使用的。
-
-
-二、ARP运行过程...
+客户主机依然正常运行，并从服务器可达。客户的TC...
                                 
         </div>
 </article>
@@ -340,8 +347,8 @@ RARP是被那些没有磁盘驱动器的系统使用的。
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -350,10 +357,10 @@ RARP是被那些没有磁盘驱动器的系统使用的。
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/保活定时器/">保活定时器</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议" title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
