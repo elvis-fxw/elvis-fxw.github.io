@@ -48,6 +48,17 @@
 
     <div style="max-width: 820px;margin: 0 auto">
         
+        <h3 class="archive-separator" id="tag-[object Object]">
+            <script>
+                let url = window.location.href;
+                let index = url.indexOf('categories/');
+                url = url.substr(index+11);
+                index = url.indexOf('/');
+                let title = decodeURI(url.substring(0,index));
+
+                document.write(title);
+            </script>
+        </h3>
         <div class="waterfall">
             
             <div class="waterfall-item">
@@ -91,6 +102,7 @@
         </div>
         
     </div>
+        
     
 </div>
 
@@ -157,7 +169,7 @@
 </footer>
 
 
-<script type="text/javascript" src="../css/fonts/fonts.js"></script>
+<script type="text/javascript" src="/css/fonts/fonts.js"></script>
 
     </main>
     <div class="mask" id="mask"></div>

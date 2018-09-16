@@ -323,13 +323,13 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》读书笔记 第2章 链路层" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/">《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/">《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器</a>
     </span>
   
 
@@ -339,12 +339,7 @@ a和b都是 32位 整数么？
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言链路层主要有三个目的：
-1. 为IP模块发送和接收IP数据包
-2. 为ARP模块发送ARP请求和接收ARP应答
-3. 为RARP发送RARP请求和接收RARP应答
-
-二、以太网和IEEE802封装以太网是一个标准，是当今TCP/IP采用的主要的局域网技术。它的速率为10Mb/s，地址为48bit。而IEEE是一个与以太网稍有不同的标准集。以太网IP数据报的封装实在RFC894（最常用...
+                            TCP的坚持定时器引言ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window prob...
                                 
         </div>
 </article>
@@ -362,8 +357,8 @@ a和b都是 32位 整数么？
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -372,10 +367,10 @@ a和b都是 32位 整数么？
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链路层/">链路层</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层" title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>

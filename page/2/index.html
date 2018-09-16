@@ -118,6 +118,70 @@ UDP首部
         </li>
         
         <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            TCP连接的建立与终止引言TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。
+UDP是无连接协议。
+
+连接的建立与终止建立过程（三次握手）：1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
+2. 服务器发回包含服务器初始序...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -167,75 +231,6 @@ UDP首部
 
                     
 	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统" title="《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/">《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            TCP：传输控制协议这一章可以看成是TCP的概述
-TCP的服务
-TCP提供一种面向连接的、可靠的字节流服务。（面向连接：在彼此交互数据前要先建立TCP连接，仅有两方进行通信）
-广播和多播不能用于TCP
-
-提供可靠性：
-
-应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据报长度将保持不变。
-TCP数据成为报文段或段（segment）
-超时与重传：当TCP发出一...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/传输控制协议/">传输控制协议</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -315,13 +310,13 @@ TCP数据成为报文段或段（segment）
         </li>
         
         <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/">《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议</a>
     </span>
   
 
@@ -331,11 +326,16 @@ TCP数据成为报文段或段（segment）
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            TCP连接的建立与终止引言TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。
-UDP是无连接协议。
+                            TCP：传输控制协议这一章可以看成是TCP的概述
+TCP的服务
+TCP提供一种面向连接的、可靠的字节流服务。（面向连接：在彼此交互数据前要先建立TCP连接，仅有两方进行通信）
+广播和多播不能用于TCP
 
-连接的建立与终止建立过程（三次握手）：1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
-2. 服务器发回包含服务器初始序...
+提供可靠性：
+
+应用数据被分割成TCP认为最适合发送的数据块。这和UDP完全不同，应用程序产生的数据报长度将保持不变。
+TCP数据成为报文段或段（segment）
+超时与重传：当TCP发出一...
                                 
         </div>
 </article>
@@ -353,8 +353,8 @@ UDP是无连接协议。
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -363,10 +363,10 @@ UDP是无连接协议。
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/传输控制协议/">传输控制协议</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议" title="《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
