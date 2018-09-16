@@ -256,6 +256,73 @@ a和b都是 32位 整数么？
         </li>
         
         <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/">《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            IP选路引言选路是IP最重要的功能之一。主要目的：了解单个IP层如何作出路由决策。
+
+选路的原理IP搜索路由表的几个步骤：
+1. 搜索匹配的主机地址
+2. 搜索匹配的网络地址
+3. 搜索默认表项
+IP层进行的选路实际上是一种选路机制，它搜索路由表并决定向哪个网络接口发送分组。这区别于选路策略，它只是一组决定把哪些路由放入路由表的规则。
+简单路由表netstat -r列出路由表，-n以数字格式...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP选路/">IP选路</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/选路/">选路</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路" title="《TCPIP详解 卷1协议》 读书笔记 第9章 IP选路"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -311,66 +378,6 @@ a和b都是 32位 整数么？
 
                     
 	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议" title="《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/">《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            TCP的坚持定时器引言ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window prob...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的坚持定时器/">TCP的坚持定时器</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器" title="《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
