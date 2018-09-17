@@ -27,12 +27,12 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <main id="main">
+    <main id="main" class="animated fadeInDown">
         
 
 <div class="container body-wrap">
     <div>
-    <div class="header animated fadeInDown">
+    <div class="header animated fade-in-down">
         <div style="float: left;">
             <a href="/">
                 <img src="/img/logo1.png" style="width:130px;">
@@ -48,71 +48,6 @@
 </div>
 
     <ul class="post-list">
-        
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            TCP的超时与重传引言TCP提供可靠的运输层，方法之一就是确认从另一端收到的数据。但是数据和确认都有可能会丢失。如果当定时器溢出时还没有收到确认，它就重传该数据。
-对每个连接，TCP管理4个不同的定时器：
-
-重传定时器适用于当希望收到另一端的确认。
-坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。
-保活（keepalive）定时器可检测到一个空闲连接的另一...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
         
         <li class="post-list-item animated fadeInDown">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
@@ -240,6 +175,141 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         </li>
         
         <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            TCP的超时与重传引言TCP提供可靠的运输层，方法之一就是确认从另一端收到的数据。但是数据和确认都有可能会丢失。如果当定时器溢出时还没有收到确认，它就重传该数据。
+对每个连接，TCP管理4个不同的定时器：
+
+重传定时器适用于当希望收到另一端的确认。
+坚持（persist）定时器使窗口大小信息保持不断流动，即使另一端关闭了其接收窗口。
+保活（keepalive）定时器可检测到一个空闲连接的另一...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/超时与重传/">超时与重传</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" title="《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
+
+不可靠：它不能保证IP数据报能成功地到达目的地。
+无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
+
+
+二、IP首部IP数据报的格式如下图所示：
+                
+                IP数据报格式
+            
+普通IP的部首长为20个字节。分析IP首部，最高...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item animated fadeInDown">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -291,72 +361,6 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
 
                     
 	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            一、引言当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。
-
-ARP为IP地址到对应的硬件地址之间提供动态映射。
-RARP是被那些没有磁盘驱动器的系统使用的。
-
-
-二、ARP运行过程...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议" title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
