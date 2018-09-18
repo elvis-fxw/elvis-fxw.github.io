@@ -94,7 +94,7 @@
             <p>最近在重构一个页面，需要把表格做成可编辑的。但是不巧的是Element框架里是没有可编辑表格的，所以只好自己来实现一个了。</p>
 <p>实现起来不难，下面我给大家分享一下我是怎么做的。</p>
 <h1 id="表格怎么实现可编辑"><a href="#表格怎么实现可编辑" class="headerlink" title="表格怎么实现可编辑"></a>表格怎么实现可编辑</h1><p>其实思路很简单，主要利用普通显示和输入框之间的切换，来实现表格的编辑。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
 <p>比如像上面的代码这样，我们使用v-if(或v-show)指令来实现普通的显示和输入之间的切换。</p>
 <p>这里使用到了<a href="https://cn.vuejs.org/v2/guide/components.html#%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD" target="_blank" rel="noopener">slot-scope</a>，这主要是用于把el-table-column的值传递到input里。</p>
 <h1 id="监听表格的点击"><a href="#监听表格的点击" class="headerlink" title="监听表格的点击"></a>监听表格的点击</h1><p>首先第一步肯定是去监听点击事件，看看点击了表格的哪里，我好切换输入框。</p>
@@ -119,10 +119,10 @@
 <p>比如这样，当表格某个格子被点击的时候，我们就调用edit函数，可以在edit函数中进行处理，来切换输入框等。</p>
 <h1 id="怎么实现表格的文本与输入框的切换"><a href="#怎么实现表格的文本与输入框的切换" class="headerlink" title="怎么实现表格的文本与输入框的切换"></a>怎么实现表格的文本与输入框的切换</h1><p>现在我们知道，使用cell-click时间来监听表格的点击，在edit函数中实现文本与输入框的切换。</p>
 <p>一开始的时候，我是想给表格的每一列都加一个对应的状态，比如isEditing1，isEditing2…用第一列v-if可以绑定row.isEditing1，我只要改变这个isEditing1的值为true或false，就可以控制切换了。像下面这样：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing1"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing1"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"!scope.row.isEditing1"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.isEditing1"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
 <p>但是这样的话还要加上那么多个状态，多少列数据就加多少个状态，太麻烦了，这个方案想了一下就被我放弃了。</p>
 <p>后来我发现column里面有一个property属性，这个属性其实是数据的变量名。比如上面代码中，column.property = “name”。我只要加一个变量，存储被编辑的数据的变量名即可。当然column还有其他属性可以选择~</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"scope.row.editingColumn != 'name'"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.editingColumn == 'name'"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;template slot-scope=<span class="string">"scope"</span>&gt;</span><br><span class="line">   &lt;span v-<span class="keyword">if</span>=<span class="string">"scope.row.editingColumn != 'name'"</span>&gt;&#123;&#123; scope.row.name &#125;&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">   &lt;span v-if="scope.row.editingColumn == 'name'"&gt;&lt;el-input v-model="name" placeholder="请输入内容"&gt;&lt;/</span>el-input&gt;&lt;/span&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br></pre></td></tr></table></figure>
 <p>我给每一行数据加了一个属性editingColumn，顾名思义，是用来指明现在被编辑的是哪一列的数据。我只要在cell-click绑定的edit函数里，修改这个row.editingColumn即可：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edit: <span class="function"><span class="keyword">function</span>(<span class="params">row, column, cell, event</span>)</span>&#123;</span><br><span class="line">	row[<span class="string">'editingColumn'</span>] = column.property;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而且不用担心这一整列数据都会变成输入框，因为我们是根据row参数来修改的，只是改了被点击的这一行的数据。所以只有这一行这一列的格子会变成输入框~</p>
@@ -339,43 +339,6 @@
 <script type="text/javascript" src="/css/fonts/fonts.js"></script>
 
     </main>
-    <!-- <div class="mask" id="mask"></div>
-<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
-
-
-
-<div class="global-share" id="globalShare">
-    <ul class="reset share-icons">
-      
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2018/01/20/Element可编辑表格的实现/&title=《Element可编辑表格的实现》 — 方小维&source=编程、代码" data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      
-    </ul>
- </div>
-
-
-<div class="page-modal wx-share" id="wxShare">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtUlEQVR42u3aQW7jMAwF0Nz/0h1gltPK/STFphg8rwLbifW0sJhPvV7x8fH3+HzmdCTfPX3+fP/pd64deHh4eK2hPw/0dOb56vO3eiOsTi4eHh7eHu/5RZwMNL9afVby+8fzeHh4eG/lPS8nyWIzvwcPDw/v/+A9v9zzMr0XYeDh4eG9i5cMpfp5EuzmU3Mta8HDw8OLedUG2G/4vNjfw8PDwxt01ScxQfKanrz6o9Hi4eHhLfAmUWl1KNVBJ4HF86jw8PDwtnl5C78asya/k28sKJ/Hw8PDu8qrlr/5QpI0zJKrkyUHDw8Pb4+XMHJAPtzkKfkUHBcGPDw8vDVer9XUK4WrzbZqSV3o2uHh4eG1eJPX9BycT2u5IYeHh4e3wKsGDXkrKw8yqmV3PgV4eHh4e7xebNoLfCfB8bwEx8PDw5vz7jbA5qVwNSAuhBF4eHh4V3l5iZyfn8Sv1eceP+Ph4eEt8PIvV6cg30CQT0R1EcLDw8Pb5lUbVPmkVDcfVMHfjAEPDw9vjdcLanvNsF4p39tVhYeHh3eXN29WTe6J5j5eur54Ch4eHt6P8PJiOl8woj0LMa8QRuDh4eGt8SabBqqNrl7Q0JxEPDw8vDVe8gqebyOYl8jVkAIPDw9vgzdp8OfbBfY2ByTTjYeHh3eXlwes1RL57hJSXWbw8PDwfoaXR6t5sZsje6HtNxONh4eHt8DLI9R82aiGBYXavwfDw8PDu8r7KB6T6KHabJvEEMd/DHh4eHhjXrVg7Q03H0reKsPDw8N7L68XLvQemZfdeRxcSFzw8PDwrvKqTf15MZ0P9zU58PDw8N7Ky1/Kkw0BvTj4eCceHh7eL+DlD+iFv3lIEU0oHh4e3hovf1lXA4V5cysv8b+4ioeHh7fAm/yjnxTT1VZWHn9cCyzw8PDw/j3+AJXbGDynVa62AAAAAElFTkSuQmCC" alt="微信分享二维码">
-</div>
-
- -->
     
     <!-- main-js -->
 <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>

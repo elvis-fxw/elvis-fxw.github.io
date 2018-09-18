@@ -51,11 +51,12 @@
         <h3 class="archive-separator" id="tag-[object Object]">
             <script>
                 let url = window.location.href;
-                let index = url.indexOf('categories/');
-                url = url.substr(index+11);
-                index = url.indexOf('/');
-                let title = decodeURI(url.substring(0,index));
+                let index = url.lastIndexOf('/');
+                url = url.substring(0, index);
+                index = url.lastIndexOf('/');
+                let title = decodeURI(url.substring(index+1));
                 document.write(title);
+
             </script>
         </h3>
         <div class="waterfall">
@@ -82,7 +83,7 @@
         </div>
         
     </div>
-        
+
     
 </div>
 
@@ -152,43 +153,6 @@
 <script type="text/javascript" src="/css/fonts/fonts.js"></script>
 
     </main>
-    <!-- <div class="mask" id="mask"></div>
-<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
-
-
-
-<div class="global-share" id="globalShare">
-    <ul class="reset share-icons">
-      
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/categories/C/&title=方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/categories/C/&title=方小维&source=编程、代码" data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      
-    </ul>
- </div>
-
-
-<div class="page-modal wx-share" id="wxShare">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABw0lEQVR42u3aQW7CQAwF0Nz/0nRLVSX9tolB4s0qGkLyYGF5bB9HvB5P6+/O2Tr77vP+ccfCxcUdc6uvTPbnzz99Ji4u7iL37DWTe6rB7vr5uLi4n8/NoWf34+LifgP3GjcPlLi4uPvcagqSFDuSpOfGsxouLu6Am1cp77u+pb6Li4vb4j6KK2mrJAGr+XZcXNwVbh5QrtOOPDxVAxkuLu57uXkiUi2GJvT8r8HFxd3h9gJW9QBTfWaExsXFvYE7GZ6YlE7y49Ova1xc3BVuNUGpHmwmPyA6q+Hi4q5w81JmM4dqdUyOXk6Ei4vb4lZHLvKixiT1OQ1kuLi4K9we61Ul1HwfFxd3k1tNZZJEpDdsEf0RuLi4K9yk4VEdtnjV4Sdq1eDi4t7G7bVUq6zqSOg/hx9cXNxFbrX9mTdg8lGt6KyGi4u7yO29vldyrZZicXFxd7iP4pqHrXzwAhcX913c3khEnrhMyiujIgsuLu6YO29yTO5M9nFxcd/FzcNQcj0vjpQ/xsXF/QBucwosOHo1qya4uLgfw503XMslVFxc3EVuXiTtDU9UKzHlnjAuLu5Lub0vV5us+ZFpEiJxcXHH3B+FEVLBB4V7SAAAAABJRU5ErkJggg==" alt="微信分享二维码">
-</div>
-
- -->
     
     <!-- main-js -->
 <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
