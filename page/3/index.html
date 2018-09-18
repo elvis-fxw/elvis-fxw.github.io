@@ -32,7 +32,7 @@
 
 <div class="container body-wrap">
     <div>
-    <div class="header animated fade-in-down">
+    <div class="header">
         <div style="float: left;">
             <a href="/">
                 <img src="/img/logo1.png" style="width:130px;">
@@ -49,14 +49,14 @@
 
     <ul class="post-list">
         
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
+        <li class="post-list-item">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/">《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</a>
     </span>
   
 
@@ -66,12 +66,11 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            TCP的成块数据流引言一种流量控制方法——滑动窗口协议
-该协议允许发送方在停止并等待确认前可以连续发送多个分组，由于发送发不必每发送一个分组就停下来等待确认，因此该协议可以加速数据的传输。
+                            TCP连接的建立与终止引言TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。
+UDP是无连接协议。
 
-正常数据流隔一个报文段确认的策略1. 每2个报文段返回一次ACK。
-2. 如果定时器溢出，那不管有没有确认2个报文段，也返回一次ACK。
-ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一个收...
+连接的建立与终止建立过程（三次握手）：1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
+2. 服务器发回包含服务器初始序...
                                 
         </div>
 </article>
@@ -89,8 +88,8 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -99,10 +98,10 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/成块数据流/">成块数据流</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -114,7 +113,7 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
 </div>
         </li>
         
-        <li class="post-list-item animated fadeInDown">
+        <li class="post-list-item">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -179,7 +178,7 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
 </div>
         </li>
         
-        <li class="post-list-item animated fadeInDown">
+        <li class="post-list-item">
             <article id="post-《TCPIP详解 卷1协议》读书笔记 第2章 链路层" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -244,7 +243,7 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
 </div>
         </li>
         
-        <li class="post-list-item animated fadeInDown">
+        <li class="post-list-item">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -307,14 +306,14 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
 </div>
         </li>
         
-        <li class="post-list-item animated fadeInDown">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议" class="article-card article-type-post" itemprop="blogPost">
+        <li class="post-list-item">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/">《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议</a>
     </span>
   
 
@@ -324,13 +323,14 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。
+                            ICMP:Internet控制报文协议引言ICMP通常被认为是IP层的一个组成部分。它传递差错报文及其他需要注意的信息。ICMP实在IP数据报内部被传输的。（封装在IP中）
 
-ARP为IP地址到对应的硬件地址之间提供动态映射。
-RARP是被那些没有磁盘驱动器的系统使用的。
+                
+                ICMP报文
+            
 
-
-二、ARP运行过程...
+所有ICMP报文前4个字节是一样的。（也就是类型的前4位不变，所以类型只有15个）
+检验和字段覆盖整个ICMP...
                                 
         </div>
 </article>
@@ -348,8 +348,8 @@ RARP是被那些没有磁盘驱动器的系统使用的。
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -358,10 +358,10 @@ RARP是被那些没有磁盘驱动器的系统使用的。
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARP/">ARP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/地址解析协议/">地址解析协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICMP/">ICMP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Internet控制报文协议/">Internet控制报文协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议" title="《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议" title="《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
