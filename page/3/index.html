@@ -50,13 +50,13 @@
     <ul class="post-list">
         
         <li class="post-list-item">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/">《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流</a>
     </span>
   
 
@@ -66,11 +66,12 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            TCP连接的建立与终止引言TCP是一个面向连接的协议。无论哪一方向向另一方发送数据之前，都必须现在双方之间建立一条连接。
-UDP是无连接协议。
+                            TCP的成块数据流引言一种流量控制方法——滑动窗口协议
+该协议允许发送方在停止并等待确认前可以连续发送多个分组，由于发送发不必每发送一个分组就停下来等待确认，因此该协议可以加速数据的传输。
 
-连接的建立与终止建立过程（三次握手）：1. 客户发送一个SYN（一个同步标志，建立连接时使用）段，指明打算连接的服务器的端口，以及初始序号（ISN）。该报文还包括了win（通知窗口大小）、mss（最大报文段长度）。
-2. 服务器发回包含服务器初始序...
+正常数据流隔一个报文段确认的策略1. 每2个报文段返回一次ACK。
+2. 如果定时器溢出，那不管有没有确认2个报文段，也返回一次ACK。
+ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一个收...
                                 
         </div>
 </article>
@@ -88,8 +89,8 @@ UDP是无连接协议。
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -98,10 +99,10 @@ UDP是无连接协议。
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP连接的建立与终止/">TCP连接的建立与终止</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/成块数据流/">成块数据流</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止" title="《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" title="《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -179,13 +180,13 @@ UDP是无连接协议。
         </li>
         
         <li class="post-list-item">
-            <article id="post-《TCPIP详解 卷1协议》读书笔记 第2章 链路层" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/">《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/">《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序</a>
     </span>
   
 
@@ -195,12 +196,12 @@ UDP是无连接协议。
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            一、引言链路层主要有三个目的：
-1. 为IP模块发送和接收IP数据包
-2. 为ARP模块发送ARP请求和接收ARP应答
-3. 为RARP发送RARP请求和接收RARP应答
+                            Traceroute程序引言Traceroute程序是一个能更深入探索TCP/IP协议的方便可用的工具，它可以让我们看到IP数据报从一台主机到另一台主机所经过的路由，还可以让我们使用IP源路由选项。
 
-二、以太网和IEEE802封装以太网是一个标准，是当今TCP/IP采用的主要的局域网技术。它的速率为10Mb/s，地址为48bit。而IEEE是一个与以太网稍有不同的标准集。以太网IP数据报的封装实在RFC894（最常用...
+Traceroute程序的操作为什么不使用IP记录路由选项而是用Traceroute？原因有三：
+1. 并非所有路由器都支持记录路由选项。
+2. 记录路由一般是单向的选项。
+3. **主要原因...
                                 
         </div>
 </article>
@@ -218,8 +219,8 @@ UDP是无连接协议。
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -228,10 +229,80 @@ UDP是无连接协议。
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/链路层/">链路层</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第2章 链路层/" class="leancloud_visitors" data-flag-title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层" title="《TCP/IP详解 卷1：协议》读书笔记 第2章 链路层"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序" title="《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/">《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            一、引言IP是TCP/IP协议族中最为核心的协议。特点：
+
+不可靠：它不能保证IP数据报能成功地到达目的地。
+无连接：IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。
+
+
+二、IP首部IP数据报的格式如下图所示：
+                
+                IP数据报格式
+            
+普通IP的部首长为20个字节。分析IP首部，最高...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网际协议/">网际协议</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议" title="《TCPIP详解 卷1协议》 读书笔记 第3章 IP：网际协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -295,73 +366,6 @@ UDP是无连接协议。
 
                     
 	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/">《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            ICMP:Internet控制报文协议引言ICMP通常被认为是IP层的一个组成部分。它传递差错报文及其他需要注意的信息。ICMP实在IP数据报内部被传输的。（封装在IP中）
-
-                
-                ICMP报文
-            
-
-所有ICMP报文前4个字节是一样的。（也就是类型的前4位不变，所以类型只有15个）
-检验和字段覆盖整个ICMP...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICMP/">ICMP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Internet控制报文协议/">Internet控制报文协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第6章 ICMPInternet控制报文协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议" title="《TCPIP详解 卷1协议》 读书笔记 第6章 ICMP Internet控制报文协议"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
