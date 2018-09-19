@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -176,23 +176,60 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/&title=《《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD40lEQVR42u3ay27bQBAEQP3/TyvXBIno7pldBwaKJ0ORJW4xQHser1d8vX+7Pr3y/M5PP/99ffr259efv/fwhQMHDhw44qN+urnn1/P3JBDJ+2c00QPAgQMHDhyHOJIvyAM4CePnz0niNnl4+Rlx4MCBA8f/4sgPOSsO83tIsHDgwIEDx8/iaJt9CVkbuvs/FHDgwIEDxw2OvGGXl0xtw65t5L2D62KvFAcOHDhwfJ1frzbYfsrPV/Y7cODAgQPHY7HUhtYmYtsFiGTQNYvhP34XBw4cOHCsOTYNu9uxd/aRFI1IHDhw4MCx4Ng33ZKhVLsAdy9Qh7sVOHDgwIFjwZEvIuQEzwdoUdpVjKLFiQMHDhw4DnHk6wXtIsJsmSAv9vJyMSr/cODAgQPHIY68tbf511lsz+4qH1z9o0uKAwcOHDgWHPkCwanuWdJkzFcf2gNHcDhw4MCB4xDHJhr3EZivPuRHbR8GDhw4cODYc+Sxl4fiJgJblLOLGjhw4MCB4xTHbBVgU1Dt23k3Pg0HDhw4cJzlaMNv1uxrlyE2oVuXpjhw4MCB4yjHjbJtdrC87ZhDRGMnHDhw4MCx5miPNINIbnqzprBpHdYoOHDgwIEj4JjF56Zd2Mbz2fd/8bs4cODAgeMQR14stSvO7XtmY7B9kOPAgQMHjlMcOc1zCZQTzB7Dhin5Lhw4cODAsefIhzfJgCoZMt1YYtgHLQ4cOHDgOMVxqoWXL0ZslrZnyxD7IRYOHDhw4JhxbNbO2ptrIzkferUFXlTL4sCBAweOmGMWaclNzBqF+Wfm91D8oYADBw4cONYc7cE2I5/nMq9t2J0K12gJGwcOHDhwxBx5RM2CsL31fbSv2pc4cODAgeMQR76ssC/2zkZjThBR4sCBAweOCxxtIy9v8yXcs4FTEqXRg8GBAwcOHIc4kiO1K2ttKOZlWN5kbIs6HDhw4MBxiuNs0LbLBEn0tljJ50TNQRw4cODAMeKYjZo2QHmRlrQdk8cQxT8OHDhw4DjEsRkLfc8q26bOKhqXOHDgwIHjEEd+pH3I5Y8hL+HyliUOHDhw4LjNsfn6WeH3iq/ZGlz+R8Cr/V+AAwcOHDgCjnd5bdT3zce2gdjePw4cOHDg2HO0sZeEaB607UrEZii1x8WBAwcOHDlHEq7t4lo+iGoHVG0zMWlx4sCBAweOGxyzoMqDc78MsWk1FgUeDhw4cOD4do5NiLZDr3b1bbYqET0xHDhw4MBxmWNzE22h2I7BVgMzHDhw4MBxiGN2pE1zcIbbFoQXx044cODAgWO90NB+Zb70MGv2FcOkUbsTBw4cOHCUHL8AZxAVR4GaAKAAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传/" id="post-prev" class="post-nav-link">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第21章 TCP的超时与重传</h4>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统</h4>
       </a>
     </div>
   
 
   
     <div class="next">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/" id="post-next" class="post-nav-link">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议</h4>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</h4>
       </a>
     </div>
   
@@ -259,14 +296,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -292,10 +321,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

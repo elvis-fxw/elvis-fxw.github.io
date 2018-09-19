@@ -15,7 +15,7 @@
         var DC = {
             reward:	false,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -50,13 +50,13 @@
     <ul class="post-list">
         
         <li class="post-list-item">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" class="article-card article-type-post" itemprop="blogPost">
     
 
 
   
     <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/">《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议</a>
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/">《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器</a>
     </span>
   
 
@@ -66,15 +66,10 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
                 
-                            UDP：用户数据报协议引言UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。
-UDP首部为8字节，IP首部为20字节。
-UDP是不可靠的。
+                            TCP的保活定时器有时一个TCP连接会是空闲的，没有任何数据通过，双方都不交换信息。许多时候一个服务器希望知道客户主机是否崩溃并关机或者崩溃又重启。使用保活定时器来进行检测。保活功能就是试图在服务器端检测到这种半开放的连接。
+如果一个给定的连接在两个小时之内没有任何动作，则服务器就向客户发送一个探查报文段。客户主机必须处于以下4个状态之一：
 
-UDP首部
-                
-                UDP首部
-            
-在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪...
+客户主机依然正常运行，并从服务器可达。客户的TC...
                                 
         </div>
 </article>
@@ -92,8 +87,8 @@ UDP首部
             <!-- 
     <span class="leancloud-comment" style="margin-left: 20px">
         <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" style="color: #bbbbbb"></span>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" style="color: #bbbbbb"></span>
         </a>
     </span>
 
@@ -102,10 +97,77 @@ UDP首部
             
                 
 	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UDP/">UDP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/用户数据报协议/">用户数据报协议</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/保活定时器/">保活定时器</a></li></ul>
 
                     
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议" title="《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议"
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器" title="《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器"
+		style="margin-left: 20px;">
+		
+			<i class="icon icon-paw"></i>
+		
+		<span class="leancloud-visitors-count"></span>
+	</span>
+ 
+
+</div>
+        </li>
+        
+        <li class="post-list-item">
+            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流" class="article-card article-type-post" itemprop="blogPost">
+    
+
+
+  
+    <span class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</a>
+    </span>
+  
+
+
+
+
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+                
+                            TCP的交互数据流引言TCP通信量的研究：
+
+按照分组数量计算：一般TCP报文段包含成块数据（如FTP、电子邮件和Usenet新闻），另一半则包含交互数据（如Telnet和Rlogin）。
+按照字节计算：90%为成块数据，10%为交互数据。
+
+
+交互式输入在一个Rlogin连接上键入一个交互命令所产生的数据流，通常每一个交互按键都会产生一个数据分组，每次从客户传到服务器的是一个字节的按键。
+...
+                                
+        </div>
+</article>
+<div class="post-footer">
+    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
+<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
+    2017-12-31</time>
+
+        
+	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
+
+
+
+            <!-- 
+    <span class="leancloud-comment" style="margin-left: 20px">
+        <i class="icon icon-comment-o"></i>
+        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/#comment">
+            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" style="color: #bbbbbb"></span>
+        </a>
+    </span>
+
+ -->
+            <!--  -->
+            
+                
+	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的交互数据流/">TCP的交互数据流</a></li></ul>
+
+                    
+	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流" title="《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流"
 		style="margin-left: 20px;">
 		
 			<i class="icon icon-paw"></i>
@@ -251,73 +313,6 @@ UDP是无连接协议。
         </li>
         
         <li class="post-list-item">
-            <article id="post-《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流" class="article-card article-type-post" itemprop="blogPost">
-    
-
-
-  
-    <span class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</a>
-    </span>
-  
-
-
-
-
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-                
-                            TCP的交互数据流引言TCP通信量的研究：
-
-按照分组数量计算：一般TCP报文段包含成块数据（如FTP、电子邮件和Usenet新闻），另一半则包含交互数据（如Telnet和Rlogin）。
-按照字节计算：90%为成块数据，10%为交互数据。
-
-
-交互式输入在一个Rlogin连接上键入一个交互命令所产生的数据流，通常每一个交互按键都会产生一个数据分组，每次从客户传到服务器的是一个字节的按键。
-...
-                                
-        </div>
-</article>
-<div class="post-footer">
-    <!-- <span class="date"><i class="icon icon-clock-o"></i></span> -->
-<time title="2017-12-31 12:52:28" datetime="2017-12-31T04:52:28.000Z" itemprop="datePublished">
-    2017-12-31</time>
-
-        
-	<span style="margin-left: 20px;"><i class="icon icon-paperclip"></i></span>
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/TCP-IP/">TCP/IP</a></li></ul></li></ul>
-
-
-
-            <!-- 
-    <span class="leancloud-comment" style="margin-left: 20px">
-        <i class="icon icon-comment-o"></i>
-        <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/#comment">
-            <span class="valine-comment-count" data-xid="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" style="color: #bbbbbb"></span>
-        </a>
-    </span>
-
- -->
-            <!--  -->
-            
-                
-	<span style="margin-left: 20px;"><i class="icon icon-tags"></i></span>
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP-IP详解/">TCP/IP详解</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP的交互数据流/">TCP的交互数据流</a></li></ul>
-
-                    
-	<span id="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" class="leancloud_visitors" data-flag-title="《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流" title="《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流"
-		style="margin-left: 20px;">
-		
-			<i class="icon icon-paw"></i>
-		
-		<span class="leancloud-visitors-count"></span>
-	</span>
- 
-
-</div>
-        </li>
-        
-        <li class="post-list-item">
             <article id="post-《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流" class="article-card article-type-post" itemprop="blogPost">
     
 
@@ -412,14 +407,6 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -445,10 +432,6 @@ ACK是积累的使用TCP的滑动窗口协议时，接收方不必确认每一�
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

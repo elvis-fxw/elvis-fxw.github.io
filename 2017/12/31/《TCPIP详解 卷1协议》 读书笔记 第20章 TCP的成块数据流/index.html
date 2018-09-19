@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -223,14 +223,51 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流/&title=《《TCPIP详解 卷1协议》 读书笔记 第20章 TCP的成块数据流》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD6klEQVR42u3aS27bQBAFQN//0so2gE3qve6hYAPFlaBQw5ligHZ/vr7i6/Xfdf9N8qvv//r9zu/r3H+f7OfYhQMHDhw44qNebe5qu8mG7pla1hw9of+BDAcOHDhwHOJIwlh+mOQA90fKw+rsj4DL73HgwIEDx8c5ku22v5q9kvzpOHDgwIHj93MkITYv822Cbh6YceDAgQPHJzlmBbt9C2pTyHsF14O1Uhw4cODA8T5+1UHrr3x+ZL4DBw4cOHDcJkt50MrDZDvWkBxjP75weTocOHDgwLHmmBXs8gbPJuzlKWX+AqJCJA4cOHDgWHAkLaL2wW0BbvP0Nqx+1f9VcODAgQPHhCMPmS3ErGXVvrDZ9z98xoEDBw4chzjyIYB2fGE2TJAH5jZdfHMWHDhw4MCx5ng6oUqwZoN3m7JgkdrhwIEDB46SY9ZGmqVk7ZDErNSYv38cOHDgwPEcR9tzyRO8tgiYPysZcWhfBg4cOHDg2HO0oXHT8tkXHGdPaVlx4MCBA8cpjnYUIE+Q8uZWjvjEajhw4MCB4xRHOwzXjim0CV4e1GdNqWhlHDhw4MAx4ihaMuVkxD7BOxXmi/YYDhw4cOBYcxwrqJVtpBZ3Vlhs00scOHDgwHGKI2/2zDY6W+25+9/8FgcOHDhwHOJoh+ESyra8OCv8bdZfJW84cODAgaNEmTWc2sbV0+W//Fk4cODAgWPPsQlU7SjDbP3PFB9x4MCBA8cpjs2VJ29tuXDf6NoUNHHgwIEDxymOJ4bb8jXzQHufKCYpZbJDHDhw4MCx4TiVjCWrteliOxKXB/XLO3HgwIEDx4Jj02TKvffBuIVLypGXbSccOHDgwLHgmBXXZi2itkTYrpP/KbAqDuLAgQMHjluOfBxtlqQ9HRpnieWbFA4HDhw4cCw42jZSnnq195wtNbaUOHDgwIHjCY5N2JtljbPmVl5kbJM6HDhw4MCx55gV19phtby8uB+qyNe5LA7iwIEDB441x6xplA9D5DE/2c+sARaVF3HgwIEDx1GOti2UIyZ35qMP7cvIW1Y4cODAgeMURx5i82DWtn/yIuCp14MDBw4cOJ7g2LRtNmW+fXrWvpLiHhw4cODAseB4lVf+mFn7Z1N83KSROHDgwIHjFEcb9vYluTxw5mXBdv1kbzhw4MCBY8ORBNdN8a4dLEiKgPl+kqE9HDhw4MDxBEey9fwY++JdO+iwycJw4MCBA8dv4MiDaHv4FiUva0a7woEDBw4cH+c4Wy7Mn5K3kTYNMxw4cODAcYqjDVFtkpYX6dpj7/9owIEDBw4cZznyUtqmFdQO0rVDFe2QxKrUiAMHDhw4fv78D7FVw6Zbzc3JAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流/" id="post-prev" class="post-nav-link">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流</h4>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第18章 TCP连接的建立与终止</h4>
       </a>
     </div>
   
@@ -306,14 +343,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -339,10 +368,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

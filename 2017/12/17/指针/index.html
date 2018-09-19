@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -212,6 +212,43 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/17/指针/&title=《指针》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3awXKDMAxFUf7/p+m2nTTmPilkBvmy6pDG+LBQJEvHga/z5fp9f/3/ZM3X+8cdlwwZMh7LOJcX2Ra5T1bmn/7zRBkyZGzAIJvgJB5M13eCFydDhgwZbx6Wpok8BMuQIUNGn0EC8RovQ4YMGSmDL905PuPr3FiLy5Ah44EMfur+/b9v6W/IkCHjUYwzvDqH/rXWJtqVDBkyRjM6aV+t7CTNhmIaKkOGjKEMXi6mBSr/LgnHFzAZMmSMZvABCPLgGrV2VId+N2TIkDGCkQbBzsBEOi72gVArQ4aMDRh86c8mlOmeZciQsRsjrQ05Oy1lyRiHDBky9mGQwJomhTyhrJ2Y/flUhgwZoxmdAzWeVvJwzIN1HIJlyJDxWEa/vOyPVqTBNO5syJAhYxyjdojGg3LalkApowwZMkYzeBuy0zbgIbh2zCdDhox9GDxB7CR2vGA+0kuGDBmjGZ1xCrJCGqZ5IL4Ay5AhYxAjHTblPF7upq2Fi+EwGTJkDGX0Rx/uTkMvMDJkyNiGwYcqaq1KfujWCrgyZMgYyugUnGnIRtsiYxYyZMjYgHGGVzqQUUso43VkyJAxmtFZmj8mTfJqyaIMGTJmM2pb5N9K31xxpEOGDBkbMGoDEDVA5xfg7coyZMiQsQy4pMjkR3iksXrRGJAhQ4aMdombbhGFchkyZGzA4OUoKSlr7cl0TRkyZOzD4KUjCbIkcUybpp0XJEOGjIczfgAUPLJQcmGjNwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
@@ -288,14 +325,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -321,10 +350,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

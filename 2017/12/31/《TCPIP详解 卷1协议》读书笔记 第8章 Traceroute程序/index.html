@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -188,6 +188,43 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/&title=《《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序/&title=《《TCPIP详解 卷1协议》读书笔记 第8章 Traceroute程序》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADMUlEQVR42u3aQW7DMAwEwPz/0+6lhwJt1CVpA7E8PhWJ42gUoAS1fL3i6/hx/Xzl9z3v3s3vPH5dyZ2vKy5sbGzsm7CP5bX+gnf3r3n5/ZNX1mvDxsbG3o99VplZA5LiVP0ZksKJjY2Njd179PrOpJHINwgbGxsbu8dutgHFI6S8QcLGxsZ+MjtvFZJD/7yAnbutl5ylYWNjY388O09FP//vS/JtbGxs7A9mH8WrV7SqxS8pSL31f38WGxsbeyN2dVnruDcPgKutTr4RhfVjY2Njb8TOy09v+KYa4s6PhMqfwsbGxr4tuxrHTkpa/pyk+UnuL+Qh2NjY2DdnJ+UqvydBTlqOZD3l3gsbGxt7I3Zv4Ka6ZdUWZRJL//FMbGxs7O3YSch6VrnKY+PexkWbhY2Njb0Re96E5PFtlZSUz15UjI2Njb0TuxoM5OUqbzYmjF4BxsbGxt6bnR+1n7Xoc+Ph5DgMGxsbez92dGtriKccwRZbo2bvhY2Njb0dOx+OyRuVSUszCYajBgkbGxv7Aey8LOUNRv7uvNT9s7nY2NjYG7HzUZu8SZiMAVVho/4CGxsbezv2FQVmvsTe/FHSRGFjY2Pvwa62DcmnJg1MciSUl8C3ImxsbOzt2PnSq0Uojxnyglr99j8s2NjY2NuxzzrKX5erKIItDgblQcWoFcHGxsa+FXsyXtMLG6ojQXnwEEW82NjY2Ddn5x+exMCTI6HJGgr5NjY2NvbN2ZOwNm8Aqkc/+VhP72fAxsbGfgK7OppTDQOqQfJ8ZAcbGxv7Cewesnr0f12oUG2rsLGxsfdg9w79zw1xq2Vvvt3Y2NjYz2HPg9tJy9F7PWqQsLGxsR/ArjYJvQJTLUW90fxCAcPGxsa+FfsoXsmh0mSYJi9XhUJVzZyxsbGxb8Wu/uvPvz4vQpMn5IW2uSnY2NjYN2HnRWu9HfMTm2SDqiObb9eJjY2NvR17EsRWRzbPGtM8oc3AxsbGfiR7vejqAFASEvQiBGxsbGzs6uFR3pbkAXBvW5MoAhsbG3s/djWC/eehxYChFwD3fh5sbGzs/di9E5jqGE2+ib3AIC9m2NjY2BuxvwCWzIaSoHgNVwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
@@ -271,14 +308,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -304,10 +333,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

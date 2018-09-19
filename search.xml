@@ -223,30 +223,69 @@
     </entry>
     
     <entry>
-      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器]]></title>
-      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC22%E7%AB%A0%20TCP%E7%9A%84%E5%9D%9A%E6%8C%81%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
-      <content type="html"><![CDATA[<h1 id="TCP的坚持定时器"><a href="#TCP的坚持定时器" class="headerlink" title="TCP的坚持定时器"></a>TCP的坚持定时器</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。<br>有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。<br>为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window probe）</p>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC11%E7%AB%A0%20UDP%EF%BC%9A%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="UDP：用户数据报协议"><a href="#UDP：用户数据报协议" class="headerlink" title="UDP：用户数据报协议"></a>UDP：用户数据报协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。</p>
+<p>UDP首部为8字节，IP首部为20字节。</p>
+<p>UDP是不可靠的。</p>
 <hr>
-<h2 id="坚持定时器"><a href="#坚持定时器" class="headerlink" title="坚持定时器"></a><strong>坚持定时器</strong></h2><p>当通告窗口为0之后，引起客户设置其坚持定时器，当定时器溢出时还没有接收到窗口更新的话，它就探查这个空的窗口来判断窗口更新的报文是否丢失了。</p>
-<ul>
-<li>如果得知窗口非0了，就可以开始发送数据了</li>
-<li>如果窗口还是0，就重新计时，这个过程将会持续到窗口被打开，或者连接被终止（所以叫做“坚持”定时器）</li>
-<li>坚持定时器使用了TCP指数退避，但是坚持定时器总是在5~60秒之间。</li>
-</ul>
+<h2 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172012100" alt="UDP首部" title="" class="">
+                <p>UDP首部</p>
+            </figure>
+<p>在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪个应用服务。<br>UDP长度指的是UDP首部+UDP数据的<strong>字节长度</strong>（有些首部长度的单位是32bit，4个byte，这里是1个byte）。</p>
 <hr>
-<h2 id="糊涂窗口综合征症SWS（Silly-Window-Syndrome）"><a href="#糊涂窗口综合征症SWS（Silly-Window-Syndrome）" class="headerlink" title="糊涂窗口综合征症SWS（Silly Window Syndrome）"></a><strong>糊涂窗口综合征症SWS（Silly Window Syndrome）</strong></h2><p>基于窗口的流量控制，会导致SWS——少量的数据将通过连接进行交换，而不是满长度的报文段。</p>
-<ul>
-<li>接收方可以通告一个<strong>小窗口</strong>，发送方也可以发送少量的数据（不用等到其他数据一起发送一个大的报文段）。</li>
-<li>这样会导致在通道中有很多小数据，可能导致拥塞，影响网络利用率。</li>
-</ul>
-<p>避免的方法：</p>
-<pre><code>1. **接收方**不通告小窗口，除非窗口有了一个满长度的报文段大小，或者有了一半缓存空间。
-2. **发送方**有3个条件，必须满足任一条件才发送数据：
+<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160818172500686" alt="UDP首部+伪首部" title="" class="">
+                <p>UDP首部+伪首部</p>
+            </figure>
+<p>UDP检验和覆盖UDP首部和UDP数据。（IP的检验和只覆盖IP的首部，不覆盖数据）<br>UDP和TCP在首部中都有覆盖它们首部和数据的检验和。UDP的检验和是可选的，TCP的检验和是必须的。</p>
+<p>UDP和IP检验和的不同：</p>
+<pre><code>1. UDP数据报的长度可以为奇数字节，为了符合16bit反码相加的特性，会在数据最后填充字节0（这些0可能不被传送）。
+2. UDP数据报和TCP段都包含一个**12字节**长的伪首部，为了计算检验和而设置（包含IP首部的一些字段）。目的是让UDP两次检查数据是否已经正确到达目的地。
 </code></pre><ul>
-<li>可以发送一个满长度的报文段</li>
-<li>可以发送至少是接收方通告窗口大小一半的报文段</li>
-<li>可以发送任何数据并且不希望接收ACK（就是说没有未被确认的数据）或者该连接上不能使用Nagle算法（连接上只能有一个未被确认的分组，确认后才能发送新的）。（<strong>一半会用Nagle来防止这种SWS的情况</strong>）</li>
+<li>UDP数据报的长度在检验和计算过程中出现两次。</li>
+<li>如果检验和的计算结果为0，则存入的值为全1（65535），如果检验和为0，说明发送端没有计算检验和。</li>
+<li>如果发送端没有计算检验和而接收端检测到检验和有错，那么UDP数据报就要被悄悄丢弃，不产生任何差错报文。</li>
+<li>UDP检验和虽然是可选的，但是默认都是打开的。</li>
+<li>UDP检验和是简单的16bit反码相加，检测不出交换2个16bit的差错。</li>
 </ul>
+<p>TCP发生检验和差错的比例比UDP高得多，因为TCP经常是“远程”连接，而UDP一般是本地通信。</p>
+<hr>
+<h2 id="IP分片"><a href="#IP分片" class="headerlink" title="IP分片"></a>IP分片</h2><ul>
+<li>物理网络层一般要限制每次发送数据帧的最大长度。</li>
+<li>分片可以发生在发送端主机上，也可以发生在中间路由器上（因为MTU可能发生变化）。- - 已经分片过的可能再次进行分片。</li>
+<li>只有到达目的地才进行重新组装（其他网络协议在下一站就重新组装），由IP层完成。<br><img src="http://img.blog.csdn.net/20160819171501444" alt="这里写图片描述"></li>
+<li>IP首部的标识字段都包含一个唯一的值，该值分片时赋值到每个片中。</li>
+<li>标志字段用一个bit来标识“更多的片”，最后一片置为0，其余置为1.</li>
+<li>片偏移字段是该片偏移原始数据报开始出的位置。</li>
+<li>分片后，每个片的总长度要改为该片的长度值。</li>
+<li>标识字段有一个bit称作“不分片”位，置1的时候不能分片，要分片的时候会产生一个ICMP差错报文。</li>
+<li>如果丢失了一片数据，就要重传整份数据，IP没有重传机制，这是根据TCP重传机制决定的。</li>
+<li>使用UDP很容易导致IP分片，TCP会试图避免分片。</li>
+</ul>
+<p>在一个以太网上，数据帧最大的长度是1500.<br>数据帧=IP首部（20字节）+UDP首部（8字节）+数据（最多1472字节）</p>
+<ul>
+<li>在分片时，除最后一片外，其他每一片的数据部分（UDP首部+数据）必须是8字节的整数倍。</li>
+<li>端口号在UDP首部，而UDP首部在第一片，所以端口号只能在第一片。</li>
+</ul>
+<p><strong>IP数据报</strong>：IP层端到端的传输单元<br><strong>分组</strong>：IP层和链路层之间传送的数据单元，一个分组可以使一个完整的IP数据报，也可以是一个分片。</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160819172725359" alt="分片" title="" class="">
+                <p>分片</p>
+            </figure>
+<hr>
+<h2 id="ICMP不可达差错（需要分片）"><a href="#ICMP不可达差错（需要分片）" class="headerlink" title="ICMP不可达差错（需要分片）"></a>ICMP不可达差错（需要分片）</h2><p>如果数据需要分片，但是IP首部设置了不可分片（DF）的bit为1，那么就会发送ICMP不可达差错。<br>可以利用这个差错来判断路径的MTU。</p>
+<hr>
+<h2 id="UDP和ARP之间的交互作用"><a href="#UDP和ARP之间的交互作用" class="headerlink" title="UDP和ARP之间的交互作用"></a>UDP和ARP之间的交互作用</h2><p>如ARP缓存是清空的，那么在发送第一个数据报片前必须交换ARP请求和应答。<br>如果有多个数据报，在等待一个ARP应答时，只将最后一个报文发送给特定目的主机。</p>
+<hr>
+<h2 id="最大UDP数据报长度"><a href="#最大UDP数据报长度" class="headerlink" title="最大UDP数据报长度"></a>最大UDP数据报长度</h2><p>IP数据报的最大长度是65535字节，这是16bit的总长度字段所限制的。<br>那么UDP数据报最长长度为65535-20-8=65507.</p>
+<p>限制因素：</p>
+<pre><code>1. 程序接口限制。
+2. TCP/IP的内核实现限制。
+</code></pre><p>主机必须能够接收最短为576的IP数据报，所以在许多UDP应用程序的设计中，其应用程序数据被限制成512字节或更小（确保能接收）。</p>
+<hr>
+<h2 id="ICMP源站抑制差错"><a href="#ICMP源站抑制差错" class="headerlink" title="ICMP源站抑制差错"></a>ICMP源站抑制差错</h2><p>当一个系统接收数据报的速度比其处理速度快时，可能产生这个差错。（注意是<strong>可能</strong>，不一定会发送这个差错报文。）<br>采用UDP时，源站抑制报文可能会被忽略。<br>TCP也支持源站抑制报文。</p>
 ]]></content>
       
         <categories>
@@ -266,7 +305,9 @@
             
             <tag> TCP/IP详解 </tag>
             
-            <tag> TCP的坚持定时器 </tag>
+            <tag> UDP </tag>
+            
+            <tag> 用户数据报协议 </tag>
             
         </tags>
         
@@ -373,69 +414,16 @@
     </entry>
     
     <entry>
-      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议]]></title>
-      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC11%E7%AB%A0%20UDP%EF%BC%9A%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE/</url>
-      <content type="html"><![CDATA[<h1 id="UDP：用户数据报协议"><a href="#UDP：用户数据报协议" class="headerlink" title="UDP：用户数据报协议"></a>UDP：用户数据报协议</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>UDP是一个简单的面向数据包的运输层协议：进程的每个输出操作都正好产生一个UDP数据报，并组装成一份待发送的IP数据报。</p>
-<p>UDP首部为8字节，IP首部为20字节。</p>
-<p>UDP是不可靠的。</p>
-<hr>
-<h2 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h2><figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160818172012100" alt="UDP首部" title="" class="">
-                <p>UDP首部</p>
-            </figure>
-<p>在分用到UDP（TCP）这一层后，由端口号来继续往上分用，决定是哪个应用服务。<br>UDP长度指的是UDP首部+UDP数据的<strong>字节长度</strong>（有些首部长度的单位是32bit，4个byte，这里是1个byte）。</p>
-<hr>
-<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160818172500686" alt="UDP首部+伪首部" title="" class="">
-                <p>UDP首部+伪首部</p>
-            </figure>
-<p>UDP检验和覆盖UDP首部和UDP数据。（IP的检验和只覆盖IP的首部，不覆盖数据）<br>UDP和TCP在首部中都有覆盖它们首部和数据的检验和。UDP的检验和是可选的，TCP的检验和是必须的。</p>
-<p>UDP和IP检验和的不同：</p>
-<pre><code>1. UDP数据报的长度可以为奇数字节，为了符合16bit反码相加的特性，会在数据最后填充字节0（这些0可能不被传送）。
-2. UDP数据报和TCP段都包含一个**12字节**长的伪首部，为了计算检验和而设置（包含IP首部的一些字段）。目的是让UDP两次检查数据是否已经正确到达目的地。
-</code></pre><ul>
-<li>UDP数据报的长度在检验和计算过程中出现两次。</li>
-<li>如果检验和的计算结果为0，则存入的值为全1（65535），如果检验和为0，说明发送端没有计算检验和。</li>
-<li>如果发送端没有计算检验和而接收端检测到检验和有错，那么UDP数据报就要被悄悄丢弃，不产生任何差错报文。</li>
-<li>UDP检验和虽然是可选的，但是默认都是打开的。</li>
-<li>UDP检验和是简单的16bit反码相加，检测不出交换2个16bit的差错。</li>
-</ul>
-<p>TCP发生检验和差错的比例比UDP高得多，因为TCP经常是“远程”连接，而UDP一般是本地通信。</p>
-<hr>
-<h2 id="IP分片"><a href="#IP分片" class="headerlink" title="IP分片"></a>IP分片</h2><ul>
-<li>物理网络层一般要限制每次发送数据帧的最大长度。</li>
-<li>分片可以发生在发送端主机上，也可以发生在中间路由器上（因为MTU可能发生变化）。- - 已经分片过的可能再次进行分片。</li>
-<li>只有到达目的地才进行重新组装（其他网络协议在下一站就重新组装），由IP层完成。<br><img src="http://img.blog.csdn.net/20160819171501444" alt="这里写图片描述"></li>
-<li>IP首部的标识字段都包含一个唯一的值，该值分片时赋值到每个片中。</li>
-<li>标志字段用一个bit来标识“更多的片”，最后一片置为0，其余置为1.</li>
-<li>片偏移字段是该片偏移原始数据报开始出的位置。</li>
-<li>分片后，每个片的总长度要改为该片的长度值。</li>
-<li>标识字段有一个bit称作“不分片”位，置1的时候不能分片，要分片的时候会产生一个ICMP差错报文。</li>
-<li>如果丢失了一片数据，就要重传整份数据，IP没有重传机制，这是根据TCP重传机制决定的。</li>
-<li>使用UDP很容易导致IP分片，TCP会试图避免分片。</li>
-</ul>
-<p>在一个以太网上，数据帧最大的长度是1500.<br>数据帧=IP首部（20字节）+UDP首部（8字节）+数据（最多1472字节）</p>
-<ul>
-<li>在分片时，除最后一片外，其他每一片的数据部分（UDP首部+数据）必须是8字节的整数倍。</li>
-<li>端口号在UDP首部，而UDP首部在第一片，所以端口号只能在第一片。</li>
-</ul>
-<p><strong>IP数据报</strong>：IP层端到端的传输单元<br><strong>分组</strong>：IP层和链路层之间传送的数据单元，一个分组可以使一个完整的IP数据报，也可以是一个分片。</p>
-<figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160819172725359" alt="分片" title="" class="">
-                <p>分片</p>
-            </figure>
-<hr>
-<h2 id="ICMP不可达差错（需要分片）"><a href="#ICMP不可达差错（需要分片）" class="headerlink" title="ICMP不可达差错（需要分片）"></a>ICMP不可达差错（需要分片）</h2><p>如果数据需要分片，但是IP首部设置了不可分片（DF）的bit为1，那么就会发送ICMP不可达差错。<br>可以利用这个差错来判断路径的MTU。</p>
-<hr>
-<h2 id="UDP和ARP之间的交互作用"><a href="#UDP和ARP之间的交互作用" class="headerlink" title="UDP和ARP之间的交互作用"></a>UDP和ARP之间的交互作用</h2><p>如ARP缓存是清空的，那么在发送第一个数据报片前必须交换ARP请求和应答。<br>如果有多个数据报，在等待一个ARP应答时，只将最后一个报文发送给特定目的主机。</p>
-<hr>
-<h2 id="最大UDP数据报长度"><a href="#最大UDP数据报长度" class="headerlink" title="最大UDP数据报长度"></a>最大UDP数据报长度</h2><p>IP数据报的最大长度是65535字节，这是16bit的总长度字段所限制的。<br>那么UDP数据报最长长度为65535-20-8=65507.</p>
-<p>限制因素：</p>
-<pre><code>1. 程序接口限制。
-2. TCP/IP的内核实现限制。
-</code></pre><p>主机必须能够接收最短为576的IP数据报，所以在许多UDP应用程序的设计中，其应用程序数据被限制成512字节或更小（确保能接收）。</p>
-<hr>
-<h2 id="ICMP源站抑制差错"><a href="#ICMP源站抑制差错" class="headerlink" title="ICMP源站抑制差错"></a>ICMP源站抑制差错</h2><p>当一个系统接收数据报的速度比其处理速度快时，可能产生这个差错。（注意是<strong>可能</strong>，不一定会发送这个差错报文。）<br>采用UDP时，源站抑制报文可能会被忽略。<br>TCP也支持源站抑制报文。</p>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC23%E7%AB%A0%20TCP%E7%9A%84%E4%BF%9D%E6%B4%BB%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的保活定时器"><a href="#TCP的保活定时器" class="headerlink" title="TCP的保活定时器"></a>TCP的保活定时器</h1><p>有时一个TCP连接会是空闲的，没有任何数据通过，双方都不交换信息。<br>许多时候一个服务器希望知道客户主机是否崩溃并关机或者崩溃又重启。使用<strong>保活定时器</strong>来进行检测。保活功能就是试图在服务器端检测到这种半开放的连接。</p>
+<p>如果一个给定的连接在两个小时之内没有任何动作，则服务器就向客户发送一个探查报文段。<br>客户主机必须处于以下4个状态之一：</p>
+<ol>
+<li>客户主机依然正常运行，并从服务器可达。客户的TCP响应正常，而服务器也知道对方是正常工作的。服务器在两小时以后将保活定时器复位。如果在两个小时定时器到时间之前有应用程序的通信量通过此连接，则定时器在交换数据后的未来2小时再复位。</li>
+<li>客户主机已经崩溃，并且关闭或者正在重新启动。在任何一种情况下，客户的TCP都没有响应。服务器将不能够收到对探查的响应，并在75秒后超时。服务器总共发送10个这样的探查，每个间隔75秒。如果服务器没有收到一个响应，它就认为客户主机已经关闭并终止连接。</li>
+<li>客户主机崩溃并已经重新启动。这时服务器将收到一个对其保活探查的响应，但是这个响应是一个复位，使得服务器终止这个连接。</li>
+<li>客户主机正常运行，但是从服务器不可达。这与状态2相同，因为TCP不能够区分状态4与状态2之间的区别，它所能发现的就是没有收到探查的响应。</li>
+</ol>
 ]]></content>
       
         <categories>
@@ -455,9 +443,55 @@
             
             <tag> TCP/IP详解 </tag>
             
-            <tag> UDP </tag>
+            <tag> 保活定时器 </tag>
             
-            <tag> 用户数据报协议 </tag>
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC19%E7%AB%A0%20TCP%E7%9A%84%E4%BA%A4%E4%BA%92%E6%95%B0%E6%8D%AE%E6%B5%81/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的交互数据流"><a href="#TCP的交互数据流" class="headerlink" title="TCP的交互数据流"></a>TCP的交互数据流</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>TCP通信量的研究：</p>
+<ul>
+<li>按照分组数量计算：一般TCP报文段包含<strong>成块数据</strong>（如FTP、电子邮件和Usenet新闻），另一半则包含<strong>交互数据</strong>（如Telnet和Rlogin）。</li>
+<li>按照字节计算：90%为成块数据，10%为交互数据。</li>
+</ul>
+<hr>
+<h2 id="交互式输入"><a href="#交互式输入" class="headerlink" title="交互式输入"></a><strong>交互式输入</strong></h2><p>在一个Rlogin连接上键入一个交互命令所产生的数据流，通常每一个交互按键都会产生一个数据分组，每次从客户传到服务器的是一个字节的按键。<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160905231113246" alt="交互按键回显的方法" title="" class="">
+                <p>交互按键回显的方法</p>
+            </figure></p>
+<hr>
+<h2 id="经受时延的确认"><a href="#经受时延的确认" class="headerlink" title="经受时延的确认"></a><strong>经受时延的确认</strong></h2><p>通常TCP在接收到数据时并不立即发送ACK；它会等到有需要发送的数据，再和ACK一起发送。（有时候称为数据捎带ACK）<br>绝大多数采用的时延为200ms，TCP将以最大200ms的时延等待是否有数据一起发送。每次等200ms，然后发一次。</p>
+<p>ACK等待发送的时间总是不大于定时器，因为ACK在1~200ms内到达，而定时器在200ms溢出，那它等待的时间肯定小于200ms啦。</p>
+<hr>
+<h2 id="Nagle算法"><a href="#Nagle算法" class="headerlink" title="Nagle算法"></a><strong>Nagle算法</strong></h2><p>交互数据可能是很多的小分组，比如一个字节，就要发送41字节的分组：IP首部+TCP首部+1=41.<br>在局域网上这些小分组通常不会有问题，局域网很少拥塞。但是在广域网上，这些小分组就增加了拥塞的可能。</p>
+<p>Nagle算法：要求一个TCP连接上最多只能有一个未被确认的未完成的小分组，在该分组<strong>确认到达之前</strong>不能发送其他的小分组；TCP收集这些小分组，在<strong>确认到来时</strong>一起以一个分组发出去。</p>
+<p>优点：减少拥塞的可能。<br>缺点：增加时延。</p>
+<h3 id="关闭Nagle算法"><a href="#关闭Nagle算法" class="headerlink" title="关闭Nagle算法"></a><strong>关闭Nagle算法</strong></h3><p>有时候需要关闭Nagle算法，因为有些应用必须无时延发送。</p>
+<hr>
+<h2 id="窗口大小通告"><a href="#窗口大小通告" class="headerlink" title="窗口大小通告"></a><strong>窗口大小通告</strong></h2><p>TCP报文段会通报窗口大小win，一般为4096.表示缓存可以接收的数据大小。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> TCP的交互数据流 </tag>
             
         </tags>
         
@@ -607,54 +641,6 @@
             <tag> TCP/IP详解 </tag>
             
             <tag> TCP连接的建立与终止 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第19章 TCP的交互数据流]]></title>
-      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC19%E7%AB%A0%20TCP%E7%9A%84%E4%BA%A4%E4%BA%92%E6%95%B0%E6%8D%AE%E6%B5%81/</url>
-      <content type="html"><![CDATA[<h1 id="TCP的交互数据流"><a href="#TCP的交互数据流" class="headerlink" title="TCP的交互数据流"></a>TCP的交互数据流</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>TCP通信量的研究：</p>
-<ul>
-<li>按照分组数量计算：一般TCP报文段包含<strong>成块数据</strong>（如FTP、电子邮件和Usenet新闻），另一半则包含<strong>交互数据</strong>（如Telnet和Rlogin）。</li>
-<li>按照字节计算：90%为成块数据，10%为交互数据。</li>
-</ul>
-<hr>
-<h2 id="交互式输入"><a href="#交互式输入" class="headerlink" title="交互式输入"></a><strong>交互式输入</strong></h2><p>在一个Rlogin连接上键入一个交互命令所产生的数据流，通常每一个交互按键都会产生一个数据分组，每次从客户传到服务器的是一个字节的按键。<br><figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160905231113246" alt="交互按键回显的方法" title="" class="">
-                <p>交互按键回显的方法</p>
-            </figure></p>
-<hr>
-<h2 id="经受时延的确认"><a href="#经受时延的确认" class="headerlink" title="经受时延的确认"></a><strong>经受时延的确认</strong></h2><p>通常TCP在接收到数据时并不立即发送ACK；它会等到有需要发送的数据，再和ACK一起发送。（有时候称为数据捎带ACK）<br>绝大多数采用的时延为200ms，TCP将以最大200ms的时延等待是否有数据一起发送。每次等200ms，然后发一次。</p>
-<p>ACK等待发送的时间总是不大于定时器，因为ACK在1~200ms内到达，而定时器在200ms溢出，那它等待的时间肯定小于200ms啦。</p>
-<hr>
-<h2 id="Nagle算法"><a href="#Nagle算法" class="headerlink" title="Nagle算法"></a><strong>Nagle算法</strong></h2><p>交互数据可能是很多的小分组，比如一个字节，就要发送41字节的分组：IP首部+TCP首部+1=41.<br>在局域网上这些小分组通常不会有问题，局域网很少拥塞。但是在广域网上，这些小分组就增加了拥塞的可能。</p>
-<p>Nagle算法：要求一个TCP连接上最多只能有一个未被确认的未完成的小分组，在该分组<strong>确认到达之前</strong>不能发送其他的小分组；TCP收集这些小分组，在<strong>确认到来时</strong>一起以一个分组发出去。</p>
-<p>优点：减少拥塞的可能。<br>缺点：增加时延。</p>
-<h3 id="关闭Nagle算法"><a href="#关闭Nagle算法" class="headerlink" title="关闭Nagle算法"></a><strong>关闭Nagle算法</strong></h3><p>有时候需要关闭Nagle算法，因为有些应用必须无时延发送。</p>
-<hr>
-<h2 id="窗口大小通告"><a href="#窗口大小通告" class="headerlink" title="窗口大小通告"></a><strong>窗口大小通告</strong></h2><p>TCP报文段会通报窗口大小win，一般为4096.表示缓存可以接收的数据大小。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> 计算机网络 </category>
-            
-            <category> TCP/IP </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> TCP </tag>
-            
-            <tag> IP </tag>
-            
-            <tag> TCP/IP详解 </tag>
-            
-            <tag> TCP的交互数据流 </tag>
             
         </tags>
         
@@ -816,16 +802,54 @@
     </entry>
     
     <entry>
-      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器]]></title>
-      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC23%E7%AB%A0%20TCP%E7%9A%84%E4%BF%9D%E6%B4%BB%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
-      <content type="html"><![CDATA[<h1 id="TCP的保活定时器"><a href="#TCP的保活定时器" class="headerlink" title="TCP的保活定时器"></a>TCP的保活定时器</h1><p>有时一个TCP连接会是空闲的，没有任何数据通过，双方都不交换信息。<br>许多时候一个服务器希望知道客户主机是否崩溃并关机或者崩溃又重启。使用<strong>保活定时器</strong>来进行检测。保活功能就是试图在服务器端检测到这种半开放的连接。</p>
-<p>如果一个给定的连接在两个小时之内没有任何动作，则服务器就向客户发送一个探查报文段。<br>客户主机必须处于以下4个状态之一：</p>
-<ol>
-<li>客户主机依然正常运行，并从服务器可达。客户的TCP响应正常，而服务器也知道对方是正常工作的。服务器在两小时以后将保活定时器复位。如果在两个小时定时器到时间之前有应用程序的通信量通过此连接，则定时器在交换数据后的未来2小时再复位。</li>
-<li>客户主机已经崩溃，并且关闭或者正在重新启动。在任何一种情况下，客户的TCP都没有响应。服务器将不能够收到对探查的响应，并在75秒后超时。服务器总共发送10个这样的探查，每个间隔75秒。如果服务器没有收到一个响应，它就认为客户主机已经关闭并终止连接。</li>
-<li>客户主机崩溃并已经重新启动。这时服务器将收到一个对其保活探查的响应，但是这个响应是一个复位，使得服务器终止这个连接。</li>
-<li>客户主机正常运行，但是从服务器不可达。这与状态2相同，因为TCP不能够区分状态4与状态2之间的区别，它所能发现的就是没有收到探查的响应。</li>
-</ol>
+      <title><![CDATA[《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC4%E7%AB%A0%20ARP%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE/</url>
+      <content type="html"><![CDATA[<h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。<br>地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。</p>
+<ul>
+<li>ARP为IP地址到对应的硬件地址之间提供动态映射。</li>
+<li>RARP是被那些<strong>没有磁盘驱动器</strong>的系统使用的。</li>
+</ul>
+<hr>
+<h1 id="二、ARP运行过程"><a href="#二、ARP运行过程" class="headerlink" title="二、ARP运行过程"></a>二、ARP运行过程</h1><p>一个FTP客户端传输过程如下：</p>
+<pre><code>1. FTP调用函数gethostbyname把主机名用DNS转换成32bit的IP地址。
+2. 用IP地址建立TCP连接。
+3. TCP发送一个连接请求到远端的主机上。
+4. 如果目的主机在本地网络上，那么直接发送到该主机；如果不在本地，那么就需要通过IP选路函数来确定下一跳路由器地址。
+5. 如果链路层是以太网，那么发送端主机需要把32bit的IP地址变换成48bit的以太网地址，这个时候就要用到ARP。
+6. ARP广播发送一份**ARP请求**的以太网数据帧到以太网上的每个主机，请IP地址相符的拥有者返回硬件地址
+7. 目的主机收到广播报文，返回一个**ARP应答**。
+8. 发送IP数据报。
+</code></pre><p>在ARP背后有一个基本概念，那就是网络接口有一个硬件地址（48bit）。内核（如以太网驱动程序）必须知道目的端的硬件地址才能发送数据。<br><em>点对点链路不使用ARP，点对点链路发送数据肯定是到另一个点，并不涉及硬件地址。</em></p>
+<hr>
+<h1 id="三、ARP高速缓存"><a href="#三、ARP高速缓存" class="headerlink" title="三、ARP高速缓存"></a>三、ARP高速缓存</h1><p>ARP高效运行的关键是每个主机上都有一个ARP高速缓存，存放着IP和MAC地址的映射。<br>48bit的以太网地址用6个十六进制的数来表示，中间以冒号隔开。</p>
+<hr>
+<h1 id="四、ARP的分组格式"><a href="#四、ARP的分组格式" class="headerlink" title="四、ARP的分组格式"></a>四、ARP的分组格式</h1><p>ARP请求和应答分组的格式如下：<br><figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809140010563" alt="ARP格式" title="" class="">
+                <p>ARP格式</p>
+            </figure></p>
+<ul>
+<li>目的地址和源地址：全1的为广播地址。电缆上所有以太网接口都要接受广播的数据帧。</li>
+<li>帧类型：表示后面的数据类型（ARP请求/ARP应答/RARP请求/RARP应答），请求的值为0x0806.</li>
+<li>硬件类型：比如以太网。</li>
+<li>协议类型：比如IP协议。</li>
+<li>硬件地址长度和协议地址长度：以字节为单位。</li>
+<li>op操作：支出4种操作类型，ARP请求/ARP应答/RARP请求/RARP应答，值分别为1/2/3/4.</li>
+</ul>
+<p>可以用<em>tcpdum</em>指令来查看运行过程。<br> 当系统受到ARP请求或发送ARP应答时，都要把请求端的硬件地址和IP地址存入ARP高速缓存中。</p>
+<hr>
+<h1 id="ARP代理"><a href="#ARP代理" class="headerlink" title="ARP代理"></a>ARP代理</h1><p>如果ARP请求是从一个网络的主机发往另一个网络上的主机，那么连接这两个网络的路由器就可以回答该请求，这个过程称作<strong>委托ARP</strong>或<strong>ARP代理</strong>。（也就是说返回的是路由器的MAC地址和主机的IP）</p>
+<figure class="image-box">
+                <img src="http://img.blog.csdn.net/20160809141848009" alt="ARP代理" title="" class="">
+                <p>ARP代理</p>
+            </figure>
+<p>拨号SLIP链路的两端只拥有一个IP地址140.252.1.183，而SLIP链路的两端却分别有一个IP地址，为什么？因为路由不需要知道拨号SLIP链路每一端的IP地址，它通过分组到达的串行链路接口来确定发送分组的拨号主机。<em>（<strong>其实这里不是很懂，希望理解的朋友们给我留言解答一下</strong>）</em></p>
+<p>ARP代理也称作混合ARP或ARP出租，这些名字来自于它的其他用途：通过两个物理网络之间的路由器可以互相隐藏物理网络。</p>
+<hr>
+<h1 id="七、免费ARP"><a href="#七、免费ARP" class="headerlink" title="七、免费ARP"></a>七、免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址。<br>主要有2个作用：</p>
+<pre><code>1. 一个主机可以通过它来确定另一个主机是否设置了相同的IP地址。
+2. 如果发送免费ARP的主机正好改变了硬件地址，那么这个分组就可以使其他主机高速缓存中旧的硬件地址进行相应的更新。
+</code></pre><hr>
+<h1 id="八、arp命令"><a href="#八、arp命令" class="headerlink" title="八、arp命令"></a>八、arp命令</h1><p>arp -a显示ARP高速缓存中的所有内容<br>arp -d删除某一项内容<br>arp -s增加一项内容<br>位于命令行末尾的关键字pub和-s选项一起，可以使系统起着主机ARP代理的作用。</p>
 ]]></content>
       
         <categories>
@@ -845,7 +869,9 @@
             
             <tag> TCP/IP详解 </tag>
             
-            <tag> 保活定时器 </tag>
+            <tag> ARP </tag>
+            
+            <tag> 地址解析协议 </tag>
             
         </tags>
         
@@ -1032,6 +1058,56 @@
             <tag> TCP/IP详解 </tag>
             
             <tag> 网际协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《TCPIP详解 卷1协议》 读书笔记 第22章 TCP的坚持定时器]]></title>
+      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC22%E7%AB%A0%20TCP%E7%9A%84%E5%9D%9A%E6%8C%81%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
+      <content type="html"><![CDATA[<h1 id="TCP的坚持定时器"><a href="#TCP的坚持定时器" class="headerlink" title="TCP的坚持定时器"></a>TCP的坚持定时器</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>ACK的传递是不可靠的，TCP不对ACK报文段进行确认，只确认那些包含数据的ACK报文段。<br>有些通知窗口大小为0，或者打开窗口的ACK是不包含数据的。这种ACK可能丢失，如果打开窗口的ACK丢失，那么可能导致连接终止。<br>为了防止这种死锁，发送方使用一个坚持定时器（persist timer）来周期性向接收方询查窗口是否已增大。（发出的报文段叫做窗口探查window probe）</p>
+<hr>
+<h2 id="坚持定时器"><a href="#坚持定时器" class="headerlink" title="坚持定时器"></a><strong>坚持定时器</strong></h2><p>当通告窗口为0之后，引起客户设置其坚持定时器，当定时器溢出时还没有接收到窗口更新的话，它就探查这个空的窗口来判断窗口更新的报文是否丢失了。</p>
+<ul>
+<li>如果得知窗口非0了，就可以开始发送数据了</li>
+<li>如果窗口还是0，就重新计时，这个过程将会持续到窗口被打开，或者连接被终止（所以叫做“坚持”定时器）</li>
+<li>坚持定时器使用了TCP指数退避，但是坚持定时器总是在5~60秒之间。</li>
+</ul>
+<hr>
+<h2 id="糊涂窗口综合征症SWS（Silly-Window-Syndrome）"><a href="#糊涂窗口综合征症SWS（Silly-Window-Syndrome）" class="headerlink" title="糊涂窗口综合征症SWS（Silly Window Syndrome）"></a><strong>糊涂窗口综合征症SWS（Silly Window Syndrome）</strong></h2><p>基于窗口的流量控制，会导致SWS——少量的数据将通过连接进行交换，而不是满长度的报文段。</p>
+<ul>
+<li>接收方可以通告一个<strong>小窗口</strong>，发送方也可以发送少量的数据（不用等到其他数据一起发送一个大的报文段）。</li>
+<li>这样会导致在通道中有很多小数据，可能导致拥塞，影响网络利用率。</li>
+</ul>
+<p>避免的方法：</p>
+<pre><code>1. **接收方**不通告小窗口，除非窗口有了一个满长度的报文段大小，或者有了一半缓存空间。
+2. **发送方**有3个条件，必须满足任一条件才发送数据：
+</code></pre><ul>
+<li>可以发送一个满长度的报文段</li>
+<li>可以发送至少是接收方通告窗口大小一半的报文段</li>
+<li>可以发送任何数据并且不希望接收ACK（就是说没有未被确认的数据）或者该连接上不能使用Nagle算法（连接上只能有一个未被确认的分组，确认后才能发送新的）。（<strong>一半会用Nagle来防止这种SWS的情况</strong>）</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 计算机网络 </category>
+            
+            <category> TCP/IP </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> TCP </tag>
+            
+            <tag> IP </tag>
+            
+            <tag> TCP/IP详解 </tag>
+            
+            <tag> TCP的坚持定时器 </tag>
             
         </tags>
         
@@ -1280,82 +1356,6 @@
             <tag> IP选路 </tag>
             
             <tag> 选路 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议]]></title>
-      <url>/2017/12/31/%E3%80%8ATCPIP%E8%AF%A6%E8%A7%A3%20%E5%8D%B71%E5%8D%8F%E8%AE%AE%E3%80%8B%20%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%20%E7%AC%AC4%E7%AB%A0%20ARP%EF%BC%9A%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE/</url>
-      <content type="html"><![CDATA[<h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit以太网地址（MAC地址）来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。<br>地址解析为这两种不同的地址形式提供映射：32bit的IP地址和数据链路层使用的任何类型的地址。</p>
-<ul>
-<li>ARP为IP地址到对应的硬件地址之间提供动态映射。</li>
-<li>RARP是被那些<strong>没有磁盘驱动器</strong>的系统使用的。</li>
-</ul>
-<hr>
-<h1 id="二、ARP运行过程"><a href="#二、ARP运行过程" class="headerlink" title="二、ARP运行过程"></a>二、ARP运行过程</h1><p>一个FTP客户端传输过程如下：</p>
-<pre><code>1. FTP调用函数gethostbyname把主机名用DNS转换成32bit的IP地址。
-2. 用IP地址建立TCP连接。
-3. TCP发送一个连接请求到远端的主机上。
-4. 如果目的主机在本地网络上，那么直接发送到该主机；如果不在本地，那么就需要通过IP选路函数来确定下一跳路由器地址。
-5. 如果链路层是以太网，那么发送端主机需要把32bit的IP地址变换成48bit的以太网地址，这个时候就要用到ARP。
-6. ARP广播发送一份**ARP请求**的以太网数据帧到以太网上的每个主机，请IP地址相符的拥有者返回硬件地址
-7. 目的主机收到广播报文，返回一个**ARP应答**。
-8. 发送IP数据报。
-</code></pre><p>在ARP背后有一个基本概念，那就是网络接口有一个硬件地址（48bit）。内核（如以太网驱动程序）必须知道目的端的硬件地址才能发送数据。<br><em>点对点链路不使用ARP，点对点链路发送数据肯定是到另一个点，并不涉及硬件地址。</em></p>
-<hr>
-<h1 id="三、ARP高速缓存"><a href="#三、ARP高速缓存" class="headerlink" title="三、ARP高速缓存"></a>三、ARP高速缓存</h1><p>ARP高效运行的关键是每个主机上都有一个ARP高速缓存，存放着IP和MAC地址的映射。<br>48bit的以太网地址用6个十六进制的数来表示，中间以冒号隔开。</p>
-<hr>
-<h1 id="四、ARP的分组格式"><a href="#四、ARP的分组格式" class="headerlink" title="四、ARP的分组格式"></a>四、ARP的分组格式</h1><p>ARP请求和应答分组的格式如下：<br><figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160809140010563" alt="ARP格式" title="" class="">
-                <p>ARP格式</p>
-            </figure></p>
-<ul>
-<li>目的地址和源地址：全1的为广播地址。电缆上所有以太网接口都要接受广播的数据帧。</li>
-<li>帧类型：表示后面的数据类型（ARP请求/ARP应答/RARP请求/RARP应答），请求的值为0x0806.</li>
-<li>硬件类型：比如以太网。</li>
-<li>协议类型：比如IP协议。</li>
-<li>硬件地址长度和协议地址长度：以字节为单位。</li>
-<li>op操作：支出4种操作类型，ARP请求/ARP应答/RARP请求/RARP应答，值分别为1/2/3/4.</li>
-</ul>
-<p>可以用<em>tcpdum</em>指令来查看运行过程。<br> 当系统受到ARP请求或发送ARP应答时，都要把请求端的硬件地址和IP地址存入ARP高速缓存中。</p>
-<hr>
-<h1 id="ARP代理"><a href="#ARP代理" class="headerlink" title="ARP代理"></a>ARP代理</h1><p>如果ARP请求是从一个网络的主机发往另一个网络上的主机，那么连接这两个网络的路由器就可以回答该请求，这个过程称作<strong>委托ARP</strong>或<strong>ARP代理</strong>。（也就是说返回的是路由器的MAC地址和主机的IP）</p>
-<figure class="image-box">
-                <img src="http://img.blog.csdn.net/20160809141848009" alt="ARP代理" title="" class="">
-                <p>ARP代理</p>
-            </figure>
-<p>拨号SLIP链路的两端只拥有一个IP地址140.252.1.183，而SLIP链路的两端却分别有一个IP地址，为什么？因为路由不需要知道拨号SLIP链路每一端的IP地址，它通过分组到达的串行链路接口来确定发送分组的拨号主机。<em>（<strong>其实这里不是很懂，希望理解的朋友们给我留言解答一下</strong>）</em></p>
-<p>ARP代理也称作混合ARP或ARP出租，这些名字来自于它的其他用途：通过两个物理网络之间的路由器可以互相隐藏物理网络。</p>
-<hr>
-<h1 id="七、免费ARP"><a href="#七、免费ARP" class="headerlink" title="七、免费ARP"></a>七、免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址。<br>主要有2个作用：</p>
-<pre><code>1. 一个主机可以通过它来确定另一个主机是否设置了相同的IP地址。
-2. 如果发送免费ARP的主机正好改变了硬件地址，那么这个分组就可以使其他主机高速缓存中旧的硬件地址进行相应的更新。
-</code></pre><hr>
-<h1 id="八、arp命令"><a href="#八、arp命令" class="headerlink" title="八、arp命令"></a>八、arp命令</h1><p>arp -a显示ARP高速缓存中的所有内容<br>arp -d删除某一项内容<br>arp -s增加一项内容<br>位于命令行末尾的关键字pub和-s选项一起，可以使系统起着主机ARP代理的作用。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> 计算机网络 </category>
-            
-            <category> TCP/IP </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> TCP </tag>
-            
-            <tag> IP </tag>
-            
-            <tag> TCP/IP详解 </tag>
-            
-            <tag> ARP </tag>
-            
-            <tag> 地址解析协议 </tag>
             
         </tags>
         

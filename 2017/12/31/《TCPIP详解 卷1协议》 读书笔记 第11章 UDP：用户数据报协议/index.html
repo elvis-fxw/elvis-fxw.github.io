@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -229,23 +229,60 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第11章 UDP：用户数据报协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD50lEQVR42u3ayW7cQAwFQP//TyfXAM7I75GcOAZKJ0PW0l06cLh8fMTHrz+OV2c+n391V3Ll52c+n39+1/GBAwcOHDjirT5vI9ne8/UtWfK0nCb6ADhw4MCB44gjeUGyxHx7SSBPNjxbw8vzOHDgwIHjv+TYJIfJlnJiHDhw4MDxszgOXr++ZrZ+HDhw4MDxbo59uygvz+VJ4KzI+I9qpThw4MCB46lr8zELbD/l77fMd+DAgQMHjsfCXB60kqRoNlSXbKMNosXucODAgQPHmqMtxs1G1vbtqDylfP4AUdMLBw4cOHAsOJLbknLeDC4vEbYBe1gExIEDBw4cRxzJ4mZJVP6WZKv56MPwRwAOHDhw4DjiaANVPpQwG4BoA38+2PdF8MaBAwcOHEccV6G0Tbpu0782KS2qpDhw4MCBI+aYDcm1WLNrZkCbd+HAgQMHjluOJA1LHtcG3SQZmyWWmxCOAwcOHDhmHEly1TaT8qfNWkf5f+t2Fw4cOHDgWHM8B7bZwFzbxGq3l5cphwkeDhw4cOBYcNy2iBLc2UDDLOi2a8OBAwcOHLccs0A7S6I2dyX1zuEucODAgQPHKUfeEGoTpKuRtTxtG7agcODAgQPHm7v5+eLatlD+/PbK9q6X1+PAgQMHjjdwzJKlNgS2YXJWmqw/Dw4cOHDgWHO0AWw2VJf/fVX+y9+FAwcOHDj2HPnYWfua5MzVEEMbjF8+DQcOHDhwrDneV7ZLKPN7NyMUV00vHDhw4MDRcmzKf/um1Gz4OzkzzGVx4MCBA8eIY9akmY1KX7WgNkNyXySBOHDgwIFjzZE3bJJjk+bNAv+mMfbFOnHgwIEDx4gjCV1t06gNsW1Rctb0iv6LAwcOHDjWHHl6s5nCa1HyBLIdlZslezhw4MCBo+W4ailthgmS0uQs0LYlSBw4cODAseHIFzErurVBcXNNOyTxl7XhwIEDB441R96bagcL2iRt9rS2KLlqPuHAgQMHjhFHG0TbdlQSqttUcPMBXg7J4cCBAweOEcds7GCfSrWp4KxEWBcxceDAgQPHEUfSHGrD3iwJbMPqZp0vf3HgwIEDB44Fx1UxbpZutcd+zO5jo4UDBw4cOEqIdnytLfBtCoKzWfK64IgDBw4cONYcV8F4lp7th7/bUbz9zwUcOHDgwJFwJMF1U7xLksCWox3OLgqLOHDgwIHjiGMTCGeDCHlQn32eNn3FgQMHDhzfxZGT5YW/TXKYlzWjT4IDBw4cOL6VYx8m8/A8I66TTxw4cODAccSxD1FtUS/Zdv7B9j8IcODAgQPHFUcePvNiX467Lxrm9LOROxw4cODAEXP8BqB0XP9DsGagAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" id="post-prev" class="post-nav-link">
+      <a href="/2018/01/13/el-form源码解析/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统</h4>
+        <h4 class="title">el-form源码解析</h4>
       </a>
     </div>
   
 
   
     <div class="next">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议/" id="post-next" class="post-nav-link">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第17章 TCP：传输控制协议</h4>
+        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第14章 DNS：域名系统</h4>
       </a>
     </div>
   
@@ -312,14 +349,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -345,10 +374,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>

@@ -15,7 +15,7 @@
         var DC = {
             reward:	true,
             lv: JSON.parse('{"enable":true,"app_id":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","app_key":"EmxYKNUae2XMnqwndbAKXhHs","icon":true}'),
-            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}')
+            v: JSON.parse('{"enable":true,"appid":"EK6xbXm6p9JBS3Idt2XsJo6M-gzGzoHsz","appkey":"EmxYKNUae2XMnqwndbAKXhHs","notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"robohash"}')
         };
     </script>
     <script type="text/javascript">
@@ -222,14 +222,51 @@
 
         
     </div>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议》 — 方小维&pic=https://elvis-fxw.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://elvis-fxw.github.io/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议/&title=《《TCPIP详解 卷1协议》 读书笔记 第10章 动态选路协议》 — 方小维&source=编程、代码" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD50lEQVR42u3aS27bQBAFQN//0goSZBHAovRe91DxorgSLGo4U140+/P1FV+PP1d759WvHv9cV3+/+vbq8/df5XuuLxw4cODAERzg6kq2kqx8dX9O0+7wNdnVc3HgwIEDxymOPGQmD0629XqjCVn7lOgFAgcOHDhwfJCjWLRc7T5EHDhw4MDxkzny7bagyUbbNBIHDhw4cPxfjqT01gazHKiFawt/t9RKceDAgQNHF+mGhcKf+fnG+Q4cOHDgwDEaGtiH4TzQzkL7ZiTi729x4MCBA8eaY1O2O5XmtevPyojFHnDgwIEDx4KjHQs4mxDmTDnQ7Cxv3jtw4MCBA0fJcSqhmv29bRRtoKP+Gw4cOHDgOMpx91by0YR8/VmZ8sn9OHDgwIFjzZEPLrQH2Ay6zdDzIbyiZIkDBw4cOEqOJLjug1+y/iyH2iSWOHDgwIHjDo6kYLcPe/nYwalmVfsvKeqXOHDgwIHjJUceSvPi3d0EycHab3HgwIEDx1mOtuXTorQhOU/nNuhPzoIDBw4cONYcbbCcNZnaoYe6V3ao+YQDBw4cOPYcbbBMHtPyJZuevQrULSgcOHDgwLHmyMtw7Yb2bapZ8rZ5XcCBAwcOHJ/hOHWk/fqr47UJJw4cOHDgGHHMkqu2ObS5Z5OG5f+Gy4wWBw4cOHCUHG1DaFPOm7WUZkyz9XHgwIEDx55j08jJj9oOHLSUm4GGJ+8dOHDgwIFjnRPNimvt4/P18+Rts2bxxoEDBw4cOEYcszSphdh8zhPLTYKKAwcOHDhOcczG4PaFv1kil/w2iaFPfosDBw4cOA5xtK2jPeIshUuKfW3wXk1J4MCBAweOuFWTbGt2+LOrzdpOT4Bw4MCBA8dRjuTxyVhDnjjlZbt23KFNHYeL4sCBAweOoIY2awVtSn556pi3l9rksB5uwIEDBw4cFydqQ1ECMQtp++C6OQsOHDhw4DjFkTSWZq2gfcxvE782IYyaTzhw4MCBo+RIQtepwYVZkpYH6XwPl3/BgQMHDhwf4cgHETYFviTYb14Iojtx4MCBA8chjiSAbb5NDtbuYTbE8OZOHDhw4MCx5mgTsORIs0GETQExXzNaAQcOHDhwLDge5XWqgbQpDu5HGXDgwIEDx30cbUDaHC//nKycHGD2LBw4cODAsefIWz6nxtRmgfbsoMObiikOHDhw4Fhz7Mtzw8ePWkRt26lgwoEDBw4cP4xj1vjZJI3tOMVHAy0OHDhw4CgHGvL0bDZalxQNN00mHDhw4MBxH8dmjCDfdMLX3tkOK7x5IcCBAwcOHGcqZvVAw2a0rsXNV2jHHY6NyuHAgQMHjt/XLwsCUyVeEPDjAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
 </article>
 <!-- 
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器/" id="post-prev" class="post-nav-link">
+      <a href="/2017/12/31/《TCPIP详解 卷1协议》 读书笔记 第4章 ARP：地址解析协议/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">《TCPIP详解 卷1协议》 读书笔记 第23章 TCP的保活定时器</h4>
+        <h4 class="title">《TCP/IP详解 卷1:协议》 读书笔记 第4章 ARP：地址解析协议</h4>
       </a>
     </div>
   
@@ -305,14 +342,6 @@
             归档
         </a>
         
-        <a href="/message"  >
-            留言
-        </a>
-        
-        <a href="/about"  >
-            关于
-        </a>
-        
         <a href="https://github.com/elvis-fxw" target="_blank"
              >
             Github
@@ -338,10 +367,6 @@
             </span>
             
 
-            
-            <span>
-                Hosted by <a href="https://coding.net/pages" target="_blank">Coding Pages</a>
-            </span>
             
         </p>
     </div>
